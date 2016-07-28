@@ -1,0 +1,23 @@
+{
+  "name": "app-v1",
+  "description": "Esta é a primeira versão de testes da aplicação",
+  "main": "server.js",
+  "authors": [
+    "Murilo Eduardo dos Santos"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/MuriloEduardo/login-passport",
+  "resolutions": {
+    "jquery": "^3.0.0"
+  },
+  "dependencies": {
+    "angular": "^1.5.7",
+    "angular-route": "^1.5.7",
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.0.0",
+    "animate.css": "^3.5.2"
+  },
+  "install": {
+    "path": "public/libs"
+  }
+}

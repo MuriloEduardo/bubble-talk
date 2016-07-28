@@ -1,0 +1,382 @@
+/*!
+ * Start Bootstrap - SB Admin (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+/* Global Styles */
+
+html,body {
+    height:100%;
+    font-family: 'Open Sans', sans-serif;
+}
+.bg-animate{
+    -webkit-animation: GradientAnimateBackground 100s ease infinite;
+    -moz-animation: GradientAnimateBackground 100s ease infinite;
+    -o-animation: GradientAnimateBackground 100s ease infinite;
+    animation: GradientAnimateBackground 100s ease infinite;
+}
+.bg-animate-color{
+    background: -webkit-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: -moz-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: -o-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: -ms-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background-size: 400% 400%;
+}
+@media(min-width:768px) {
+    body {
+        margin-top: 80px;
+    }
+}
+@-webkit-keyframes GradientAnimateBackground {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+@-moz-keyframes GradientAnimateBackground {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+@-o-keyframes GradientAnimateBackground {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+@keyframes GradientAnimateBackground { 
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+#wrapper {
+    padding-left: 0;
+    height:100%;
+}
+#wrapper,
+#wrapper .side-nav,
+#wrapper .side-nav li,
+#wrapper .side-nav li a,
+#wrapper .side-nav li a span{
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+#page-wrapper {
+    padding: 0;
+    background-color: #f1f1f1;
+    height:100%;
+}
+.huge {
+    font-size: 50px;
+    line-height: normal;
+}
+
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 225px;
+    }
+
+    #page-wrapper {
+        padding: 10px;
+        margin-top: 89px;
+    }
+}
+
+/* Top Navigation */
+.navbar-inverse .navbar-nav>li>a{
+    color:#fff;
+}
+.top-nav {
+    padding: 0 15px;
+}
+.top-nav-no-padding{
+    padding:0;
+}
+.top-nav>li {
+    display: inline-block;
+    float: left;
+}
+
+.top-nav>li>a {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    line-height: 20px;
+    color: #999;
+}
+.top-nav>li>.input-group {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    line-height: 20px;
+    color: #999;
+}
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover{
+    background-color:rgba(255, 255, 255, .3);
+}
+.top-nav>li>a:hover,
+.top-nav>li>a:focus,
+.top-nav>.open>a,
+.top-nav>.open>a:hover,
+.top-nav>.open>a:focus {
+    color: #fff;
+    background: -webkit-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: -moz-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: -o-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: -ms-linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background: linear-gradient(270deg, #4c8ffc, #24c7b1);
+    background-size: 400% 400%;
+}
+.top-nav i{
+    position:relative;
+    top:2px;
+}
+.search-top{position:relative;}
+.search-top i{
+    position:absolute;
+    color:#999;
+    top:32px;
+    left:12px;
+}
+.search-top input{
+    padding:15px 15px 15px 50px;
+    margin:19px 0;
+    border:none;
+    border-radius:4px;
+    width:325px;
+    color:#999;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.search-top input:focus{
+    outline:none;
+    background-color:#f1f1f1;
+    width:425px;
+}
+.search-top input:hover{
+    background-color:#f1f1f1;
+}
+.top-nav>.open>.dropdown-menu {
+    float: left;
+    position: absolute;
+    margin-top: 0;
+    border: 1px solid rgba(0,0,0,.15);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background-color: #fff;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.top-nav>.open>.dropdown-menu>li>a {
+    white-space: normal;
+}
+
+ul.message-dropdown {
+    padding: 0;
+    max-height: 250px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+li.message-preview {
+    width: 275px;
+    border-bottom: 1px solid rgba(0,0,0,.15);
+}
+
+li.message-preview>a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+li.message-footer {
+    margin: 5px 0;
+}
+
+ul.alert-dropdown {
+    width: 200px;
+}
+
+/* Side Navigation */
+
+@media(min-width:768px) {
+    .side-nav {
+        position: fixed;
+        top: 89px;
+        left: 225px;
+        width: 225px;
+        margin-left: -225px;
+        border: none;
+        border-radius: 0;
+        overflow-y: auto;
+        background-color: transparent;
+        bottom: 0;
+        overflow-x: hidden;
+        padding-bottom: 40px;
+        -webkit-transition: all .2s ease-in-out;
+        -moz-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out;
+    }
+
+    .side-nav>li>a {
+        width: 225px;
+        -webkit-transition: all .2s ease-in-out;
+        -moz-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out;
+    }
+
+    .side-nav li a:hover,
+    .side-nav li a:focus {
+        outline: none;
+        background-color: rgba(255, 255, 255, .3) !important;
+    }
+}
+.navbar-brand{
+    height:80px;
+    padding:10px 15px;
+    text-align:center;
+    width:225px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.side-nav li a span{
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;   
+}
+.navbar-inverse{
+    background-color:#fff;
+    border:none;
+}
+.side-nav{
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.side-nav li a i{
+    font-size:24px;
+    margin-right: 10px;
+    vertical-align:middle;
+}
+.side-nav>li>ul {
+    padding: 0;
+}
+
+.side-nav>li>ul>li>a {
+    display: block;
+    padding: 10px 15px 10px 38px;
+    text-decoration: none;
+    color: #999;
+}
+
+.side-nav>li>ul>li>a:hover {
+    color: #fff;
+}
+
+/* Flot Chart Containers */
+
+.flot-chart {
+    display: block;
+    height: 400px;
+}
+
+.flot-chart-content {
+    width: 100%;
+    height: 100%;
+}
+
+/* Custom Colored Panels */
+
+.huge {
+    font-size: 40px;
+}
+
+.panel-green {
+    border-color: #5cb85c;
+}
+
+.panel-green > .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-green > a {
+    color: #5cb85c;
+}
+
+.panel-green > a:hover {
+    color: #3d8b3d;
+}
+
+.panel-red {
+    border-color: #d9534f;
+}
+
+.panel-red > .panel-heading {
+    border-color: #d9534f;
+    color: #fff;
+    background-color: #d9534f;
+}
+
+.panel-red > a {
+    color: #d9534f;
+}
+
+.panel-red > a:hover {
+    color: #b52b27;
+}
+
+.panel-yellow {
+    border-color: #f0ad4e;
+}
+
+.panel-yellow > .panel-heading {
+    border-color: #f0ad4e;
+    color: #fff;
+    background-color: #f0ad4e;
+}
+
+.panel-yellow > a {
+    color: #f0ad4e;
+}
+.panel-yellow > a:hover {
+    color: #df8a13;
+}
+
+#logotipo{
+    width:60px;
+    height:60px;
+    border-radius:100%;
+    color:#fff;
+    text-align:center;
+    line-height:86px;
+    display:inline-block;
+}
+#logotipo i{
+    font-size:40px;
+    text-shadow: 2px 2px 30px #fff;
+}
+
+/* Toggle menu fixed left */
+#wrapper.toggledmenuleft .navbar-brand,
+#wrapper.toggledmenuleft .side-nav,
+#wrapper.toggledmenuleft .side-nav li{
+    width:100px;
+}
+#wrapper.toggledmenuleft .side-nav li a{
+    width:100px;
+    text-align:center;
+}
+@media(min-width:768px) {
+    #wrapper.toggledmenuleft{
+        padding-left: 100px;
+    }
+}
+#wrapper.toggledmenuleft .side-nav li a i{
+    margin-right:0;
+}
+#wrapper.toggledmenuleft .side-nav li a span{
+    font-size:0;
+}
