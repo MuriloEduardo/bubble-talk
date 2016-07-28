@@ -1,2 +1,2 @@
-# bubble-v0
-Primeira versão da aplicação Bubbler Talk
+# Bubble-v0
+Primeira versão da aplicação Bubble Talk
