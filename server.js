@@ -12,7 +12,7 @@ var flash = require('connect-flash');
 var path = require('path');
 var api = express.Router();
 
-var port = process.env.PORT || 3030;
+var port = process.env.PORT || 10;
 
 var configDB = require('./server/config/database');
 mongoose.connect(configDB.url, function(err, res) {
@@ -42,14 +42,25 @@ app.set('views', path.resolve(__dirname, 'public', 'site'));
 
 app.use(express.static(path.resolve(__dirname, 'public')));
 
-// Site
+/*
+	Site
+*/
+// Home - One Page
 app.get('/', function(req, res){
-	res.render('./index.ejs', {message_login: req.flash('loginAviso'), message_cadastrar: req.flash('cadastrarAviso')});
+	res.render('./index.ejs');
+});
+// Login
+app.get('/login', function(req, res){
+	res.render('./login.ejs', {message_login: req.flash('loginAviso')});
+});
+// Landing
+app.get('/experimente-gratis', function(req, res){
+	res.render('./cadastrar.ejs', {message_cadastrar: req.flash('cadastrarAviso')});
 });
 
 // App
 require('./server/routes/app')(api, io);
-app.use('/', api);
+app.use('/app', api);
 
 // API
 require('./server/routes/api')(api, passport);

@@ -9,16 +9,16 @@ module.exports = function(router, passport){
 	///////////////////////////////////////////////
 
 	// CADASTRAR UM NOVO USUARIO
-	router.post('/cadastrar', passport.authenticate('local-signup', {
+	router.post('/experimente-gratis', passport.authenticate('local-signup', {
 		successRedirect: '/app',
-		failureRedirect: '/',
+		failureRedirect: '/experimente-gratis',
 		failureFlash: true
 	}));
 
 	// EFETUA O LOGIN APARTIR DE EMAIL E SENHA //
 	router.post('/login', passport.authenticate('local-login', {
 		successRedirect: '/app',
-		failureRedirect: '/',
+		failureRedirect: '/login',
 		failureFlash: true
 	}));
 

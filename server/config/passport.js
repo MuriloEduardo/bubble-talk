@@ -55,7 +55,6 @@ module.exports = function(passport){
 						return done(null, false, req.flash('loginAviso', 'Senha inválida'));
 					}
 					return done(null, user);
-
 				});
 			});
 		}

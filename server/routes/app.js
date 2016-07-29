@@ -1,6 +1,6 @@
 module.exports = function(router, io){
 
-	router.get('/app*', isLoggedIn, function(req, res){
+	router.get('/*', isLoggedIn, function(req, res){
 		res.render('./../app/index.ejs', {user: req.user});
 	});
 };
