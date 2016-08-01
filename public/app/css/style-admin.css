@@ -64,7 +64,6 @@ html,body {
 }
 #page-wrapper {
     padding: 0;
-    background-color: #f1f1f1;
     height:100%;
 }
 .huge {
@@ -78,7 +77,7 @@ html,body {
     }
 
     #page-wrapper {
-        padding: 10px;
+        padding: 30px 10px;
         margin-top: 89px;
     }
 }
@@ -102,7 +101,7 @@ html,body {
     padding-top: 30px;
     padding-bottom: 30px;
     line-height: 20px;
-    color: #999;
+    color: #c6c6c6;
 }
 .top-nav>li>.input-group {
     padding-top: 30px;
@@ -130,12 +129,15 @@ html,body {
     position:relative;
     top:2px;
 }
-.search-top{position:relative;}
+.search-top{
+    position:relative;
+    padding: 0 15px;
+}
 .search-top i{
     position:absolute;
-    color:#999;
+    color:#c6c6c6;
     top:32px;
-    left:12px;
+    left:28px;
 }
 .search-top input{
     padding:15px 15px 15px 50px;
@@ -248,6 +250,7 @@ ul.alert-dropdown {
 .navbar-inverse{
     background-color:#fff;
     border:none;
+    box-shadow: 0 3px 6px rgba(130,130,130,.16), 0 3px 6px rgba(130,130,130,.23);
 }
 .side-nav{
     -webkit-transition: all .2s ease-in-out;
@@ -379,4 +382,85 @@ ul.alert-dropdown {
 }
 #wrapper.toggledmenuleft .side-nav li a span{
     font-size:0;
+}
+.perfil-toggle{
+    padding-top: 24.5px !important;
+    padding-bottom: 24.5px !important;
+}
+.perfil-toggle div{
+    display: inline-block;
+    vertical-align: middle;
+}
+#foto-perfil{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    border:solid 2px rgba(255,255,255,.3);
+    margin-left: 5px;
+    background-size: cover;
+    background-position: center;
+}
+.no-img-perfil{
+    background-image: url(../img/blank-profile-picture.png) !important;
+}
+.top-new-chat{
+    background: linear-gradient(270deg, rgba(76,143,252,.5), rgba(36,199,177,.5)), url(http://goingcloud.com.br/wp-content/uploads/2015/05/bg_flat_mountain.png);
+    background-size: cover;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 4px;
+    padding: 15px;
+}
+.btn{
+    border:none;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.btn-primary{
+    background-color: #24c7b1;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:active:hover{
+    background-color: #4c8ffc;
+    border:none;
+    outline: none;
+}
+.btn-with-icon{
+    line-height: 22px;
+}
+.cada-chat{
+    color: #fff;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    border-radius: 4px;
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: solid thin rgba(255,255,255,.1);
+}
+.cada-chat:hover{
+    background-color: rgba(255,255,255,.2);
+}
+.cada-chat .bubble,
+.cada-chat .desc-bubble{
+    display: inline-block;
+    vertical-align: middle;
+}
+.bubble{
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    border:solid 2px rgba(255,255,255,.3);
+    background-size: cover;
+    background-position: center;
+    margin-right: 10px;
+    background-size: cover;
+    background-position: center;
+}
+.no-chat-perfil{
+    background-size: 60%;
+    background-image: url(../img/blank-chats-picture.png);
 }

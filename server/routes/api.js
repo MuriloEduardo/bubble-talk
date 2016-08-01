@@ -1,5 +1,5 @@
 var Usuario = require('../models/usuario');
-var Lojas = require('../models/loja');
+var Bubble = require('../models/bubble');
 var mongoose = require('mongoose');
 
 module.exports = function(router, passport){
@@ -90,13 +90,13 @@ module.exports = function(router, passport){
 	///////////////////////////////////////////////
 
 	// CRIAR UMA LOJA //
-	router.post('/lojas', isLoggedIn, function(req, res){
+	router.post('/new-bubble', isLoggedIn, function(req, res){
 		
-		var novaLoja   = new Lojas();
-		novaLoja.dados = req.body.dados;
-		novaLoja.administradores.push(req.user._id);
+		var novoBubble   = new Bubble();
+		novoBubble.dados = req.body.dados;
+		novoBubble.administradores.push(req.user._id);
 
-		novaLoja.save(function(err, data){
+		novoBubble.save(function(err, data){
 			if(err){
 				throw err;
 			}else{
@@ -150,10 +150,11 @@ module.exports = function(router, passport){
 	});
 
 	// LISTAR TODAS AS LOJAS DO USUARIO LOGADO //
-	router.get('/propriedades', isLoggedIn, function(req, res){
-		Lojas.find({_id: { $in: req.user.propriedades.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
-			res.json(data);
-		});
+	router.get('/bubbles', isLoggedIn, function(req, res){
+		/*Bubble.find({_id: { $in: req.user.propriedades.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
+			//res.json(data);
+			console.log(data)
+		});*/
 	});
 
 	// LISTAR TODAS AS LOJAS //

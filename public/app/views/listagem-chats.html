@@ -1,1 +1,27 @@
-<h1>Listar todos os chats deste usuario aqui</h1>
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<div class="col-md-8">
+			<div class="cada-chat" ng-repeat="bubble in bubbles">
+				<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}"></div>
+				<div class="desc-bubble">
+					<div class="nome">
+						Teste teste teste teste teste
+					</div>
+					<div class="infos">
+						Teste teste teste teste teste
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default comprar-new-chat">
+				<div class="panel-body">
+					<div class="form-group top-new-chat">
+						Você pode adicionar diversos chat's à sua conta. 
+					</div>
+					<a href="./new-bubble" class="btn btn-primary form-control btn-with-icon"><i class="material-icons pull-left">add_shopping_cart</i> Novo Chat</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

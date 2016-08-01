@@ -1,11 +1,9 @@
 var mongoose = require('mongoose');
 
-var lojaSchema = mongoose.Schema({
+var bubbleSchema = mongoose.Schema({
 	dados: {
 		nome: String,
-		ramo: String,
 		termos: Boolean,
-		cnpj: String,
 		telefone: String,
 		endereco: {
 			cep: Number,
@@ -16,13 +14,12 @@ var lojaSchema = mongoose.Schema({
 			cidade: String,
 			estado: String
 		},
-		data_cadastro: {type: Date, default: Date.now}
-	},
-	frete: {
-		tipo_frete: String,
-		tipo_entrega: String
+		data_cadastro: {
+			type: Date, 
+			default: Date.now
+		}
 	},
 	administradores: []
 });
 
-module.exports = mongoose.model('Loja', lojaSchema);
+module.exports = mongoose.model('Bubble', bubbleSchema);

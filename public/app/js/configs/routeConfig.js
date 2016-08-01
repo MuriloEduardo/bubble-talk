@@ -4,7 +4,17 @@ app.config(function ($routeProvider, $locationProvider) {
     
     .when('/app/', {
         templateUrl: 'views/listagem-chats.html',
-        controller: 'listagemChatsCtrl'
+        controller: 'listagemChatsCtrl',
+        resolve: {
+            AllBubbles: function(Api) {
+                return Api.getAllBubbles();
+            }
+        }
+    })
+
+    .when('/app/new-bubble', {
+        templateUrl: 'views/new-bubble.html',
+        controller: 'newBubbleCtrl'
     })
 
     .otherwise({redirectTo: '/app'});

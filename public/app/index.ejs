@@ -28,14 +28,33 @@
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
+
+        <!-- jQuery -->
+        <script src="../libs/jquery/jquery.min.js"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="../libs/bootstrap/bootstrap.min.js"></script>
+
+        <script src="../libs/angular/angular.min.js"></script>
+        <script src="../libs/angular-route/angular-route.min.js"></script>
+
+        <script src="js/app.js"></script>
+
+        <script src="js/configs/routeConfig.js"></script>
+
+        <script src="js/services/servicesAPI.js"></script>
+
+        <script src="js/controllers/listagemChatsCtrl.js"></script>
+        <script src="js/controllers/mainCtrl.js"></script>
+        <script src="js/controllers/newBubbleCtrl.js"></script>
     </head>
-    <body class="bg-animate bg-animate-color">
-        <div id="wrapper">
+    <body class="bg-animate bg-animate-color" ng-controller="mainCtrl" ng-init="loadUser('<%= user %>')">
+        <div id="wrapper" ng-style="!menuLeft && {'padding-left':'0'}">
             <!-- Navigation -->
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse" ng-show="menuLeft">
                         <span class="sr-only">Abre e fecha menu</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -46,7 +65,7 @@
                     </a>
                 </div>
                 <ul class="nav navbar-left top-nav top-nav-no-padding">
-                    <li>
+                    <li ng-show="menuLeft">
                         <a id="toggleMenu" href="javascript:void(0)" class="bg-animate"><i class="material-icons">menu</i></a>
                     </li>
                     <li class="search-top">
@@ -137,7 +156,10 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle bg-animate" data-toggle="dropdown"><i class="fa fa-user"></i> <%= user.local.email %> <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle bg-animate perfil-toggle" data-toggle="dropdown">
+                            <div>{{user.nome}}</div>
+                            <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+                        </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -157,7 +179,7 @@
                 </ul>
                 <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav side-nav">
+                    <ul class="nav navbar-nav side-nav" ng-show="menuLeft">
                         <li class="active">
                             <a href="index.html"><i class="material-icons">chat</i><span>Conversas</span></a>
                         </li>
@@ -185,22 +207,5 @@
             <!-- /#page-wrapper -->
         </div>
         <!-- /#wrapper -->
-
-        <!-- jQuery -->
-        <script src="../libs/jquery/jquery.min.js"></script>
-
-        <!-- Bootstrap Core JavaScript -->
-        <script src="../libs/bootstrap/bootstrap.min.js"></script>
-
-        <script src="../libs/angular/angular.min.js"></script>
-        <script src="../libs/angular-route/angular-route.min.js"></script>
-
-        <script src="js/app.js"></script>
-
-        <script src="js/configs/routeConfig.js"></script>
-
-        <script src="js/controllers/listagemChatsCtrl.js"></script>
-
-        <script>$('#toggleMenu').click(function(){$('#wrapper').toggleClass('toggledmenuleft')})</script>
     </body>
 </html>
