@@ -10,19 +10,12 @@ html,body {
     height:100%;
     font-family: 'Open Sans', sans-serif;
 }
-.bg-animate{
-    -webkit-animation: GradientAnimateBackground 100s ease infinite;
-    -moz-animation: GradientAnimateBackground 100s ease infinite;
-    -o-animation: GradientAnimateBackground 100s ease infinite;
-    animation: GradientAnimateBackground 100s ease infinite;
-}
 .bg-animate-color{
-    background: -webkit-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: -moz-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: -o-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: -ms-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background-size: 400% 400%;
+    background: -webkit-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -moz-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -o-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -ms-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: linear-gradient(0deg, #00f2d4, #00d5fc);
 }
 @media(min-width:768px) {
     body {
@@ -30,24 +23,24 @@ html,body {
     }
 }
 @-webkit-keyframes GradientAnimateBackground {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+    0%{background-position:51% 0%}
+    50%{background-position:50% 100%}
+    100%{background-position:51% 0%}
 }
 @-moz-keyframes GradientAnimateBackground {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+    0%{background-position:51% 0%}
+    50%{background-position:50% 100%}
+    100%{background-position:51% 0%}
 }
 @-o-keyframes GradientAnimateBackground {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+    0%{background-position:51% 0%}
+    50%{background-position:50% 100%}
+    100%{background-position:51% 0%}
 }
 @keyframes GradientAnimateBackground { 
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+    0%{background-position:51% 0%}
+    50%{background-position:50% 100%}
+    100%{background-position:51% 0%}
 }
 #wrapper {
     padding-left: 0;
@@ -118,12 +111,11 @@ html,body {
 .top-nav>.open>a:hover,
 .top-nav>.open>a:focus {
     color: #fff;
-    background: -webkit-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: -moz-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: -o-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: -ms-linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background: linear-gradient(270deg, #4c8ffc, #24c7b1);
-    background-size: 400% 400%;
+    background: -webkit-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -moz-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -o-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -ms-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: linear-gradient(0deg, #00f2d4, #00d5fc);
 }
 .top-nav i{
     position:relative;
@@ -404,7 +396,11 @@ ul.alert-dropdown {
     background-image: url(../img/blank-profile-picture.png) !important;
 }
 .top-new-chat{
-    background: linear-gradient(270deg, rgba(76,143,252,.5), rgba(36,199,177,.5)), url(http://goingcloud.com.br/wp-content/uploads/2015/05/bg_flat_mountain.png);
+    background: -webkit-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
+    background: -moz-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
+    background: -o-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
+    background: -ms-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
+    background: linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
     background-size: cover;
     color: #fff;
     font-size: 18px;
@@ -413,18 +409,19 @@ ul.alert-dropdown {
 }
 .btn{
     border:none;
-    -webkit-transition: all .2s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
 }
 .btn-primary{
-    background-color: #24c7b1;
+    background-color: #00f2d4;
 }
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary:active:hover{
-    background-color: #4c8ffc;
+    background: -webkit-linear-gradient(180deg, #00f2d4, #00d5fc);
+    background: -moz-linear-gradient(180deg, #00f2d4, #00d5fc);
+    background: -o-linear-gradient(180deg, #00f2d4, #00d5fc);
+    background: -ms-linear-gradient(180deg, #00f2d4, #00d5fc);
+    background: linear-gradient(180deg, #00f2d4, #00d5fc);
     border:none;
     outline: none;
 }
@@ -439,10 +436,33 @@ ul.alert-dropdown {
     border-radius: 4px;
     padding: 15px;
     cursor: pointer;
-    border-bottom: solid thin rgba(255,255,255,.1);
+    background-color: rgba(255,255,255,.2);
+    border-bottom: solid thin rgba(255,255,255,.3);
+    overflow: hidden;
+    position: relative;
 }
 .cada-chat:hover{
-    background-color: rgba(255,255,255,.2);
+    background-color: rgba(255,255,255,.4);
+}
+.cada-chat:before{
+    content: "\E84E";
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    margin: -15px;
+    background: rgba(255, 255, 255, .3);
+    right: -65px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    line-height: 88px;
+    padding: 0 10px;
+    content: attr(data-icon);
+    font-family: 'Material Icons';
+    font-size: 26px;
+}
+.cada-chat:hover:before{
+    right: 15px;
 }
 .cada-chat .bubble,
 .cada-chat .desc-bubble{
@@ -461,6 +481,9 @@ ul.alert-dropdown {
     background-position: center;
 }
 .no-chat-perfil{
-    background-size: 60%;
+    background-size: 45%;
     background-image: url(../img/blank-chats-picture.png);
+}
+.comprar-new-chat{
+    border-color: #fff;
 }

@@ -60,7 +60,7 @@ app.get('/experimente-gratis', function(req, res){
 
 // App
 require('./server/routes/app')(api, io);
-app.use('/app', api);
+app.use('/', api);
 
 // API
 require('./server/routes/api')(api, passport);

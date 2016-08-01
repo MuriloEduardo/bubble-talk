@@ -1,4 +1,3 @@
-app.controller('listagemChatsCtrl', ['$scope', '$rootScope', 'AllBubbles', function($scope, $rootScope, AllBubbles){
-	console.log(AllBubbles)
-	$scope.bubbles = AllBubbles.data;
-}]);
+app.controller('listagemChatsCtrl', function($scope, $rootScope, allChats){
+	console.log(allChats.data)
+});

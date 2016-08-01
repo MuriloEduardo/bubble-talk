@@ -6,8 +6,8 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: 'views/listagem-chats.html',
         controller: 'listagemChatsCtrl',
         resolve: {
-            AllBubbles: function(Api) {
-                return Api.getAllBubbles();
+            allChats: function (Api){
+                return Api.AllChats();
             }
         }
     })

@@ -1,15 +1,16 @@
-app.factory('Api', function($http){
+app.factory('Api', function($resource, $http){
 
 	var _createBubble = function(obj) {
 		return $http.post('/api/new-bubble', obj);
 	};
 
-	var _getAllBubbles = function() {
+	var _getAllChats = function() {
 		return $http.get('/api/bubbles');
-	}
+	};
 
 	return {
 		createBubble: _createBubble,
-		getAllBubbles: _getAllBubbles
+		Bubbles: $resource('/api/bubbles/:id', {id: '@id'}),
+		AllChats: _getAllChats
 	};
 });
