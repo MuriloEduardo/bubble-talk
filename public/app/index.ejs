@@ -18,6 +18,9 @@
         <!-- Animate CSS -->
         <link href="../libs/animate.css/animate.min.css" rel="stylesheet">
 
+        <!-- Notificações UI Angular -->
+        <link rel="stylesheet" href="../libs/angular-ui-notification/angular-ui-notification.min.css">
+
         <!-- Custom Fonts -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -35,19 +38,29 @@
         <!-- Bootstrap Core JavaScript -->
         <script src="../libs/bootstrap/bootstrap.min.js"></script>
 
+        <!-- Socket.io -->
+        <script src="../libs/socket.io/socket.io-1.4.5.js"></script>
+
         <script src="../libs/angular/angular.min.js"></script>
         <script src="../libs/angular-route/angular-route.min.js"></script>
-        <script src="../libs/angular-resource/angular-resource.min.js"></script>
 
         <script src="js/app.js"></script>
 
+        <!-- Notificações UI Angular -->
+        <script src="../libs/angular-ui-notification/angular-ui-notification.min.js"></script>
+
         <script src="js/configs/routeConfig.js"></script>
+        <script src="js/configs/notificationConfig.js"></script>
 
         <script src="js/services/servicesAPI.js"></script>
+
+        <script src="js/filters/spaceless.js"></script>
 
         <script src="js/controllers/listagemChatsCtrl.js"></script>
         <script src="js/controllers/mainCtrl.js"></script>
         <script src="js/controllers/newBubbleCtrl.js"></script>
+        <script src="js/controllers/bubbleCtrl.js"></script>
+        <script src="js/controllers/equipeCtrl.js"></script>
     </head>
     <body class="bg-animate-color" ng-controller="mainCtrl" ng-init="loadUser('<%= user %>')">
         <div id="wrapper" ng-style="!menuLeft && {'padding-left':'0'}">
@@ -61,7 +74,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="/">
                         <div id="logotipo" class="bg-animate-color"><i class="material-icons">bubble_chart</i></div>
                     </a>
                 </div>
@@ -194,7 +207,7 @@
                             <a href="forms.html"><i class="material-icons">timeline</i><span>Estatísticas</span></a>
                         </li>
                         <li>
-                            <a href="bootstrap-elements.html"><i class="material-icons">people</i><span>Equipe</span></a>
+                            <a href="javascript:void(0)" ng-click="goInternalPages('equipe')"><i class="material-icons">people</i><span>Equipe</span></a>
                         </li>
                     </ul>
                 </div>

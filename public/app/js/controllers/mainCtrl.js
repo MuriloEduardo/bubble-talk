@@ -1,4 +1,4 @@
-app.controller('mainCtrl', ['$scope', '$rootScope', function($scope, $rootScope){
+app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams){
 
 	// Abre e fecha menu esquerdo
 	$('#toggleMenu').click(function(){
@@ -14,6 +14,12 @@ app.controller('mainCtrl', ['$scope', '$rootScope', function($scope, $rootScope)
 	// todos os dados do usuario vindo do passport
 	$scope.loadUser = function(user) {
 		// Variavel com todos os dados do usuario
-		$scope.user = JSON.parse(user);
+		$rootScope.user = JSON.parse(user);
 	}
-}]);
+
+	$scope.goInternalPages = function(destino) {
+		var url = '/app/' + $routeParams.appname + '/' + destino;
+		console.log(url)
+		$location.path(url);
+	}
+});

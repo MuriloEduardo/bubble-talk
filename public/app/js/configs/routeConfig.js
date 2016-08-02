@@ -17,6 +17,21 @@ app.config(function ($routeProvider, $locationProvider) {
         controller: 'newBubbleCtrl'
     })
 
+    .when('/app/:appname', {
+        templateUrl: 'views/bubble.html',
+        controller: 'bubbleCtrl',
+        resolve: {
+            bubble: function (Api, $route){
+                return Api.getBubble($route.current.params.appname);
+            }
+        }
+    })
+
+    .when('/app/:appname/equipe', {
+        templateUrl: 'views/equipe.html',
+        controller: 'bubbleCtrl'
+    })
+
     .otherwise({redirectTo: '/app'});
 
     $locationProvider.html5Mode({enabled: true, requireBase: false});

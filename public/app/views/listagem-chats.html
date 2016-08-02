@@ -1,11 +1,11 @@
 <div class="row">
 	<div class="col-md-8 col-md-offset-2">
 		<div class="col-md-8">
-			<div class="cada-chat" data-icon="input">
+			<div class="cada-chat" data-icon="input" ng-repeat="chat in allChats" ng-click="openChat(chat.dados.appname)">
 				<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}"></div>
 				<div class="desc-bubble">
 					<div class="nome">
-						Teste teste teste teste teste
+						{{chat.dados.appname | spaceless}}
 					</div>
 					<div class="infos">
 						Teste teste teste teste teste

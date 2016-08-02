@@ -5,8 +5,10 @@
  */
 
 /* Global Styles */
-
-html,body {
+html{
+    height:100%;
+}
+body {
     height:100%;
     font-family: 'Open Sans', sans-serif;
 }
@@ -16,6 +18,8 @@ html,body {
     background: -o-linear-gradient(0deg, #00f2d4, #00d5fc);
     background: -ms-linear-gradient(0deg, #00f2d4, #00d5fc);
     background: linear-gradient(0deg, #00f2d4, #00d5fc);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 @media(min-width:768px) {
     body {
@@ -440,6 +444,7 @@ ul.alert-dropdown {
     border-bottom: solid thin rgba(255,255,255,.3);
     overflow: hidden;
     position: relative;
+    margin-bottom: 15px;
 }
 .cada-chat:hover{
     background-color: rgba(255,255,255,.4);
@@ -486,4 +491,22 @@ ul.alert-dropdown {
 }
 .comprar-new-chat{
     border-color: #fff;
+}
+.modal-notify{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,.7);
+    z-index: 9;
+}
+.notify-body{
+    position: absolute;
+    left: 30px;
+    bottom: 30px;
+    width: 250px;
+    height: 250px;
+    border-radius: 4px;
+    background-color: #f00;
 }

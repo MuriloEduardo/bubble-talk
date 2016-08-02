@@ -59,11 +59,11 @@ app.get('/experimente-gratis', function(req, res){
 });
 
 // App
-require('./server/routes/app')(api, io);
+require('./server/routes/app')(api);
 app.use('/', api);
 
 // API
-require('./server/routes/api')(api, passport);
+require('./server/routes/api')(api, passport, io);
 app.use('/api', api);
 
 // Erro 404

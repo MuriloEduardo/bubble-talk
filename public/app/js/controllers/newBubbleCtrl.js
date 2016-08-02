@@ -1,9 +1,18 @@
-app.controller('newBubbleCtrl', ['$scope', '$rootScope', 'Api', function($scope, $rootScope, Api){
+app.controller('newBubbleCtrl', function($scope, $rootScope, Api, Notification){
 	$scope.cadastro = function(obj) {
+		
+		obj.dados.appname = obj.dados.appname.replace(/ /g, '-');
+
 		Api.createBubble(obj).success(function(resposta){
-			console.log(resposta)
+			if(resposta.err){
+				// Appname ja existe
+				Notification.error('Nome do chat já existente');
+			}else{
+				// Cadastrado com sucesso
+				Notification.success('Chat criado com sucesso');
+			}
 		}).error(function(err){
 			console.error(err)
 		})
 	}
-}]);
+});

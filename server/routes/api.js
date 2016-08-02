@@ -2,7 +2,7 @@ var Usuario = require('../models/usuario');
 var Bubble = require('../models/bubble');
 var mongoose = require('mongoose');
 
-module.exports = function(router, passport){
+module.exports = function(router, passport, io){
 
 	  ///////////////////////////////////////////////
 	 //                  USUARIOS                 //
@@ -72,28 +72,37 @@ module.exports = function(router, passport){
 	 //                     BUBBLES               //
 	///////////////////////////////////////////////
 
-	// CRIAR UMA LOJA //
+	// CRIAR UM NOVO BUBBLE //
 	router.post('/new-bubble', isLoggedIn, function(req, res){
-		
-		var novoBubble   = new Bubble();
-		novoBubble.dados = req.body.dados;
-		novoBubble.administradores.push(req.user._id);
 
-		novoBubble.save(function(err, data){
-			if(err){
-				throw err;
-			}else{
+		Bubble.findOne({'dados.appname': req.body.dados.appname}, function(err, data){
+			// Appname nao encontrado, entao nao existe
+			// Deverá e será unico
+			if(!data){
+				var novoBubble   = new Bubble();
+				novoBubble.dados = req.body.dados;
+				novoBubble.administradores.push(req.user._id);
 
-				var propriedadeUsuario = req.user;
-				propriedadeUsuario.propriedades.push(data._id);
-
-				propriedadeUsuario.save(function(err){
+				novoBubble.save(function(err, data){
 					if(err){
 						throw err;
 					}else{
-						res.json(data);
+
+						var propriedadeUsuario = req.user;
+						propriedadeUsuario.propriedades.push(data._id);
+
+						propriedadeUsuario.save(function(err){
+							if(err){
+								throw err;
+							}else{
+								res.json(data);
+							}
+						});
 					}
 				});
+			}else{
+				// Appname encontrado
+				res.json({err: true});
 			}
 		});
 	});
@@ -119,9 +128,18 @@ module.exports = function(router, passport){
 	});
 
 	// LISTAR UM CHAT //
-	router.get('/bubbles/:id', function(req, res){
-		Bubble.findOne({_id: req.params.id}, function(err, data){
+	router.get('/bubbles/:appname', function(req, res){
+		Bubble.findOne({'dados.appname': req.params.appname}, function(err, data){
 			res.json(data);
+
+			var namespace = io.of('/' + req.params.appname);
+			namespace.on('connection', function (socket) {
+				socket.on('administrador-entrou', function (data) {
+					
+					// Transmitir a todos que usuario entrou na propriedade
+					socket.emit('aviso-administrador-entrou', data);
+				});
+			});
 		});
 	});
 

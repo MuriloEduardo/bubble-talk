@@ -1,1 +1,1 @@
-var app = angular.module('bubbleApp', ['ngRoute', 'ngResource']);
+var app = angular.module('bubbleApp', ['ngRoute', 'ui-notification']);

@@ -1,4 +1,4 @@
-module.exports = function(router, io){
+module.exports = function(router){
 
 	router.get('/app/*', isLoggedIn, function(req, res){
 		res.render('./../app/index.ejs', {user: JSON.stringify(req.user)});

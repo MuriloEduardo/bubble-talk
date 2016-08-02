@@ -15,7 +15,8 @@
     "angular-route": "^1.5.7",
     "bootstrap": "^3.3.6",
     "jquery": "^3.0.0",
-    "animate.css": "^3.5.2"
+    "animate.css": "^3.5.2",
+    "angular-ui-notification": "^0.2.0"
   },
   "install": {
     "path": "public/libs"

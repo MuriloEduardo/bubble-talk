@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var bubbleSchema = mongoose.Schema({
 	dados: {
-		nome: String,
+		appname: String,
 		termos: Boolean,
 		telefone: String,
 		endereco: {

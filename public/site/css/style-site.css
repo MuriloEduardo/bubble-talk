@@ -30,6 +30,8 @@ html,body{
     background: -o-linear-gradient(0deg, #00f2d4, #00d5fc);
     background: -ms-linear-gradient(0deg, #00f2d4, #00d5fc);
     background: linear-gradient(0deg, #00f2d4, #00d5fc);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 input[type="text"].form-control,
 input[type="password"].form-control{
