@@ -9,6 +9,6 @@ app.controller('listagemChatsCtrl', function($scope, $rootScope, allChats, $loca
 	$scope.allChats = allChats.data;
 
 	$scope.openChat = function(appname){
-		$location.path('/app/' + appname);
+		$location.path('/' + appname);
 	};
 });

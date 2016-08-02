@@ -2,7 +2,7 @@ app.config(function ($routeProvider, $locationProvider) {
     
     $routeProvider
     
-    .when('/app/', {
+    .when('/', {
         templateUrl: 'views/listagem-chats.html',
         controller: 'listagemChatsCtrl',
         resolve: {
@@ -12,27 +12,34 @@ app.config(function ($routeProvider, $locationProvider) {
         }
     })
 
-    .when('/app/new-bubble', {
+    .when('/new-bubble', {
         templateUrl: 'views/new-bubble.html',
         controller: 'newBubbleCtrl'
     })
 
-    .when('/app/:appname', {
+    .when('/:appname', {
         templateUrl: 'views/bubble.html',
         controller: 'bubbleCtrl',
         resolve: {
-            bubble: function (Api, $route){
+            bubble: function (Api, $route, $location){
+                Api.getBubble($route.current.params.appname).success(function(data){ if(!data) $location.path('/') });
                 return Api.getBubble($route.current.params.appname);
             }
         }
     })
 
-    .when('/app/:appname/equipe', {
+    .when('/:appname/equipe', {
         templateUrl: 'views/equipe.html',
-        controller: 'bubbleCtrl'
+        controller: 'equipeCtrl',
+        resolve: {
+            bubble: function (Api, $route, $location){
+                Api.getBubble($route.current.params.appname).success(function(data){ if(!data) $location.path('/') });
+                return Api.getBubble($route.current.params.appname);
+            }
+        }
     })
 
-    .otherwise({redirectTo: '/app'});
+    .otherwise({redirectTo: '/'});
 
     $locationProvider.html5Mode({enabled: true, requireBase: false});
 });

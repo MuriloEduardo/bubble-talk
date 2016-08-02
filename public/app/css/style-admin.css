@@ -1,10 +1,28 @@
-/*!
- * Start Bootstrap - SB Admin (http://startbootstrap.com/)
- * Copyright 2013-2016 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
- */
-
-/* Global Styles */
+@font-face {
+    font-family: 'Open Sans';
+    src: url(../../fonts/OpenSans/OpenSans-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(../../fonts/material-design-icons/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
 html{
     height:100%;
 }
@@ -221,6 +239,8 @@ ul.alert-dropdown {
         -webkit-transition: all .2s ease-in-out;
         -moz-transition: all .2s ease-in-out;
         transition: all .2s ease-in-out;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 
     .side-nav li a:hover,
@@ -352,6 +372,12 @@ ul.alert-dropdown {
     text-align:center;
     line-height:86px;
     display:inline-block;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background: -webkit-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -moz-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -o-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -ms-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: linear-gradient(0deg, #00f2d4, #00d5fc);
 }
 #logotipo i{
     font-size:40px;

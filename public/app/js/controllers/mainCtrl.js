@@ -18,8 +18,6 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams)
 	}
 
 	$scope.goInternalPages = function(destino) {
-		var url = '/app/' + $routeParams.appname + '/' + destino;
-		console.log(url)
-		$location.path(url);
+		$location.path('/' + $routeParams.appname + '/' + destino);
 	}
 });

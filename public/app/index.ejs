@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR" ng-app="bubbleApp">
     <head>
+        <base href="/app/">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title></title>
+        <title>Bubble Talk - Seja muito bem vindo!</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="../libs/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -20,10 +21,6 @@
 
         <!-- Notificações UI Angular -->
         <link rel="stylesheet" href="../libs/angular-ui-notification/angular-ui-notification.min.css">
-
-        <!-- Custom Fonts -->
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -74,8 +71,8 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">
-                        <div id="logotipo" class="bg-animate-color"><i class="material-icons">bubble_chart</i></div>
+                    <a class="navbar-brand" href="/app/">
+                        <div id="logotipo"><i class="material-icons">bubble_chart</i></div>
                     </a>
                 </div>
                 <ul class="nav navbar-left top-nav top-nav-no-padding">
@@ -191,35 +188,30 @@
                         </ul>
                     </li>
                 </ul>
-                <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav" ng-show="menuLeft">
                         <li class="active">
-                            <a href="index.html"><i class="material-icons">chat</i><span>Conversas</span></a>
+                            <a href="javascript:void(0)"><i class="material-icons">chat</i><span>Conversas</span></a>
                         </li>
                         <li>
-                            <a href="charts.html"><i class="material-icons">format_paint</i><span>Aparência</span></a>
+                            <a href="javascript:void(0)"><i class="material-icons">format_paint</i><span>Aparência</span></a>
                         </li>
                         <li>
-                            <a href="tables.html"><i class="material-icons">settings</i><span>Configurações</span></a>
+                            <a href="javascript:void(0)"><i class="material-icons">settings</i><span>Configurações</span></a>
                         </li>
                         <li>
-                            <a href="forms.html"><i class="material-icons">timeline</i><span>Estatísticas</span></a>
+                            <a href="javascript:void(0)"><i class="material-icons">timeline</i><span>Estatísticas</span></a>
                         </li>
                         <li>
                             <a href="javascript:void(0)" ng-click="goInternalPages('equipe')"><i class="material-icons">people</i><span>Equipe</span></a>
                         </li>
                     </ul>
                 </div>
-                <!-- /.navbar-collapse -->
             </nav>
             <div id="page-wrapper">
                 <div class="container-fluid" ng-view>
                 </div>
-                <!-- /.container-fluid -->
             </div>
-            <!-- /#page-wrapper -->
         </div>
-        <!-- /#wrapper -->
     </body>
 </html>

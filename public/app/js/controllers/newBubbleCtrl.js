@@ -1,4 +1,4 @@
-app.controller('newBubbleCtrl', function($scope, $rootScope, Api, Notification){
+app.controller('newBubbleCtrl', function($scope, Api, Notification){
 	$scope.cadastro = function(obj) {
 		
 		obj.dados.appname = obj.dados.appname.replace(/ /g, '-');

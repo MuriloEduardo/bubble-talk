@@ -128,17 +128,16 @@ module.exports = function(router, passport, io){
 	});
 
 	// LISTAR UM CHAT //
-	router.get('/bubbles/:appname', function(req, res){
+	router.get('/bubbles/:appname', isLoggedIn, function(req, res){
 		Bubble.findOne({'dados.appname': req.params.appname}, function(err, data){
+			
 			res.json(data);
 
 			var namespace = io.of('/' + req.params.appname);
 			namespace.on('connection', function (socket) {
-				socket.on('administrador-entrou', function (data) {
-					
-					// Transmitir a todos que usuario entrou na propriedade
-					socket.emit('aviso-administrador-entrou', data);
-				});
+				console.log('==================================================================')
+				// Transmitir a todos que usuario entrou na propriedade
+				socket.emit('conectado', {nome: req.user.nome});
 			});
 		});
 	});
