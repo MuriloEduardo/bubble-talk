@@ -62,8 +62,6 @@ module.exports = function(router, passport, io){
 									}, function(err){
 										if(err)
 											throw err;
-										else
-											console.log('E-mail enviado!');
 									});
 
 									res.json(data1);
@@ -163,7 +161,6 @@ module.exports = function(router, passport, io){
 
 			var namespace = io.of('/' + req.params.appname);
 			namespace.on('connection', function (socket) {
-				console.log('==================================================================')
 				// Transmitir a todos que usuario entrou na propriedade
 				socket.emit('conectado', {nome: req.user.nome});
 			});
