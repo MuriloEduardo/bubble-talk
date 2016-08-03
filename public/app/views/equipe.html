@@ -1,6 +1,31 @@
 <div class="col-md-12">
-	<h1>equipe</h1>
-	<div class="form-group">
-		<button class="btn btn-default pull-right" ng-click="newAdm()">Novo Administrador</button>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="link-and-input">
+						<div>
+							<input type="email" class="form-control sizing-more-input" ng-model="dados.local.email" placeholder="Qual o email do novo administrador? Separe por vírgulas.">
+						</div>
+						<div>
+							<a href="javascript:void(0)" class="sizing-more-input text-center" ng-disabled="!dados" ng-click="newAdm(dados)"><i class="material-icons">send</i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-show="equipe.length">
+		<div ng-repeat="adm in equipe" class="col-md-4">
+	        <div class="panel cada-adm">
+	        	<div class="panel-body">
+	        		<p><label>{{adm.local.email}}</label></p>
+	        		<span ng-if="!adm.local.senha" class="label label-danger">Aguardando este administrador cadastrar sua senha.</span>
+	        	</div>
+	        	<div class="panel-footer">
+	        		{{adm.data_cadastro | date}}
+	        	</div>
+	        </div>
+	    </div>
 	</div>
 </div>

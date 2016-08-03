@@ -49,6 +49,8 @@ module.exports = function(passport){
 				Usuario.findOne({ 'local.email': email}, function(err, user){
 					if(err)
 						return done(err);
+					if(!user.local.senha)
+						return done(null, false, req.flash('loginAviso', 'Configure sua senha'));
 					if(!user)
 						return done(null, false, req.flash('loginAviso', 'Usuário não encontrado'));
 					if(!user.validPassword(senha)){

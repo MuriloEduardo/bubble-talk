@@ -96,7 +96,16 @@ body {
         margin-top: 89px;
     }
 }
-
+a{
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.form-control:focus{
+    border-color: #00d5fc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(0,213,252,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(0,213,252,.6);
+}
 /* Top Navigation */
 .navbar-inverse .navbar-nav>li>a{
     color:#fff;
@@ -310,7 +319,9 @@ ul.alert-dropdown {
 .huge {
     font-size: 40px;
 }
-
+.panel{
+    box-shadow: 0 1.5px 3px rgba(100,100,100,.16), 0 1.5px 3px rgba(100,100,100,.23);
+}
 .panel-green {
     border-color: #5cb85c;
 }
@@ -535,4 +546,44 @@ ul.alert-dropdown {
     height: 250px;
     border-radius: 4px;
     background-color: #f00;
+}
+.sizing-more-input{
+    padding: 30px;
+}
+.link-and-input div{
+    display: inline-block;
+}
+.link-and-input div:first-child{
+    width: 89%;
+}
+.link-and-input div:last-child{
+    width: 10%;
+    text-align: center;
+}
+.link-and-input div a{
+    color: #00d5fc;
+}
+.link-and-input div a:hover{
+    color: #00f2d4;
+}
+.link-and-input div a i{
+    top: 10px;
+    position: relative;
+    font-size: 30px;
+}
+.cada-adm{
+    background-color: rgba(255,255,255,.2);
+    border-bottom: solid thin rgba(255,255,255,.3);
+    color: #fff;
+}
+.cada-adm .panel-footer{
+    font-size: 12px;
+    background-color: rgba(255,255,255,.3);
+    border-top-color: rgba(255,255,255,.3);
+}
+.ng-enter{
+    animation: .8s bounceInDown;
+}
+.ng-leave{
+    animation: .8s bounceOutUp;
 }

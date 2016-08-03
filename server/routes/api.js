@@ -1,6 +1,16 @@
 var Usuario = require('../models/usuario');
 var Bubble = require('../models/bubble');
 var mongoose = require('mongoose');
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+
+var conta = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'muriloeduardoooooo@gmail.com',
+        pass: 'liloeduardo0202'
+    }
+});
 
 module.exports = function(router, passport, io){
 
@@ -29,28 +39,41 @@ module.exports = function(router, passport, io){
 			if(!user){
 				var novoAdm = new Usuario();
 				novoAdm.local = req.body.local;
-				novoAdm.propriedades.push(req.body.propriedade);
+				novoAdm.bubbles.push(req.body.id_bubble);
 
 				novoAdm.save(function(err, data1){
 					if(err){
 						throw err;
 					}else{
-						Lojas.findOne({_id: req.body.propriedade}, function(err, data2){
-							var loja = data2;
-							loja.administradores.push(data1._id);
+						Bubble.findOne({_id: req.body.id_bubble}, function(err, data2){
+							var bubble = data2;
+							bubble.administradores.push(data1._id);
 
-							loja.save(function(err, data3){
+							bubble.save(function(err, data3){
 								if(err){
 									throw err;
 								}else{
-									res.json(data3);
+
+									conta.sendMail({
+										from: 'Seu Nome <muriloeduardoooooo@gmail.com>',
+										to: 'Alan Hoffmeister <muriloeduardoooooo@gmail.com>',
+										subject: 'Estou testando seu gist',
+										html: '<strong>Oi Alan!</strong><p>Estou testando seu gist para enviar e-mails, amo você!</p>'
+									}, function(err){
+										if(err)
+											throw err;
+										else
+											console.log('E-mail enviado!');
+									});
+
+									res.json(data1);
 								}
 							});
 						});
 					}
 				});
 			}else{
-				res.json({err: 1});
+				res.json(user);
 			}
 		});
 	});
@@ -65,7 +88,7 @@ module.exports = function(router, passport, io){
 	// LOGOUT //
 	router.get('/logout', isLoggedIn, function(req, res){
 		req.logout();
-		res.redirect('/');
+		res.redirect('/login');
 	});
 
 	  ///////////////////////////////////////////////
@@ -82,6 +105,7 @@ module.exports = function(router, passport, io){
 				var novoBubble   = new Bubble();
 				novoBubble.dados = req.body.dados;
 				novoBubble.administradores.push(req.user._id);
+				novoBubble.criador = req.user._id;
 
 				novoBubble.save(function(err, data){
 					if(err){
@@ -89,7 +113,7 @@ module.exports = function(router, passport, io){
 					}else{
 
 						var propriedadeUsuario = req.user;
-						propriedadeUsuario.propriedades.push(data._id);
+						propriedadeUsuario.bubbles.push(data._id);
 
 						propriedadeUsuario.save(function(err){
 							if(err){
@@ -129,9 +153,13 @@ module.exports = function(router, passport, io){
 
 	// LISTAR UM CHAT //
 	router.get('/bubbles/:appname', isLoggedIn, function(req, res){
-		Bubble.findOne({'dados.appname': req.params.appname}, function(err, data){
-			
-			res.json(data);
+		Bubble.findOne({'dados.appname': req.params.appname}, function(err, data1){
+
+			Usuario.find({_id: { $in: data1.administradores.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data2){
+				data1.administradores = data2;
+				console.log(data1)
+				res.json(data1);
+			});
 
 			var namespace = io.of('/' + req.params.appname);
 			namespace.on('connection', function (socket) {
@@ -151,7 +179,7 @@ module.exports = function(router, passport, io){
 
 	// LISTAR TODAS OS CHATS DO USUARIO LOGADO //
 	router.get('/bubbles', isLoggedIn, function(req, res){
-		Bubble.find({_id: { $in: req.user.propriedades.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
+		Bubble.find({_id: { $in: req.user.bubbles.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
 			res.json(data);
 		});
 	});
@@ -161,5 +189,5 @@ function isLoggedIn(req, res, next) {
 	if(req.isAuthenticated()){
 		return next();
 	}
-	res.redirect('/');
+	res.redirect('/login');
 };

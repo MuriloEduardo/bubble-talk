@@ -19,6 +19,7 @@ var bubbleSchema = mongoose.Schema({
 			default: Date.now
 		}
 	},
+	criador: String,
 	administradores: []
 });
 

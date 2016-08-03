@@ -12,9 +12,14 @@ app.factory('Api', function($http){
 		return $http.get('/api/bubbles/' + appname);
 	}
 
+	var _newAdm = function(user) {
+		return $http.post('/api/new-adm', user);	
+	}
+
 	return {
 		createBubble: _createBubble,
 		AllChats: _getAllChats,
-		getBubble: _getBubble
+		getBubble: _getBubble,
+		newAdm: _newAdm
 	};
 });

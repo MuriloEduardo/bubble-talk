@@ -16,7 +16,7 @@ var usuarioSchema = mongoose.Schema({
 		senha: String
 	},
 	data_cadastro: {type: Date, default: Date.now},
-	propriedades: [],
+	bubbles: [],
 	notificacoes: []
 });
 
