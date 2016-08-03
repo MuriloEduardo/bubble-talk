@@ -17,7 +17,8 @@
     "jquery": "^3.0.0",
     "animate.css": "^3.5.2",
     "angular-ui-notification": "^0.2.0",
-    "angular-animate": "^1.5.8"
+    "angular-animate": "^1.5.8",
+    "angular-sanitize": "^1.5.8"
   },
   "install": {
     "path": "public/libs"

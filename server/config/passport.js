@@ -45,17 +45,21 @@ module.exports = function(passport){
 		passReqToCallback: true
 	},
 		function(req, email, senha, done){
+			console.log(email)
+			console.log(senha)
 			process.nextTick(function(){
-				Usuario.findOne({ 'local.email': email}, function(err, user){
+				Usuario.findOne({'local.email': email}, function(err, user){
 					if(err)
 						return done(err);
-					if(!user.local.senha)
-						return done(null, false, req.flash('loginAviso', 'Configure sua senha'));
-					if(!user)
+					if(!user){
 						return done(null, false, req.flash('loginAviso', 'Usuário não encontrado'));
-					if(!user.validPassword(senha)){
-						return done(null, false, req.flash('loginAviso', 'Senha inválida'));
+					}else{
+						if(!user.local.senha)
+							return done(null, false, req.flash('loginAviso', '<strong>Cadastro não confirmado!</strong> Configure sua nova senha <a href="/confirmacao/' + user._id + '" class="alert-click">clicando aqui</a>'));
 					}
+					if(!user.validPassword(senha))
+						return done(null, false, req.flash('loginAviso', 'Senha inválida'));
+
 					return done(null, user);
 				});
 			});

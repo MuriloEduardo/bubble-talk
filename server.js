@@ -53,6 +53,10 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
 	res.render('./login.ejs', {message_login: req.flash('loginAviso')});
 });
+// Confirmação
+app.get('/confirmacao/:id', function(req, res){
+	res.render('./confirmacao.ejs', {id: req.params.id});
+});
 // Landing
 app.get('/experimente-gratis', function(req, res){
 	res.render('./cadastrar.ejs', {message_cadastrar: req.flash('cadastrarAviso')});
@@ -68,12 +72,15 @@ app.use('/api', api);
 
 // Erro 404
 app.use(function(req, res) {
-	res.send('404: Page not Found', 404);
+	res.render('./pages-status/404.ejs');
+	console.log('************* 404: Page not Found');
+	console.log(res)
 });
 
 // Erro 500
 app.use(function(error, req, res, next) {
-	res.send('500: Internal Server Error' + error, 500);
+	res.render('./pages-status/500.ejs');
+	console.log('************* 500: Internal Server Error' + error);
 });
 
 server.listen(port, function(){

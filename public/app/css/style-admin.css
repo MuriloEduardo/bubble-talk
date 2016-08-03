@@ -434,14 +434,14 @@ ul.alert-dropdown {
     background-position: center;
 }
 .no-img-perfil{
-    background-image: url(../img/blank-profile-picture.png) !important;
+    background-image: url(../../img/blank-profile-picture.png) !important;
 }
 .top-new-chat{
-    background: -webkit-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
-    background: -moz-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
-    background: -o-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
-    background: -ms-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
-    background: linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/bg_flat_mountain.png);
+    background: -webkit-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../../img/bg_flat_mountain.png);
+    background: -moz-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../../img/bg_flat_mountain.png);
+    background: -o-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../img/../bg_flat_mountain.png);
+    background: -ms-linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../../img/bg_flat_mountain.png);
+    background: linear-gradient(270deg, rgba(0, 242, 212, .7), rgba(0, 213, 252, .7)), url(../../img/bg_flat_mountain.png);
     background-size: cover;
     color: #fff;
     font-size: 18px;
@@ -524,7 +524,7 @@ ul.alert-dropdown {
 }
 .no-chat-perfil{
     background-size: 45%;
-    background-image: url(../img/blank-chats-picture.png);
+    background-image: url(../../img/blank-chats-picture.png);
 }
 .comprar-new-chat{
     border-color: #fff;

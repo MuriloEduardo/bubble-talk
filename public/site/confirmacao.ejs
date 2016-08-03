@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Login - Bubble Talk</title>
+        <title>Confirmação de senha - Bubble Talk</title>
         
         <!--[if IE]><link rel="shortcut icon" href="../img/favicon.ico"><![endif]-->
 		<link rel="icon" href="../img/favicon.png">
@@ -19,7 +19,7 @@
         <link href="../libs/animate.css/animate.min.css" rel="stylesheet">
 
         <!-- Custom CSS -->
-        <link href="site/css/style-site.css" rel="stylesheet">
+        <link href="../site/css/style-site.css" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -35,50 +35,38 @@
         <!-- AngularJS -->
         <script src="../libs/angular/angular.min.js"></script>
         <script src="../libs/angular-sanitize/angular-sanitize.min.js"></script>
-        <script src="site/js/app.js"></script>
-        <script src="site/js/controllers/loginCtrl.js"></script>
+        <script src="../site/js/app.js"></script>
+        <script src="../site/js/controllers/confirmacaoCtrl.js"></script>
 	</head>
-	<body class="bg-animate-color" ng-controller="loginCtrl" ng-init="loadMsgLogin('<%= message_login %>')">
+	<body class="bg-animate-color" ng-controller="confirmacaoCtrl" ng-init="idUser='<%= id %>'">
 		<div class="vertical-center">
 			<div class="container login">
 				<div class="col-md-4 col-md-offset-4">
 					<div id="logotipo" class="bg-animate-color"><i class="material-icons">bubble_chart</i></div>
 					<div class="form-group">
-						<h2 class="text-center">Entre, fique a vontade!</h2>
+						<h2 class="text-center">Cadastre sua nova senha!</h2>
 					</div>
-					<div class="row">
-						<div class="col-md-6 col-sm-6 col-xs-6">
-							<div class="form-group">
-								<button class="btn btn-primary form-control">Facebook</button>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6">
-							<div class="form-group">
-								<button class="btn btn-danger form-control">Google</button>
-							</div>
-						</div>
-					</div>
-					<div class="separator"><div>ou</div></div>
-					<div class="alert alert-danger" ng-show="message_login">
+					<div class="alert alert-danger" ng-show="message_error">
 						<a href="#" target="_self" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-						<span ng-bind-html="message_login"></span>
+						<span ng-bind-html="message_error"></span>
 					</div>
-					<form action="/api/login" method="post" name="loginForm" ng-submit="message_login=undefined">
-						<div class="form-group">
-							<i class="material-icons">person</i>
-							<input type="email" class="form-control" placeholder="Seu email" name="email" ng-model="dados.email" required>
-						</div>
+					<div class="alert alert-success" ng-show="message_success">
+						<a href="#" target="_self" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<span ng-bind-html="message_success"></span>
+					</div>
+					<div class="alert alert-info" ng-show="message_primary">
+						<a href="#" target="_self" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<span ng-bind-html="message_primary"></span>
+					</div>
+					<form name="loginForm">
 						<div class="form-group">
 							<i class="material-icons">vpn_key</i>
-							<input type="password" class="form-control" placeholder="Sua senha" name="senha" ng-model="dados.senha" required>
-						</div>
-						<div class="form-group esqueci">
-							<a href="/experimente-gratis">Recupere sua senha facilmente</a>
+							<input type="password" class="form-control" placeholder="Informe sua nova senha" name="senha" ng-model="dados.senha" required>
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-default form-control" ng-disabled="loginForm.$invalid" ng-click="sended=true">
+							<button type="submit" class="btn btn-default form-control" ng-disabled="loginForm.$invalid" ng-click="sendConfirmacao(dados)">
 								<i class="material-icons rotate-animate" ng-show="sended">cached</i>
-								<span>Entrar</span>
+								<span>Cadastrar</span>
 							</button>
 						</div>
 					</form>

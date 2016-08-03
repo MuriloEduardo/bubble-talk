@@ -14,8 +14,8 @@ var conta = nodemailer.createTransport({
 
 module.exports = function(router, passport, io){
 
-	  ///////////////////////////////////////////////
-	 //                  USUARIOS                 //
+	///////////////////////////////////////////////
+	//                  USUARIOS                 //
 	///////////////////////////////////////////////
 
 	// CADASTRAR UM NOVO USUARIO
@@ -89,8 +89,36 @@ module.exports = function(router, passport, io){
 		res.redirect('/login');
 	});
 
-	  ///////////////////////////////////////////////
-	 //                     BUBBLES               //
+	router.put('/confirmacao', function(req, res){
+		Usuario.findOne({_id: req.body.id}, function(err, data){
+			console.log(!data)
+			if(!data){
+				// Id da url nao encontrado
+				res.json({res: 404});
+			}else if(data.local.senha){
+				// Senha ja cadastrada
+				res.json({res: false});
+			} else{
+				var newUser = data;
+				newUser.local = {
+					email: data.local.email, 
+					senha: Usuario().generateHash(req.body.senha)
+				};
+
+				newUser.save(function(err, data2){
+					if(err){
+						throw err;
+					}else{
+						// Efetuar login
+						res.json({res: data2});
+					}
+				});
+			}
+		});
+	});
+
+	///////////////////////////////////////////////
+	//                   BUBBLES                 //
 	///////////////////////////////////////////////
 
 	// CRIAR UM NOVO BUBBLE //
@@ -155,14 +183,13 @@ module.exports = function(router, passport, io){
 
 			Usuario.find({_id: { $in: data1.administradores.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data2){
 				data1.administradores = data2;
-				console.log(data1)
 				res.json(data1);
 			});
 
 			var namespace = io.of('/' + req.params.appname);
 			namespace.on('connection', function (socket) {
 				// Transmitir a todos que usuario entrou na propriedade
-				socket.emit('conectado', {nome: req.user.nome});
+				namespace.emit('conectado', {nome: req.user.nome});
 			});
 		});
 	});
