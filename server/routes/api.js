@@ -3,6 +3,7 @@ var Bubble = require('../models/bubble');
 var mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
+var path = require('path');
 
 var conta = nodemailer.createTransport({
     service: 'Gmail',
@@ -178,6 +179,7 @@ module.exports = function(router, passport, io){
 	});
 
 	// LISTAR UM CHAT //
+	var i = 0;
 	router.get('/bubbles/:appname', isLoggedIn, function(req, res){
 		Bubble.findOne({'dados.appname': req.params.appname}, function(err, data1){
 
@@ -187,10 +189,7 @@ module.exports = function(router, passport, io){
 			});
 
 			var namespace = io.of('/' + req.params.appname);
-			namespace.on('connection', function (socket) {
-				// Transmitir a todos que usuario entrou na propriedade
-				namespace.emit('conectado', {nome: req.user.nome});
-			});
+			namespace.emit('conectado', {nome: req.user.nome});
 		});
 	});
 
@@ -206,6 +205,17 @@ module.exports = function(router, passport, io){
 		Bubble.find({_id: { $in: req.user.bubbles.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
 			res.json(data);
 		});
+	});
+
+	router.get('/appexterno/:appname', function(req, res){
+		res.sendFile('app-externo/importa-arquivos.js', { root: path.join(__dirname, '../../public') });
+
+		var namespace = io.of('/' + req.params.appname);
+		namespace.emit('conectado', {msg: 'oaisjkdoiajdoiajsdoaijsdoas'});
+	});
+
+	router.get('/jsMain', function(req, res){
+		res.sendFile('app-externo/js/main.js', { root: path.join(__dirname, '../../public') });
 	});
 };
 

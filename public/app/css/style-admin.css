@@ -64,6 +64,32 @@ body {
     50%{background-position:50% 100%}
     100%{background-position:51% 0%}
 }
+
+@-webkit-keyframes rotateAnimate {
+  from { -webkit-transform: rotate(0deg);}
+  to { -webkit-transform: rotate(-360deg);}
+}
+
+@-moz-keyframes rotateAnimate {
+  from { -webkit-transform: rotate(0deg);}
+  to { -webkit-transform: rotate(-360deg);}
+}
+@-o-keyframes rotateAnimate {
+  from { -webkit-transform: rotate(0deg);}
+  to { -webkit-transform: rotate(-360deg);}
+}
+@keyframes rotateAnimate {
+  from { -webkit-transform: rotate(0deg);}
+  to { -webkit-transform: rotate(-360deg);}
+}
+.rotate-animate {
+  -moz-animation: rotateAnimate .7s infinite linear;
+  -webkit-animation: rotateAnimate .7s infinite linear;
+  -o-animation: rotateAnimate .7s infinite linear;
+  -ms-animation: rotateAnimate .7s infinite linear;
+  animation: rotateAnimate .7s infinite linear;
+}
+
 #wrapper {
     padding-left: 0;
     height:100%;
@@ -321,6 +347,7 @@ ul.alert-dropdown {
 }
 .panel{
     box-shadow: 0 1.5px 3px rgba(100,100,100,.16), 0 1.5px 3px rgba(100,100,100,.23);
+    border: none;
 }
 .panel-green {
     border-color: #5cb85c;
@@ -549,6 +576,14 @@ ul.alert-dropdown {
 }
 .sizing-more-input{
     padding: 30px;
+}
+.input-new-adm{
+    border: 1px solid #fff;
+    box-shadow: none;
+}
+.input-new-adm.form-control:focus{
+    border-color: transparent;
+    box-shadow: none; 
 }
 .link-and-input div{
     display: inline-block;

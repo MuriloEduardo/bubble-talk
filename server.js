@@ -12,7 +12,7 @@ var flash = require('connect-flash');
 var path = require('path');
 var api = express.Router();
 
-var port = process.env.PORT || 10;
+var port = process.env.PORT || 50;
 
 var configDB = require('./server/config/database');
 mongoose.connect(configDB.url, function(err, res) {
@@ -73,14 +73,11 @@ app.use('/api', api);
 // Erro 404
 app.use(function(req, res) {
 	res.render('./pages-status/404.ejs');
-	console.log('************* 404: Page not Found');
-	console.log(res)
 });
 
 // Erro 500
 app.use(function(error, req, res, next) {
-	res.render('./pages-status/500.ejs');
-	console.log('************* 500: Internal Server Error' + error);
+	res.render('./pages-status/500.ejs', {error: error});
 });
 
 server.listen(port, function(){

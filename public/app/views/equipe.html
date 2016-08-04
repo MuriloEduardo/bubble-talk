@@ -5,10 +5,10 @@
 				<div class="panel-body">
 					<div class="link-and-input">
 						<div>
-							<input type="email" class="form-control sizing-more-input" ng-model="dados.local.email" placeholder="Qual o email do novo administrador? Separe por vírgulas.">
+							<input type="email" class="form-control sizing-more-input input-new-adm" ng-model="dados.local.email" placeholder="Qual o email do novo administrador?">
 						</div>
 						<div>
-							<a href="javascript:void(0)" class="sizing-more-input text-center" ng-disabled="!dados" ng-click="newAdm(dados)"><i class="material-icons">send</i></a>
+							<a href="javascript:void(0)" class="sizing-more-input text-center" ng-disabled="!dados" ng-click="newAdm(dados)"><i class="material-icons" ng-class="{'rotate-animate': loadNewAdm}">{{loadNewAdm && 'cached' || 'send'}}</i></a>
 						</div>
 					</div>
 				</div>
