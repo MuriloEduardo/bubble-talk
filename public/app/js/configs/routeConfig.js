@@ -17,6 +17,11 @@ app.config(function ($routeProvider, $locationProvider) {
         controller: 'newBubbleCtrl'
     })
 
+    .when('/sua-conta', {
+        templateUrl: 'views/sua-conta.html',
+        controller: 'suaContaCtrl'
+    })
+
     .when('/:appname', {
         templateUrl: 'views/bubble.html',
         controller: 'bubbleCtrl',

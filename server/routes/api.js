@@ -55,10 +55,10 @@ module.exports = function(router, passport, io){
 								}else{
 
 									conta.sendMail({
-										from: 'Seu Nome <muriloeduardoooooo@gmail.com>',
-										to: 'Alan Hoffmeister <muriloeduardoooooo@gmail.com>',
-										subject: 'Estou testando seu gist',
-										html: '<strong>Oi Alan!</strong><p>Estou testando seu gist para enviar e-mails, amo você!</p>'
+										from: 'Bubble Talk <muriloeduardoooooo@gmail.com>',
+										to: 'Murilo Santinhos <muriloeduardoooooo@gmail.com>',
+										subject: 'Parabéns! Você foi convidado para se tornar um membro de equipe',
+										html: '<table width="600px" cellspacing="0" cellpadding="30" border="0" style="margin:auto;"><tr><td width="100%" height="300px" bgcolor="#00f2d4" valign="top" style="color:#fff;"><h2 style="font-size:2em;font-family: Open Sans,Lucida Grande,Segoe UI,Arial,Verdana,Lucida Sans Unicode,Tahoma,Sans Serif;">Convite para voc&ecirc; se tornar um membro da equipe ' + data2.dados.appname + '</h2><p style="text-align:center;margin-top:80px;"><a href="http://127.0.0.1:10/confirmacao/' + data1._id + '" style="text-decoration:none;padding:15px 30px;border-radius:30px;background-color:#fff;color:#00f2d4;text-align:center;cursor:pointer;font-size:22px;font-family: Open Sans,Lucida Grande,Segoe UI,Arial,Verdana,Lucida Sans Unicode,Tahoma,Sans Serif;"><b>Cadastrar sua nova senha</b></a></p></td></tr><tr><td width="100%" height="200px" bgcolor="#fbfbfb" valign="top"><h1 style="color:#555;font-family: Open Sans,Lucida Grande,Segoe UI,Arial,Verdana,Lucida Sans Unicode,Tahoma,Sans Serif;">Por que estou recebendo este email?</h1><p style="color:#555;font-family: Open Sans,Lucida Grande,Segoe UI,Arial,Verdana,Lucida Sans Unicode,Tahoma,Sans Serif;">Algum administrador lhe enviou um convite para se tornar um membro da equipe do chat ' + data2.dados.appname + '.</p><p style="text-align:center;margin:60px 0 20px 0;"><a href="#" style="text-decoration:none;padding:15px;border-radius:30px;background-color:#00f2d4;color:#fff;text-align:center;cursor:pointer;font-family: Open Sans,Lucida Grande,Segoe UI,Arial,Verdana,Lucida Sans Unicode,Tahoma,Sans Serif;"><b>D&uacute;vidas? Clique aqui</b></a></p></td></tr><tr><td width="100%" bgcolor="#f1f1f1" valign="top"><p style="text-align:center;color:#555;font-family: Open Sans,Lucida Grande,Segoe UI,Arial,Verdana,Lucida Sans Unicode,Tahoma,Sans Serif;">Fique tranquilo, tamb&eacute;m odiamos spam :)</p></td></tr></table>'
 									}, function(err){
 										if(err)
 											throw err;

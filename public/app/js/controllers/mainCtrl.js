@@ -17,7 +17,14 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams)
 		$rootScope.user = JSON.parse(user);
 	}
 
+	// Navega entre as pages depois do appname
 	$scope.goInternalPages = function(destino) {
 		$location.path('/' + $routeParams.appname + '/' + destino);
+	}
+
+	// Define qual item do meu o suario esta
+	// SOmente para urls depois do nome do aplicativo
+	$scope.isActive = function (path) {
+		return ($location.path().split('/')[2] === path) ? 'active' : '';
 	}
 });

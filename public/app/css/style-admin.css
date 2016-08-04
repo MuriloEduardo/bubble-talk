@@ -581,9 +581,9 @@ ul.alert-dropdown {
     background-color: rgba(255,255,255,.3);
     border-top-color: rgba(255,255,255,.3);
 }
-.ng-enter{
+.panel.ng-enter{
     animation: .8s bounceInDown;
 }
-.ng-leave{
+.panel.ng-leave{
     animation: .8s bounceOutUp;
 }

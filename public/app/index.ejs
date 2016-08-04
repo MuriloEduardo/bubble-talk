@@ -62,6 +62,7 @@
         <script src="js/controllers/newBubbleCtrl.js"></script>
         <script src="js/controllers/bubbleCtrl.js"></script>
         <script src="js/controllers/equipeCtrl.js"></script>
+        <script src="js/controllers/suaContaCtrl.js"></script>
     </head>
     <body class="bg-animate-color" ng-controller="mainCtrl" ng-init="loadUser('<%= user %>')">
         <div id="wrapper" ng-style="!menuLeft && {'padding-left':'0'}">
@@ -177,7 +178,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                                <a href="./sua-conta"><i class="fa fa-fw fa-user"></i> Profile</a>
                             </li>
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
@@ -194,20 +195,17 @@
                 </ul>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav" ng-show="menuLeft">
-                        <li class="active">
+                        <li ng-class="isActive('conversas')">
                             <a href="javascript:void(0)"><i class="material-icons">chat</i><span>Conversas</span></a>
                         </li>
-                        <li>
+                        <li ng-class="isActive('aparencia')">
                             <a href="javascript:void(0)"><i class="material-icons">format_paint</i><span>Aparência</span></a>
                         </li>
-                        <li>
-                            <a href="javascript:void(0)"><i class="material-icons">settings</i><span>Configurações</span></a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)"><i class="material-icons">timeline</i><span>Estatísticas</span></a>
-                        </li>
-                        <li>
+                        <li ng-class="isActive('equipe')">
                             <a href="javascript:void(0)" ng-click="goInternalPages('equipe')"><i class="material-icons">people</i><span>Equipe</span></a>
+                        </li>
+                        <li ng-class="isActive('configuracoes')">
+                            <a href="javascript:void(0)"><i class="material-icons">settings</i><span>Configurações</span></a>
                         </li>
                     </ul>
                 </div>
