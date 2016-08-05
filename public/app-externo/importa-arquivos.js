@@ -1,3 +1,10 @@
+/*
+  Este arquivo é disponibilizado na api, para clientes
+  Ele é responsável quando o usuario coloca a tag script fornecida e ele em seu site
+
+  Será responsável também por verificar se já existe as libs necessárias
+  Caso ja tenha, não seria necessário sobrecarregar o site
+*/
 (
 	function() {
     writeDependecies([

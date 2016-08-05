@@ -53,6 +53,9 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
 	res.render('./login.ejs', {message_login: req.flash('loginAviso')});
 });
+app.get('/teste', function(req, res){
+	res.render('./teste.ejs', {message_login: req.flash('loginAviso')});
+});
 // Confirmação
 app.get('/confirmacao/:id', function(req, res){
 	res.render('./confirmacao.ejs', {id: req.params.id});
