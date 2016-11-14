@@ -100,8 +100,7 @@ io.sockets.on('connection', function(socket) {
 			criado: new Date(),
 			canal: data.canal,
 			remetente: data.remetente,
-			client_socket_id: data.client_socket_id,
-			visulizado: false
+			client_socket_id: data.client_socket_id
 		}
 
 		io.sockets.emit('nova mensagem', conversaData);
@@ -132,9 +131,19 @@ io.sockets.on('connection', function(socket) {
 		trocaCanal(novoCanal);
 	});
 
-	socket.on('visulizar', function(cliente) {
-		if(usuarios[cliente.client_socket_id]) {
-			usuarios[cliente.client_socket_id].emit('visulizou', cliente);
+	socket.on('visualizar', function(infosAdm) {
+		if(usuarios[infosAdm.client_socket_id]) {
+			
+			console.log(infosAdm.conversas)
+
+			usuarios[infosAdm.client_socket_id].emit('visualizou', infosAdm);
+
+			// Salvar no banco de dados
+			Usuario.update({_id: infosAdm.canal_atual},{
+				"$set": {conversas: infosAdm.conversas}
+			},function(err) {
+				if(err) throw err;
+			});
 		}
 	});
 

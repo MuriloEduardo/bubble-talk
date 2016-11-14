@@ -116,7 +116,7 @@ ul.navbar-nav[ng-show="menuLeft"] {
     }
 
     #page-wrapper {
-        padding: 25px 0;
+        padding: 50px 0;
         margin-left: 15px;
     }
 }
@@ -722,11 +722,8 @@ label{
     color: #fff;
     font-size: 16px;
 }
-.conversas-container {
-    height: 100%;
-}
 .col-side {
-    height: 100%;
+    height: 455px;
 }
 .conversas-body{
     background-color: #fff;
@@ -745,13 +742,13 @@ label{
     padding-left: 0;
 }
 .cada-canal {
-    padding: 25px 15px;
+    padding: 20px 15px;
     cursor: pointer;
     color: #777;
     border-bottom: solid thin #f7f7f7;
 }
 .cada-canal:hover {
-    background-color: #f8f8f8;
+    background-color: #f4f5f5;
     color: #333;
 }
 .cada-canal .canal-nome,
@@ -767,27 +764,41 @@ label{
     margin-bottom: 0;
 }
 .chat-canal-0 {
-    height: calc(100% - 260px);
-    border-left: solid thin #f7f7f7;
     background-color: #f8f8f8;
 }
+
+.avisos-canal-0::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: -webkit-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -moz-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -o-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -ms-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: linear-gradient(0deg, #00f2d4, #00d5fc);
+}
 .chat-canal-0 .body-chat {
-    /* height: calc(100% - 85px); */
-    height: 300px;
+    width: 100%;
+    position: relative;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.eng-body-chat {
+    padding: 0;
     background-color: #e5ddd5;
     background-image: url('../../img/bg.jpg');
     background-repeat: repeat;
-    width: 100%;
-    padding: 15px 0;
-    overflow-y: auto;
-    position: relative;
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-    z-index: 1;
+}
+.scrollme {
+    height: 370px;
+    max-height: 370px;
 }
 .chat-canal-0 footer {
     position: relative;
     padding: 15px;
-    background-color: #e7e7e7;
+    background-color: #f5f1ee;
 }
 .chat-canal-0 footer textarea {
     border-color: #f8f8f8;
@@ -805,6 +816,31 @@ label{
 }
 .chat-canal-0 footer a.actions.emoticos {
     right: 69px;
+}
+.avisos-canal-0 {
+    text-align: center;
+    vertical-align: middle;
+    color: #777;
+    padding: 100px;
+    border: solid thin #e7e7e7;
+}
+.bola-gradient {
+    width:150px;
+    height:150px;
+    border-radius:100%;
+    color:#fff;
+    text-align:center;
+    display:inline-block;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background: -webkit-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -moz-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -o-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: -ms-linear-gradient(0deg, #00f2d4, #00d5fc);
+    background: linear-gradient(0deg, #00f2d4, #00d5fc);
+}
+.avisos-canal-0 i {
+    font-size: 80px;
+    line-height: 145px;
 }
 .container-content {
     height: 100%;
@@ -952,8 +988,8 @@ form {margin:0;}
     word-break: break-all;
     white-space: normal;
 }
-.sem-dono {
-    background-color: #eee;
+.current-cliente {
+    background-color: #e9ebeb;
 }
 .load-icon-modal {
     color: #fff;
@@ -983,4 +1019,38 @@ form {margin:0;}
   to {
     width: 1.25em;    
   }
+}
+.ngsb-wrap .ngsb-scrollbar {
+    width: 6px !important;
+}
+.eng-msgs {
+    padding: 10px 0;
+    float: left;
+}
+.ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos {
+    transition: all .8s cubic-bezier(.25,.8,.25,1);
+    -moz-transition: all .8s cubic-bezier(.25,.8,.25,1);
+    -o-transition: all .8s cubic-bezier(.25,.8,.25,1);
+}
+.ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos .ngsb-thumb {
+    border-radius: 0 !important;
+    background: rgba(0,0,0,.3) !important;
+    width: 100% !important;
+}
+.ngsb-wrap .ngsb-scrollbar .ngsb-track {
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+.nao-visu {
+    width: auto;
+    height: auto;
+    color: #fff;
+    margin: 7px 0;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 100%;
+    line-height: 22px;
+    font-size: 11px;
+    padding: 2px 4px;
+    border: solid 2px #fff;
 }

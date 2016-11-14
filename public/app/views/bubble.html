@@ -21,19 +21,16 @@
 				</nav>
 				<div class="chamados-clientes">
 					<!-- Conversas -->
-					<div ng-repeat="cliente in clientes" ng-class="{'sem-dono': cliente.canal == infosAdm.bubble_id}" class="cada-canal" ng-click="trocarCliente(cliente)" ng-if="cliente.canal == infosAdm.bubble_id || cliente.canal == user._id">
+					<div ng-repeat="cliente in clientes" ng-class="{'bg-animate-color': cliente.canal == infosAdm.bubble_id, 'current-cliente': cliente.client_socket_id == infosAdm.client_socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)" ng-if="cliente.canal == infosAdm.bubble_id || cliente.canal == user._id">
 						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 						<div class="canal-nome">
 							<div>{{cliente.client_socket_id}}</div>
-							<div class="sub-desc"><span ng-class="{'loading': cliente.client_digitando}">{{cliente.client_digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+							<div class="sub-desc"><span ng-class="{'loading': cliente.client_digitando}">{{cliente.client_digitando ? 'digitando ' : cliente.ultima_msg.msg}}</span></div>
 						</div>
-						<div class="canal-nome pull-right">
-							<i class="material-icons">&#xE315;</i>
+						<div class="canal-nome pull-right" ng-if="cliente.nao_visulizadas">
+							<div ng-bind="cliente.ultima_msg.criado | date:'HH:mm'" class="hrMsg"></div>
+							<div class="nao-visu bg-animate-color">{{cliente.nao_visulizadas}}</div>
 						</div>
-						<!-- <div ng-repeat="msg in messages" ng-if="msg.canal == infosAdm.canal_atual && msg.socket_id == cliente.client_socket_id">
-							{{msg.msg}}
-						</div>
-						<i class="material-icons" ng-if="!cliente.visulizado">&#xE3FA;</i> -->
 					</div>
 				</div>
 			</div>
@@ -58,33 +55,40 @@
 				  </div>
 				</nav>
 				<div class="chat-canal-0">
-			    	<div ng-show="!textareaBody">
-			    		<p class="text-center">Clique sobre uma conversa para tornar-se sua</p>
-			    	</div>
-			    	<div id="body" class="body-chat scrollme" ng-show="textareaBody" rebuild-on="rebuild:me" ng-scrollbar>
-						<div ng-repeat="msg in messages" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
-							<div class="msg" ng-class="{'right-msg': !msg.remetente}">
-								<div class="MsgEmSi wrapword">{{msg.msg}}</div>
-								<div class="statusMsg" ng-if="msg.remetente">
-									<i class="material-icons" ng-show="$index < 5">&#xE5CA;</i>
-									<i class="material-icons vzldo" ng-show="$index > 5">&#xE877;</i>
+			    	<div ng-show="textareaBody">
+				    	<div class="eng-body-chat">
+					    	<div id="body" class="body-chat scrollme" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
+								<div class="eng-msgs">
+									<div ng-repeat="msg in messages" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
+										<div class="msg" ng-class="{'right-msg': !msg.remetente}">
+											<div class="MsgEmSi wrapword">{{msg.msg}}</div>
+											<div class="statusMsg" ng-if="msg.remetente">
+												<i class="material-icons" ng-class="{'vzldo': msg.visualizado}">&#xE877;</i>
+											</div>
+											<div ng-bind="msg.criado | date:'HH:mm'" class="hrMsg"></div>
+										</div>
+									</div>
 								</div>
-								<div ng-bind="msg.criado | date:'HH:mm'" class="hrMsg"></div>
-							</div>
-						</div>
+					    	</div>
+				    	</div>
+				    	<footer>
+				    		<textarea class="form-control" placeholder="Digite uma mensagem" ng-model="message" ng-change="typing()" enter-submit="enviaMsg(message)"></textarea>
+				    		<a href="#" class="actions emoticos">
+								<i class="material-icons">&#xE420;</i>
+							</a>
+							<a href="#" class="actions anexo" ng-show="!message">
+								<i class="material-icons">&#xE226;</i>
+							</a>
+							<a href="javascript:void(0)" ng-click="enviaMsg(message)" class="actions send" ng-show="message">
+								<i class="material-icons">&#xE163;</i>
+							</a>
+				    	</footer>
 			    	</div>
-			    	<footer ng-show="textareaBody">
-			    		<textarea class="form-control" placeholder="Responda carinhosamente a este usuário" ng-model="message" ng-change="typing()" enter-submit="enviaMsg(message)"></textarea>
-			    		<a href="#" class="actions emoticos">
-							<i class="material-icons">&#xE420;</i>
-						</a>
-						<a href="#" class="actions anexo" ng-show="!message">
-							<i class="material-icons">&#xE226;</i>
-						</a>
-						<a href="javascript:void(0)" ng-click="enviaMsg(message)" class="actions send" ng-show="message">
-							<i class="material-icons">&#xE163;</i>
-						</a>
-			    	</footer>
+			    	<div ng-show="!textareaBody" class="avisos-canal-0">
+			    		<p><div class="bola-gradient"><i class="material-icons">&#xE913;</i></div></p>
+			    		<p><h2>Hey!</h2></p>
+			    		<p>Clique sobre uma nova conversa ao lado para tornar-la sua e particular.</p>
+			    	</div>
 			    </div>
 			</div>
 		</div>

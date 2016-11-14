@@ -706,8 +706,7 @@
 					socket_id: $scope.infosUsuario.socket_id, 
 					canal: $scope.infosUsuario.canal_atual,
 					client_socket_id: $scope.infosUsuario.socket_id,
-					remetente: false,
-					visualizado: false
+					remetente: false
 				}
 
 				socket.emit('enviar mensagem', send_mensagem);
@@ -725,7 +724,6 @@
 			});
 
 			socket.on('digitando', function(data) {
-				console.log(data)
 				if(data.usuario.socket_id != $scope.infosUsuario.socket_id && data.usuario.socket_id == $scope.infosUsuario.canal_atual) {
 					$scope.safeApply(function() {
 						$scope.infosUsuario.client_digitando = data.digitando;
@@ -788,11 +786,11 @@
 				}
 			});
 
-			socket.on('visulizou', function(cliente) {
+			socket.on('visualizou', function(cliente) {
 				for (var i = 0; i < $scope.messages.length; i++) {
 					if($scope.messages[i].client_socket_id == cliente.client_socket_id) {
 						$scope.safeApply(function() {
-							$scope.messages[i].visulizado = true;
+							$scope.messages[i].visualizado = true;
 						});
 					}
 				}
