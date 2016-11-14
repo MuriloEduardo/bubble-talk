@@ -25,6 +25,9 @@
         <!-- Notificações UI Angular -->
         <link rel="stylesheet" href="../libs/angular-ui-notification/angular-ui-notification.min.css">
 
+        <!-- Scrol Personalizado com AngularJS -->
+        <link rel="stylesheet" href="../libs/angular-scrollbar/ng-scrollbar.min.css">
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -45,10 +48,13 @@
         <script src="../libs/angular-route/angular-route.min.js"></script>
         <script src="../libs/angular-animate/angular-animate.min.js"></script>
 
-        <script src="js/app.js"></script>
-
         <!-- Notificações UI Angular -->
         <script src="../libs/angular-ui-notification/angular-ui-notification.min.js"></script>
+
+        <!-- Scrol Personalizado com AngularJS -->
+        <script src="../libs/angular-scrollbar/ng-scrollbar.min.js"></script>
+
+        <script src="js/app.js"></script>
 
         <script src="js/configs/routeConfig.js"></script>
         <script src="js/configs/notificationConfig.js"></script>
@@ -63,20 +69,22 @@
         <script src="js/controllers/bubbleCtrl.js"></script>
         <script src="js/controllers/equipeCtrl.js"></script>
         <script src="js/controllers/suaContaCtrl.js"></script>
+
+        <script src="js/directives/enterSubmit.js"></script>
     </head>
-    <body class="bg-animate-color" ng-controller="mainCtrl" ng-init="loadUser('<%= user %>')">
+    <body ng-controller="mainCtrl" ng-init="loadUser('<%= user %>')">
         <div id="wrapper" ng-style="!menuLeft && {'padding-left':'0'}">
             <!-- Navigation -->
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse" ng-show="menuLeft">
-                        <span class="sr-only">Abre e fecha menu</span>
+                        <span class="sr-only">Menu</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/app/">
+                    <a class="navbar-brand" href="javascript:void(0)" ng-click="goInternalPages('app')">
                         <div id="logotipo"><i class="material-icons">bubble_chart</i></div>
                     </a>
                 </div>
@@ -173,12 +181,12 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle perfil-toggle" data-toggle="dropdown">
-                            <div>{{user.nome}}</div>
+                            <div class="descricoes">{{firstName(user)}}</div>
                             <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="./sua-conta"><i class="fa fa-fw fa-user"></i> Profile</a>
+                                <a href="javascript:void(0)" ng-click="go('sua-conta')"><i class="fa fa-fw fa-user"></i> Profile</a>
                             </li>
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
@@ -188,15 +196,15 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="/api/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                                <a href="javascript:void(0)" ng-click="go('/api/logout')"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                             </li>
                         </ul>
                     </li>
                 </ul>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav side-nav" ng-show="menuLeft">
-                        <li ng-class="isActive('conversas')">
-                            <a href="javascript:void(0)"><i class="material-icons">chat</i><span>Conversas</span></a>
+                    <ul class="nav navbar-nav side-nav bg-animate-color" ng-show="menuLeft">
+                        <li ng-class="isActive('bubble')">
+                            <a href="javascript:void(0)" ng-click="goInternalPages('bubble')"><i class="material-icons">chat</i><span>Conversas</span></a>
                         </li>
                         <li ng-class="isActive('aparencia')">
                             <a href="javascript:void(0)"><i class="material-icons">format_paint</i><span>Aparência</span></a>
@@ -211,8 +219,12 @@
                 </div>
             </nav>
             <div id="page-wrapper">
-                <div class="container-fluid" ng-view>
-                </div>
+                <div class="container-fluid container-content" ng-view></div>
+            </div>
+        </div>
+        <div class="modal fade" id="load-modal" tabindex="-1" role="dialog" aria-labelledby="load-modal">
+            <div class="modal-dialog" role="document">
+                <i class="rotate-animate material-icons load-icon-modal">cached</i>
             </div>
         </div>
     </body>

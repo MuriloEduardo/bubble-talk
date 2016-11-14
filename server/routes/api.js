@@ -13,6 +13,7 @@ var conta = nodemailer.createTransport({
     }
 });
 
+
 module.exports = function(router, passport, io){
 
 	///////////////////////////////////////////////
@@ -31,7 +32,18 @@ module.exports = function(router, passport, io){
 		successRedirect: '/app',
 		failureRedirect: '/login',
 		failureFlash: true
-	}));
+	}),
+	function(req, res) {
+		console.log('req.body')
+		console.log(req.body)
+		return
+		if (req.body.remember) {
+			req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // Cookie expires after 30 days
+		} else {
+			req.session.cookie.expires = false; // Cookie expires at end of session
+		}
+		res.redirect('/');
+	});
 
 	// CRIAR NOVO ADMINISTRADOR //
 	router.post('/new-adm', isLoggedIn, function(req, res){
@@ -92,7 +104,6 @@ module.exports = function(router, passport, io){
 
 	router.put('/confirmacao', function(req, res){
 		Usuario.findOne({_id: req.body.id}, function(err, data){
-			console.log(!data)
 			if(!data){
 				// Id da url nao encontrado
 				res.json({res: 404});
@@ -115,6 +126,27 @@ module.exports = function(router, passport, io){
 					}
 				});
 			}
+		});
+	});
+
+	// EDITAR UM USUARIO //
+	router.post('/usuario/:id', isLoggedIn, function(req, res){
+		Usuario.findOne({_id: req.params.id}, function(err, data){
+
+			var usuario         = data;
+			usuario.nome        = req.body.nome;
+			usuario.local.email = req.body.local.email;
+			
+			if(req.body.local.senha)
+				usuario.local.senha = usuario.generateHash(req.body.local.senha);
+
+			usuario.save(function(err, data){
+				if(err){
+					throw err;
+				}else{
+					res.json(data);
+				}
+			});
 		});
 	});
 
@@ -179,17 +211,16 @@ module.exports = function(router, passport, io){
 	});
 
 	// LISTAR UM CHAT //
-	var i = 0;
-	router.get('/bubbles/:appname', isLoggedIn, function(req, res){
-		Bubble.findOne({'dados.appname': req.params.appname}, function(err, data1){
+	router.get('/bubbles/:app_id', isLoggedIn, function(req, res){
+
+		Bubble.findOne({'_id': req.params.app_id}, function(err, data1){
 
 			Usuario.find({_id: { $in: data1.administradores.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data2){
+				
 				data1.administradores = data2;
+
 				res.json(data1);
 			});
-
-			var namespace = io.of('/' + req.params.appname);
-			namespace.emit('conectado', {nome: req.user.nome});
 		});
 	});
 
@@ -207,15 +238,14 @@ module.exports = function(router, passport, io){
 		});
 	});
 
-	router.get('/appexterno/:appname', function(req, res){
-		res.sendFile('app-externo/importa-arquivos.js', { root: path.join(__dirname, '../../public') });
-
-		var namespace = io.of('/' + req.params.appname);
-		namespace.emit('conectado', {msg: 'oaisjkdoiajdoiajsdoaijsdoas'});
-	});
-
-	router.get('/jsMain', function(req, res){
-		res.sendFile('app-externo/js/main.js', { root: path.join(__dirname, '../../public') });
+	//////////////////
+	// APP EXTERNO //
+	////////////////
+	
+	// Arquivo para carregar todos arquivos locais
+	// e libs necessárias
+	router.get('/app-externo', function(req, res){
+		res.sendFile('app-externo/bubble-talk.js', { root: path.join(__dirname, '../../public') });
 	});
 };
 

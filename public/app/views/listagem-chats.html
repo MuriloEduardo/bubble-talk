@@ -1,7 +1,7 @@
 <div class="row">
-	<div class="col-md-8 col-md-offset-2">
+	<div class="col-md-10 col-md-offset-1">
 		<div class="col-md-8">
-			<div class="cada-chat" data-icon="input" ng-repeat="chat in allChats" ng-click="openChat(chat.dados.appname)">
+			<div class="cada-chat bg-animate-color" data-icon="input" ng-repeat="chat in allChats" ng-click="openChat(chat._id)">
 				<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}"></div>
 				<div class="desc-bubble">
 					<div class="nome">
@@ -19,7 +19,7 @@
 					<div class="form-group top-new-chat">
 						Você pode adicionar diversos chat's à sua conta. 
 					</div>
-					<a href="./new-bubble" class="btn btn-primary form-control btn-with-icon"><i class="material-icons pull-left">add_shopping_cart</i> Novo Chat</a>
+					<a href="javascript:void(0)" ng-click="go('new-bubble')" class="btn btn-primary form-control btn-with-icon"><i class="material-icons pull-left">add_shopping_cart</i> Novo Chat</a>
 				</div>
 			</div>
 		</div>

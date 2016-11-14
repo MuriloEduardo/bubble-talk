@@ -75,22 +75,6 @@ button.form-control{
     background-color: rgba(255,255,255,.9);
     border:none;
 }
-.btn:focus{
-	outline: none;
-}
-.form-control::-webkit-input-placeholder {
-   color: #fff;
-}
-.form-control:-moz-placeholder {
-   color: #fff;  
-}
-.form-control::-moz-placeholder {
-   color: #fff;  
-}
-
-.form-control:-ms-input-placeholder {  
-   color: #fff;  
-}
 
 .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus{
 	outline: none;

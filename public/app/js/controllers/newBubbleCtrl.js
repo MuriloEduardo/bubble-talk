@@ -1,4 +1,10 @@
-app.controller('newBubbleCtrl', function($scope, Api, Notification){
+app.controller('newBubbleCtrl', function($rootScope, $scope, Api, Notification){
+
+	// Mostrar ou não load de carregamento das views
+	// Será ativada ao clicar para trocar
+	// E escondida quando chegar em outro controller
+	$rootScope.loadViews(false);
+	
 	$scope.cadastro = function(obj) {
 		
 		obj.dados.appname = obj.dados.appname.replace(/ /g, '-');

@@ -16,14 +16,13 @@
 		</div>
 	</div>
 	<div class="row" ng-show="equipe.length">
-		<div ng-repeat="adm in equipe" class="col-md-4">
+		<div ng-repeat="adm in equipe" class="col-md-3">
 	        <div class="panel cada-adm">
-	        	<div class="panel-body">
-	        		<p><label>{{adm.local.email}}</label></p>
+	        	<div class="panel-body text-center">
+	        		<div ng-if="adm.local.senha" class="foto-adm" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+	        		<p class="email-adm" ng-if="adm.nome">{{adm.nome}}</p>
+	        		<p class="email-adm">{{adm.local.email}}</p>
 	        		<span ng-if="!adm.local.senha" class="label label-danger">Aguardando este administrador cadastrar sua senha.</span>
-	        	</div>
-	        	<div class="panel-footer">
-	        		{{adm.data_cadastro | date}}
 	        	</div>
 	        </div>
 	    </div>

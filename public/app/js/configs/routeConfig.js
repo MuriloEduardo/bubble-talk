@@ -22,24 +22,34 @@ app.config(function ($routeProvider, $locationProvider) {
         controller: 'suaContaCtrl'
     })
 
-    .when('/:appname', {
+    .when('/:app_id', {
         templateUrl: 'views/bubble.html',
         controller: 'bubbleCtrl',
         resolve: {
             bubble: function (Api, $route, $location){
-                Api.getBubble($route.current.params.appname).success(function(data){ if(!data) $location.path('/') });
-                return Api.getBubble($route.current.params.appname);
+                return Api.getBubble($route.current.params.app_id);
             }
         }
     })
 
-    .when('/:appname/equipe', {
+    .when('/:app_id/bubble', {
+        templateUrl: 'views/bubble.html',
+        controller: 'bubbleCtrl',
+        resolve: {
+            bubble: function (Api, $route, $location){
+                Api.getBubble($route.current.params.app_id).success(function(data){ if(!data) $location.path('/') });
+                return Api.getBubble($route.current.params.app_id);
+            }
+        }
+    })
+
+    .when('/:app_id/equipe', {
         templateUrl: 'views/equipe.html',
         controller: 'equipeCtrl',
         resolve: {
             bubble: function (Api, $route, $location){
-                Api.getBubble($route.current.params.appname).success(function(data){ if(!data) $location.path('/') });
-                return Api.getBubble($route.current.params.appname);
+                Api.getBubble($route.current.params.app_id).success(function(data){ if(!data) $location.path('/') });
+                return Api.getBubble($route.current.params.app_id);
             }
         }
     })

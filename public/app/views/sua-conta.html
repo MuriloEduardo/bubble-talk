@@ -1,15 +1,53 @@
 <div class="col-md-8 col-md-offset-2">
-	{{user}}
-	<div class="panel">
-		<div class="panel-body">
-			<div class="row">
-				<div class="col-md-4">
-					Seu Perfil
-				</div>
-				<div class="col-md-8">
-					<input type="text" class="form-control">
-				</div>
-			</div>
+	<div class="aviso-cool" ng-show="!user.nome && !aviso">
+		<div class="close-aviso text-right pull-right">
+			<i class="material-icons" ng-click="aviso=true">close</i>
 		</div>
+		<div class="col-md-2 icon-aviso text-center">
+			<i class="material-icons">notifications_active</i>
+		</div>
+		<div class="col-md-10 text-left desc-aviso">
+			<p>Cadastre seu nome e uma foto, os usuários do seu site agradecem!</p>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>Dados pessoais</h3>
+		</div>
+		<div class="panel-body">
+			<form name="userForm" ng-submit="edit(user)">
+				<div class="row">
+					<div class="col-md-2">
+						<div class="foto-user" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}">
+						</div>
+					</div>
+					<div class="col-md-10">
+						<div class="form-group">
+							<label for="">Seu Nome</label>
+							<input type="text" class="form-control" ng-model="user.nome" placeholder="Deixe em branco para continuar com seu nome atual" required>
+						</div>
+						<div class="form-group">
+							<label for="">Seu Email</label>
+							<input type="email" class="form-control" ng-model="user.local.email" placeholder="Deixe em branco para continuar seu email atual" required>
+						</div>
+						<div class="form-group">
+							<label for="">Sua nova Senha</label>
+							<input type="password" class="form-control" ng-model="user.local.senha" placeholder="Deixe em branco para usar sua senha atual">
+						</div>
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary form-control">Salvar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+	    <h3>Dados de pagamento</h3>
+	  </div>
+	  <div class="panel-body">
+	    Panel content
+	  </div>
 	</div>
 </div>

@@ -5,6 +5,11 @@ app.controller('equipeCtrl', function($scope, $rootScope, Api, Notification, bub
 	// Aparecerão ou não
 	$rootScope.menuLeft = true;
 
+	// Mostrar ou não load de carregamento das views
+	// Será ativada ao clicar para trocar
+	// E escondida quando chegar em outro controller
+	$rootScope.loadViews(false);
+
 	// Load de envio do email
 	$scope.loadNewAdm = false;
 

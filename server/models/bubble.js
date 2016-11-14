@@ -20,7 +20,8 @@ var bubbleSchema = mongoose.Schema({
 		}
 	},
 	criador: String,
-	administradores: []
+	administradores: [],
+	conversas: []
 });
 
 module.exports = mongoose.model('Bubble', bubbleSchema);

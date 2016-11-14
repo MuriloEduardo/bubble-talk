@@ -8,8 +8,8 @@ app.factory('Api', function($http){
 		return $http.get('/api/bubbles');
 	};
 
-	var _getBubble = function(appname) {
-		return $http.get('/api/bubbles/' + appname);
+	var _getBubble = function(app_id) {
+		return $http.get('/api/bubbles/' + app_id);
 	}
 
 	var _newAdm = function(user) {

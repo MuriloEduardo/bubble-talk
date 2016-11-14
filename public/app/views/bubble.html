@@ -1,3 +1,106 @@
-<div class="col-md-12">
-	<h1>{{chat.dados.appname}}</h1>
+<div class="row row-height100">
+	<div class="side-left col-md-11" ng-class="viewConversasEquipe ? 'col-md-9' : 'col-md-11'">
+		<div class="row conversas-container conversas-body">
+			<div class="col-side col-md-4 no-pddng-l no-pddng-r">
+				<nav class="navbar navbar-default">
+					<div class="container-fluid">
+					    <ul class="nav navbar-nav">
+					      <li>
+					      	<a href="#" class="perfil-toggle">
+	                            <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+	                            <div class="descricoes">
+	                            	<div>{{chat.dados.appname}}</div>
+	                            </div>
+	                        </a>
+					      </li>
+					    </ul>
+					    <ul class="nav navbar-nav navbar-right">
+					      <li><a href="#"><i class="material-icons">&#xE5D4;</i></a></li>
+					    </ul>
+				  	</div>
+				</nav>
+				<div class="chamados-clientes">
+					<!-- Conversas -->
+					<div ng-repeat="cliente in clientes" ng-class="{'sem-dono': cliente.canal == infosAdm.bubble_id}" class="cada-canal" ng-click="trocarCliente(cliente)" ng-if="cliente.canal == infosAdm.bubble_id || cliente.canal == user._id">
+						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+						<div class="canal-nome">
+							<div>{{cliente.client_socket_id}}</div>
+							<div class="sub-desc"><span ng-class="{'loading': cliente.client_digitando}">{{cliente.client_digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+						</div>
+						<div class="canal-nome pull-right">
+							<i class="material-icons">&#xE315;</i>
+						</div>
+						<!-- <div ng-repeat="msg in messages" ng-if="msg.canal == infosAdm.canal_atual && msg.socket_id == cliente.client_socket_id">
+							{{msg.msg}}
+						</div>
+						<i class="material-icons" ng-if="!cliente.visulizado">&#xE3FA;</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-side col-md-8 no-pddng-l no-pddng-r">
+				<nav class="navbar navbar-default" ng-show="textareaBody">
+				  <div class="container-fluid">
+				    <ul class="nav navbar-nav">
+				      <li>
+				      	<a ng-click="dadosCliente()" href="javascript:void(0)" class="perfil-toggle">
+                            <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+                            <div class="descricoes">
+                            	<div>{{infosAdm.client_socket_id}}</div>
+                            	<div class="sub-desc"><span ng-class="{'loading': infosAdm.client_digitando}">{{infosAdm.client_digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+                            </div>
+                        </a>
+				      </li>
+				    </ul>
+				    <ul class="nav navbar-nav navbar-right">
+				      <li><a href="#"><i class="material-icons">&#xE24C;</i></a></li>
+				      <li><a href="#"><i class="material-icons">&#xE5D4;</i></a></li>
+				    </ul>
+				  </div>
+				</nav>
+				<div class="chat-canal-0">
+			    	<div ng-show="!textareaBody">
+			    		<p class="text-center">Clique sobre uma conversa para tornar-se sua</p>
+			    	</div>
+			    	<div id="body" class="body-chat scrollme" ng-show="textareaBody" rebuild-on="rebuild:me" ng-scrollbar>
+						<div ng-repeat="msg in messages" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
+							<div class="msg" ng-class="{'right-msg': !msg.remetente}">
+								<div class="MsgEmSi wrapword">{{msg.msg}}</div>
+								<div class="statusMsg" ng-if="msg.remetente">
+									<i class="material-icons" ng-show="$index < 5">&#xE5CA;</i>
+									<i class="material-icons vzldo" ng-show="$index > 5">&#xE877;</i>
+								</div>
+								<div ng-bind="msg.criado | date:'HH:mm'" class="hrMsg"></div>
+							</div>
+						</div>
+			    	</div>
+			    	<footer ng-show="textareaBody">
+			    		<textarea class="form-control" placeholder="Responda carinhosamente a este usuário" ng-model="message" ng-change="typing()" enter-submit="enviaMsg(message)"></textarea>
+			    		<a href="#" class="actions emoticos">
+							<i class="material-icons">&#xE420;</i>
+						</a>
+						<a href="#" class="actions anexo" ng-show="!message">
+							<i class="material-icons">&#xE226;</i>
+						</a>
+						<a href="javascript:void(0)" ng-click="enviaMsg(message)" class="actions send" ng-show="message">
+							<i class="material-icons">&#xE163;</i>
+						</a>
+			    	</footer>
+			    </div>
+			</div>
+		</div>
+	</div>
+	<div class="side-right col-md-1" ng-mouseover="viewConversasEquipe = true" ng-mouseleave="viewConversasEquipe = false" ng-class="viewConversasEquipe ? 'col-md-3' : 'col-md-1'">
+		<section class="canais-container">
+			<div ng-repeat="canal in equipe" class="cada-canal" ng-if="canal._id != user._id">
+				<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+				<div class="canal-nome">
+					<div>{{canal.nome}}</div>
+					<span>Lorem Ipsum</span>
+				</div>
+			</div>
+			<!-- <div ng-repeat="msg in messages" ng-if="msg.canal == infosAdm.canal_atual">
+				{{msg.msg}}
+			</div> -->
+		</section>
+	</div>
 </div>

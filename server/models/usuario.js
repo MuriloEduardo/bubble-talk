@@ -17,7 +17,8 @@ var usuarioSchema = mongoose.Schema({
 	},
 	data_cadastro: {type: Date, default: Date.now},
 	bubbles: [],
-	notificacoes: []
+	notificacoes: [],
+	conversas: []
 });
 
 usuarioSchema.methods.generateHash = function(senha){
