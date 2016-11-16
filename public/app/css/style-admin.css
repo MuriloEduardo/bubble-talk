@@ -47,7 +47,7 @@ ul.navbar-nav[ng-show="menuLeft"] {
 }
 @media(min-width:768px) {
     body {
-        margin-top: 80px;
+        margin-top: 90px;
     }
 }
 @-webkit-keyframes GradientAnimateBackground {
@@ -250,9 +250,9 @@ ul.alert-dropdown {
     .side-nav {
         position: fixed;
         top: 89px;
-        left: 225px;
-        width: 225px;
-        margin-left: -225px;
+        left: 185px;
+        width: 185px;
+        margin-left: -185px;
         border: none;
         border-radius: 0;
         overflow-y: auto;
@@ -266,7 +266,7 @@ ul.alert-dropdown {
     }
 
     .side-nav>li>a {
-        width: 225px;
+        width: 185px;
         -webkit-transition: all .2s ease-in-out;
         -moz-transition: all .2s ease-in-out;
         transition: all .2s ease-in-out;
@@ -760,6 +760,9 @@ label{
 .cada-canal .canal-nome span {
     font-size: 12px;
 }
+.cada-canal .hrMsg {
+    font-size: 10px;
+}
 .conversas-container .navbar {
     margin-bottom: 0;
 }
@@ -1045,12 +1048,18 @@ form {margin:0;}
     width: auto;
     height: auto;
     color: #fff;
-    margin: 7px 0;
+    margin: 2.5px 0;
     font-weight: bold;
     text-align: center;
     border-radius: 100%;
     line-height: 22px;
-    font-size: 11px;
-    padding: 2px 4px;
-    border: solid 2px #fff;
+    font-size: 10px;
+    padding: 1px 0;
+}
+.cada-canal.bg-animate-color {
+    color: #fff;
+}
+.cada-canal.bg-animate-color .nao-visu {
+    background: #fff !important;
+    color: #24c7b1 !important;
 }

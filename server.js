@@ -12,6 +12,8 @@ var passport     = require('passport');
 var flash        = require('connect-flash');
 var path         = require('path');
 var api          = express.Router();
+var usuarios 	 = {};
+var dados_users  = [];
 
 var port = process.env.PORT || 4000;
 
@@ -46,8 +48,6 @@ app.set('views', path.resolve(__dirname, 'public', 'site'));
 
 app.use(express.static(path.resolve(__dirname, 'public')));
 
-var usuarios = {};
-
 io.sockets.on('connection', function(socket) {
 
 	// Canal onde é listados todos atendentes
@@ -56,7 +56,7 @@ io.sockets.on('connection', function(socket) {
 	socket.join(canal);
 
 	function updateNicknames() {
-		io.sockets.emit('usuarios', Object.keys(usuarios));
+		io.sockets.emit('usuarios', dados_users);
 	}
 
 	function trocaCanal(novoCanal) {
@@ -71,6 +71,7 @@ io.sockets.on('connection', function(socket) {
 
 		socket.socket_id = data.socket_id;
 		usuarios[socket.socket_id] = socket;
+		dados_users.push({id: socket.socket_id, connected: socket.connected});
 
 		trocaCanal(data.canal_atual);
 		updateNicknames();
@@ -133,8 +134,6 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('visualizar', function(infosAdm) {
 		if(usuarios[infosAdm.client_socket_id]) {
-			
-			console.log(infosAdm.conversas)
 
 			usuarios[infosAdm.client_socket_id].emit('visualizou', infosAdm);
 
@@ -180,7 +179,12 @@ io.sockets.on('connection', function(socket) {
 
 	// Disconnect
 	socket.on('disconnect', function(data) {
-		socket.emit('desconectado', socket.socket_id);
+		
+		if(!socket.socket_id) return;
+		
+		delete usuarios[socket.socket_id];
+
+		updateNicknames();
 	});
 });
 

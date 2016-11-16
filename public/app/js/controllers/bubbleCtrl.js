@@ -60,6 +60,16 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		// Real Time Notify
 		socket.emit('novo usuario', $scope.infosAdm);
 
+		socket.on('usuarios', function(data) {
+			for (var i = 0; i < data.length; i++) {
+				for (var x = 0; x < $scope.clientes.length; x++) {
+					if($scope.clientes[x].client_socket_id == data[i].id) {
+						$scope.clientes[x].client_online = data[i].connected;
+					}
+				}
+			}
+		});
+
 		var displayMsg = function(data) {
 
 			$scope.safeApply(function() {
@@ -84,13 +94,12 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		        }
 
 		        for (var i = 0; i < $scope.messages.length; i++) {
-					if(!$scope.messages[i].visualizado) {
-						$scope.safeApply(function() {
-							typeof cliente.nao_visulizadas === "undefined" ? cliente.nao_visulizadas = 1 : cliente.nao_visulizadas = cliente.nao_visulizadas + 1;
-						});
-					}
-
-					if(cliente) {
+		        	if(cliente) {
+						if(!$scope.messages[i].visualizado) {
+							$scope.safeApply(function() {
+								typeof cliente.nao_visulizadas === "undefined" ? cliente.nao_visulizadas = 1 : cliente.nao_visulizadas = cliente.nao_visulizadas + 1;
+							});
+						}
 						if($scope.messages[i].client_socket_id == cliente.client_socket_id) {
 							cliente.ultima_msg = $scope.messages[i];
 						}
@@ -121,6 +130,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 					});
 				}
 	    	}
+
+	    	if(data.client_socket_id == $scope.infosAdm.client_socket_id) {
+				$scope.infosAdm.ultima_msg = data.criado;
+				console.log($scope.infosAdm)
+			}
 
 	        scrollBottom();
 		}
@@ -177,9 +191,8 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 			for (var i = 0; i < $scope.clientes.length; i++) {
 				if($scope.clientes[i].client_socket_id == cliente.client_socket_id) {
 					$scope.clientes[i]['canal'] = $rootScope.user._id;
-					if($scope.clientes[i].client_digitando) {
-						$scope.infosAdm.client_digitando = $scope.clientes[i].client_digitando;
-					}
+					if($scope.clientes[i].client_digitando) $scope.infosAdm.client_digitando = $scope.clientes[i].client_digitando;
+					if($scope.clientes[i].client_online) $scope.infosAdm.client_online = $scope.clientes[i].client_online;
 				}
 			}
 
@@ -188,6 +201,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 			$scope.safeApply(function() {
 				$scope.infosAdm.client_socket_id = cliente.client_socket_id;
 				$scope.infosAdm.canal_atual = $rootScope.user._id;
+				$scope.infosAdm.ultima_msg = cliente.ultima_msg.criado;
 				$scope.infosAdm.conversas = [];
 				$scope.infosAdm.conversas = angular.fromJson(angular.toJson(mensagens));
 			});

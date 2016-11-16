@@ -43,7 +43,11 @@
                             <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
                             <div class="descricoes">
                             	<div>{{infosAdm.client_socket_id}}</div>
-                            	<div class="sub-desc"><span ng-class="{'loading': infosAdm.client_digitando}">{{infosAdm.client_digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+                            	<div class="sub-desc">
+                            		<div ng-class="{'loading': infosAdm.client_digitando}" ng-if="infosAdm.client_digitando">digitando </div>
+                            		{{infosAdm.client_online}}
+                            		<div ng-if="!infosAdm.client_digitando"><span ng-hide="infosAdm.client_online">{{}}última mensagem às {{infosAdm.ultima_msg | date:'HH:mm'}}</span ng-show="infosAdm.client_online">online<span></span></div>
+                            	</div>
                             </div>
                         </a>
 				      </li>
