@@ -14,14 +14,28 @@ var bubbleSchema = mongoose.Schema({
 			cidade: String,
 			estado: String
 		},
-		data_cadastro: {
-			type: Date, 
-			default: Date.now
-		}
+		data_cadastro: {type: Date, default: Date.now}
 	},
 	criador: String,
 	administradores: [],
-	conversas: []
+	conversas: [
+		{
+			socket_id: String,
+			digitando: Boolean,
+			ultima_visualizacao: {type: Date},
+			ultima_mensagem: String,
+			nao_visualizadas: Number,
+			online: Boolean,
+			mensagens: [
+				{
+					mensagem: String,
+					data: {type: Date, default: Date.now},
+					visulizada: Boolean,
+					remetente: Boolean
+				}
+			]
+		}
+	]
 });
 
 module.exports = mongoose.model('Bubble', bubbleSchema);

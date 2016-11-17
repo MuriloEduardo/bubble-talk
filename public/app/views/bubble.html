@@ -45,8 +45,10 @@
                             	<div>{{infosAdm.client_socket_id}}</div>
                             	<div class="sub-desc">
                             		<div ng-class="{'loading': infosAdm.client_digitando}" ng-if="infosAdm.client_digitando">digitando </div>
-                            		{{infosAdm.client_online}}
-                            		<div ng-if="!infosAdm.client_digitando"><span ng-hide="infosAdm.client_online">{{}}última mensagem às {{infosAdm.ultima_msg | date:'HH:mm'}}</span ng-show="infosAdm.client_online">online<span></span></div>
+                            		<div ng-if="!infosAdm.client_digitando">
+                            			<span ng-hide="infosAdm.client_online">visto por último às {{infosAdm.visto_ultimo | date:'HH:mm'}}</span>
+                            			<span ng-show="infosAdm.client_online">online</span>
+                        			</div>
                             	</div>
                             </div>
                         </a>

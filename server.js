@@ -12,14 +12,12 @@ var passport     = require('passport');
 var flash        = require('connect-flash');
 var path         = require('path');
 var api          = express.Router();
-var usuarios 	 = {};
-var dados_users  = [];
 
-var port = process.env.PORT || 4000;
+var port         = process.env.PORT || 4000;
 
-var configDB = require('./server/config/database');
-var Usuario  = require('./server/models/usuario');
-var Bubble  = require('./server/models/bubble');
+var configDB     = require('./server/config/database');
+var Usuario      = require('./server/models/usuario');
+var Bubble       = require('./server/models/bubble');
 
 mongoose.connect(configDB.url, function(err, res) {
 	if(err){
@@ -50,13 +48,17 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 
 io.sockets.on('connection', function(socket) {
 
-	// Canal onde é listados todos atendentes
-	// da aplicação
-	var canal = 0;
+	// Canal inicial
+	var canal    = 0;
+	// Todos usuarios que estão na aplicação
+	var usuarios = [];
+	// Usuario atual
+	var usuario  = {};
+
 	socket.join(canal);
 
-	function updateNicknames() {
-		io.sockets.emit('usuarios', dados_users);
+	function atualizaUsuarios() {
+		io.sockets.emit('usuarios', usuarios);
 	}
 
 	function trocaCanal(novoCanal) {
@@ -67,52 +69,50 @@ io.sockets.on('connection', function(socket) {
 		socket.emit('trocou canal', canal);
 	}
 
-	socket.on('novo usuario', function(data) {
+	function novoUsuario(data) {
 
 		socket.socket_id = data.socket_id;
-		usuarios[socket.socket_id] = socket;
-		dados_users.push({id: socket.socket_id, connected: socket.connected});
+
+		usuarios.push(data);
+
+		usuario = data;
 
 		trocaCanal(data.canal_atual);
-		updateNicknames();
 
-		var queryCanais = Usuario.find({ bubbles: { "$in" : [data.bubble_id]} });
-		queryCanais.exec(function(err, docs) {
-			if (err) {
-				throw err;
-			} else {
-				Bubble.findOne({_id: data.bubble_id}, function(err, bubble){
-					if (err) {
-						throw err;
-					} else {
-						socket.emit('nao respondidas', bubble);
-						socket.emit('equipe', docs);
-					}
-				});
-			}
+		atualizaUsuarios();
+	}
+
+	socket.on('novo cliente', function(data) {
+
+		novoUsuario(data);
+
+		var query_usuarios = Usuario.find({ bubbles: { "$in" : [usuario.bubble_id]} });
+
+		query_usuarios.exec(function(err, administradores) {
+			
+			if (err) throw err;
+
+			Bubble.findOne({_id: usuario.bubble_id}, function(err, nao_particulares){
+				
+				if (err) throw err;
+
+				socket.emit('nao particulares', nao_particulares);
+				socket.emit('particulares', administradores);
+			});
 		});
 	});
 
 	socket.on('enviar mensagem', function(data) {
 
-		var conversaData = {
-			msg: data.msg, 
-			socket_id: data.socket_id, 
-			criado: new Date(),
-			canal: data.canal,
-			remetente: data.remetente,
-			client_socket_id: data.client_socket_id
-		}
+		io.sockets.emit('nova mensagem', data);
 
-		io.sockets.emit('nova mensagem', conversaData);
-
-		if (data.canal == data.bubble_id) {
+		/*if (data.canal == data.bubble_id) {
 			
 			// A mensagem enviada pertence a todos
 			// Ou seja:
 			// Ficará salva nos documentos da aplicação
 			// E não nos usuarios
-			Bubble.update({_id: data.canal},{
+			Bubble.update({_id: usuario.bubble_id},{
 				"$push": {conversas: conversaData}
 			},function(err, bubble) {
 				if(err) throw err;
@@ -125,14 +125,11 @@ io.sockets.on('connection', function(socket) {
 			},function(err) {
 				if(err) throw err;
 			});
-		}
-	});
-
-	socket.on('trocar canal', function(novoCanal) {
-		trocaCanal(novoCanal);
+		}*/
 	});
 
 	socket.on('visualizar', function(infosAdm) {
+
 		if(usuarios[infosAdm.client_socket_id]) {
 
 			usuarios[infosAdm.client_socket_id].emit('visualizou', infosAdm);
@@ -144,10 +141,6 @@ io.sockets.on('connection', function(socket) {
 				if(err) throw err;
 			});
 		}
-	});
-
-	socket.on('digitando', function(data) {
-		io.sockets.emit('digitando', data);
 	});
 
 	socket.on('tornar minha', function(infosAdm) {
@@ -181,10 +174,41 @@ io.sockets.on('connection', function(socket) {
 	socket.on('disconnect', function(data) {
 		
 		if(!socket.socket_id) return;
-		
-		delete usuarios[socket.socket_id];
 
-		updateNicknames();
+		/*for (var i = 0; i < dados_users.length; i++) {
+			
+			if(socket.socket_id == dados_users[i].id) {
+
+				dados_users[i] = {
+					id: socket.socket_id,
+					connected: socket.connected,
+					ultima_visulizacao: new Date()
+				}
+
+				Usuario.update({_id: usuarios[socket.socket_id].canal_atual},{
+					"$push": {clientes: dados_users[i]}
+				},function(err, docs) {
+			
+					if(err) throw err;
+
+					delete usuarios[socket.socket_id];
+				});
+			}
+		}*/
+
+		atualizaUsuarios();
+	});
+
+	socket.on('trocar canal', function(novoCanal) {
+		trocaCanal(novoCanal);
+	});
+
+	socket.on('novo administrador', function(data) {
+		novoUsuario(data);
+	});
+
+	socket.on('digitando', function(data) {
+		io.sockets.emit('digitando', data);
 	});
 });
 

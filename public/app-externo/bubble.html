@@ -551,10 +551,10 @@
 			</a>
 			<a href="javascript:void(0)" id="perfilInfos" class="perfilInfos">
 				<div class="infosApp" ng-show="!openConversasF">
-					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !infosUsuario.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
+					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="descApp">
-						<div>{{infosUsuario.nome}}</div>
-						<div class="sub-des"><span ng-class="{'loading': infosUsuario.client_digitando}">{{infosUsuario.client_digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+						<div>{{conversa_atual.nome || conversa_atual.dados.appname}}</div>
+						<div class="sub-des"><span ng-class="{'loading': cliente.client_digitando}">{{cliente.client_digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
 					</div>
 				</div>
 				<div class="conversasTit" ng-show="openConversasF">
@@ -572,11 +572,11 @@
 			</a>
 		</header>
 		<!-- Chat -->
-		<div id="body" ng-show="!openConversasF" ng-class="{'bubble-all': !infosUsuario.tornou_sua && infosUsuario.canal_atual == infosUsuario.bubble_id}">
-			<div class="aviso-top-fixed" ng-if="!infosUsuario.tornou_sua && infosUsuario.canal_atual == infosUsuario.bubble_id">
+		<div id="body" ng-show="!openConversasF" ng-class="{'bubble-all': !cliente.conversa_particular && cliente.canal_atual == cliente.bubble_id}">
+			<div class="aviso-top-fixed" ng-if="!cliente.conversa_particular && cliente.canal_atual == cliente.bubble_id">
 				Quando o primeiro da equipe lhe responder, se iniciará uma conversa particular.
 			</div>
-			<div ng-repeat="msg in messages" class="row-msd-uniq" ng-if="msg.client_socket_id == infosUsuario.socket_id && msg.canal == infosUsuario.canal_atual">
+			<div ng-repeat="msg in messages" class="row-msd-uniq" ng-if="msg.client_socket_id == cliente.socket_id && msg.canal == cliente.canal_atual">
 				<div class="msg" ng-class="{'right-msg': msg.remetente}">
 					<div class="MsgEmSi wrapword">{{msg.msg}}</div>
 					<div class="statusMsg" ng-if="!msg.remetente">
@@ -604,18 +604,18 @@
 		</footer>
 		<!-- Listagem das Conversas -->
 		<div id="body-conversas" ng-show="openConversasF">
-			<!-- Canal de todos da equipe -->
-			<div class="eng-cada-canal" ng-if="!infosUsuario.tornou_sua">
-				<a href="javascript:void(0)" ng-click="trocarCanal(infosUsuario)">
-					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !infosUsuario.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
+			<!-- Canal de todos da equipe
+			<div class="eng-cada-canal" ng-if="!cliente.conversa_particular">
+				<a href="javascript:void(0)" ng-click="trocarCanal(bubble)">
+					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="pri-des">{{bubble.dados.appname}}</div>
 					<div class="sub-des">Última mensagem à 13 min atrás</div>
 				</a>
 			</div>
-			<!-- Cada canal dos atendentes -->
+			Cada canal dos atendentes -->
 			<div ng-repeat="canal in equipe" ng-if="canal.local.senha && canal.nome" class="eng-cada-canal">
 				<a href="javascript:void(0)" ng-click="trocarCanal(canal)">
-					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !infosUsuario.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
+					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="pri-des">{{canal.nome}}</div>
 					<div class="sub-des">Última mensagem à 13 min atrás</div>
 					<div ng-repeat="msg in messages" ng-if="msg.canal == 0">
@@ -625,7 +625,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="bubble" ng-click="openChatF=!openChatF" ng-class="{'no-img-perfil': !infosUsuario.img_perfil}"></div>
+	<div id="bubble" ng-click="openChatF=!openChatF" ng-class="{'no-img-perfil': !cliente.img_perfil}"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.5.0/angular-local-storage.min.js" type="text/javascript"></script>
@@ -636,22 +636,18 @@
 
 		var socket = io.connect('http://127.0.0.1:4000/');
 
-		$scope.infosUsuario = {
-			bubble_id: undefined,
-			socket_id: undefined,
+		$scope.conversa_atual = {};
+		$scope.equipe         = [];
+		$scope.cliente        = {
 			canal_atual: undefined,
-			nome: undefined,
-			visto_ultimo: undefined,
-			img_perfil: undefined,
-			tornou_sua: undefined
+			perfil: {
+				img_perfil: undefined,
+				nome: undefined
+			}
 		}
 
-		$scope.messages = [];
-		$scope.digitando = false;
-
 		$scope.init = function(app_id) {
-			$scope.infosUsuario.canal_atual = app_id;
-			$scope.infosUsuario.bubble_id = app_id;
+			$scope.cliente.canal_atual = app_id;
 		}
 
 		var ba  = document.getElementById('bubble-app');
@@ -701,12 +697,9 @@
 				if(!mensagem) return;
 				
 				var send_mensagem = {
-					msg: mensagem, 
-					bubble_id: $scope.infosUsuario.bubble_id, 
-					socket_id: $scope.infosUsuario.socket_id, 
-					canal: $scope.infosUsuario.canal_atual,
-					client_socket_id: $scope.infosUsuario.socket_id,
-					remetente: false
+					mensagem: mensagem,
+					remetente: false,
+					visulizada: false
 				}
 
 				socket.emit('enviar mensagem', send_mensagem);
@@ -720,13 +713,13 @@
 			}
 
 			$scope.$watch('digitando', function() {
-				socket.emit('digitando', {digitando: $scope.digitando, usuario: $scope.infosUsuario});
+				socket.emit('digitando', {digitando: $scope.digitando, usuario: $scope.cliente});
 			});
 
 			socket.on('digitando', function(data) {
-				if(data.usuario.socket_id != $scope.infosUsuario.socket_id && data.usuario.socket_id == $scope.infosUsuario.canal_atual) {
+				if(data.usuario.socket_id != $scope.cliente.socket_id && data.usuario.socket_id == $scope.cliente.canal_atual) {
 					$scope.safeApply(function() {
-						$scope.infosUsuario.client_digitando = data.digitando;
+						$scope.cliente.client_digitando = data.digitando;
 					});
 				}
 			});
@@ -734,38 +727,39 @@
 			$scope.trocarCanal = function(canal) {
 
 				$scope.openConversasF = false;
+				$scope.conversa_atual = canal;
 
-				if(canal._id) canal.canal_atual = canal._id;
+				/*if(canal._id) canal.canal_atual = canal._id;
 
 				var nomeCanal = canal.nome ? canal.nome : $scope.bubble.dados.appname;
 				var idCanal = canal.canal_atual ? canal.canal_atual : canal.bubble_id;
 
-				$scope.infosUsuario.nome = nomeCanal;
+				$scope.cliente.nome = nomeCanal;*/
 
-				socket.emit('trocar canal', idCanal);
+				socket.emit('trocar canal', canal);
 				
 				scrollBottom();
-				updateInfosUsuario();
+				updatecliente();
 			}
 
 			// Se ainda não tiver um socket_id no localStorage
 			// Primeira vez que acessa
 			if(!localStorageService.get('usuario')) {
 				// ID do Socket
-				$scope.infosUsuario.socket_id = socket.id;
+				$scope.cliente.socket_id = socket.id;
 				// Objeto inteiro de usuario passado para localStorage
-				updateInfosUsuario();
+				updatecliente();
 			} else {
 
-				$scope.infosUsuario = localStorageService.get('usuario');
+				$scope.cliente = localStorageService.get('usuario');
 
-				if($scope.infosUsuario.tornou_sua) {
-					$scope.trocarCanal($scope.infosUsuario);
+				if($scope.cliente.conversa_particular) {
+					$scope.trocarCanal($scope.cliente);
 				}
 			}
 
 			// Real Time Notify
-			socket.emit('novo usuario', $scope.infosUsuario);
+			socket.emit('novo cliente', $scope.cliente);
 
 			socket.on('nova mensagem', function(data) {
 				displayMsg(data);
@@ -773,7 +767,7 @@
 
 			socket.on('tornou sua', function(infosAdm) {
 
-				$scope.infosUsuario.tornou_sua = true;
+				$scope.cliente.conversa_particular = true;
 
 				// Administrador clicou na conversa sem dono
 				// E agora essa conversa vai ser entre os dois
@@ -796,47 +790,41 @@
 				}
 			});
 
-			socket.on('equipe', function(data) {
-
-				$scope.safeApply(function() {
-					$scope.equipe = data;
-		        });
-
-		        for (var i = 0; i < data.length; i++) {
-		        	for (var x = 0; x < data[i].conversas.length; x++) {
-		        		displayMsg(data[i].conversas[x]);
-		        	}
-		        }
+			socket.on('particulares', function(data) {
+		        $scope.equipe.push(data);
+		        console.log($scope.equipe)
 			});
 
 			socket.on('trocou canal', function(canal) {
 				$scope.safeApply(function() {
-					$scope.infosUsuario.canal_atual = canal;
-					updateInfosUsuario();
+					$scope.cliente.canal_atual = canal;
 		        });
+		        updatecliente();
 			});
 
-			socket.on('nao respondidas', function(data) {
+			socket.on('nao particulares', function(data) {
 
-				data.dados.appname = 'Equipe ' + data.dados.appname;
-				$scope.bubble = data;
+				//console.log(data)
 
-				if(!$scope.infosUsuario.tornou_sua) {
+				$scope.conversa_atual = data;
+				//$scope.equipe.push(data);
+
+				/*if(!$scope.cliente.conversa_particular) {
 					for (var i = 0; i < data.conversas.length; i++) {
 						displayMsg(data.conversas[i]);
 					}
 
-					$scope.infosUsuario.nome = data.dados.appname;
-				}
+					$scope.cliente.nome = data.dados.appname;
+				}*/
 			});
 		});
 
-		var updateInfosUsuario = function() {
+		var updatecliente = function() {
 			// Seta objeto inteiro do usuario
-			localStorageService.set('usuario', $scope.infosUsuario);
+			localStorageService.set('usuario', $scope.cliente);
 		}
 
-		$scope.getInfosUsuario = function() {
+		$scope.getcliente = function() {
 			// Seta objeto inteiro do usuario
 			return localStorageService.get('usuario');
 		}

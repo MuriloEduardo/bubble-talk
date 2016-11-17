@@ -18,7 +18,24 @@ var usuarioSchema = mongoose.Schema({
 	data_cadastro: {type: Date, default: Date.now},
 	bubbles: [],
 	notificacoes: [],
-	conversas: []
+	conversas: [
+		{
+			socket_id: String,
+			digitando: Boolean,
+			ultima_visualizacao: {type: Date},
+			ultima_mensagem: String,
+			nao_visualizadas: Number,
+			online: Boolean,
+			mensagens: [
+				{
+					mensagem: String,
+					data: {type: Date, default: Date.now},
+					visulizada: Boolean,
+					remetente: Boolean
+				}
+			]
+		}
+	]
 });
 
 usuarioSchema.methods.generateHash = function(senha){
