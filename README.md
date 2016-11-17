@@ -1,2 +1,2 @@
-# Bubble-v0 ![Nosso Logotipo](https://raw.githubusercontent.com/MuriloEduardo/bubble-v0/master/public/img/favicon.png)
-Primeira versão da aplicação Bubble Talk
+# Bubble-v0.1 ![Nosso Logotipo](https://raw.githubusercontent.com/MuriloEduardo/bubble-v0/master/public/img/favicon.png)
+Foram revistos alguns métodos, visando o melhor desempenho para a aplicação. Facilitando também a manutenção do código.
