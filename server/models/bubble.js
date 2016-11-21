@@ -21,15 +21,11 @@ var bubbleSchema = mongoose.Schema({
 	conversas: [
 		{
 			socket_id: String,
-			digitando: Boolean,
 			ultima_visualizacao: {type: Date},
-			ultima_mensagem: String,
-			nao_visualizadas: Number,
-			online: Boolean,
 			mensagens: [
 				{
 					mensagem: String,
-					data: {type: Date, default: Date.now},
+					data: {type: Date},
 					visulizada: Boolean,
 					remetente: Boolean
 				}

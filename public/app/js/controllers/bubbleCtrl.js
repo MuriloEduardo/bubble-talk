@@ -10,22 +10,26 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 	// E escondida quando chegar em outro controller
 	$rootScope.loadViews(false);
 
-	// Dados do chat carregado no scope
-	// Utilizar o maximo em memoria
-	$scope.chat = bubble.data;
-
 	var socket = io.connect('http://127.0.0.1:4000/');
 
-	$scope.messages = [];
-	$scope.clientes = [];
-	$scope.equipe = [];
+	$scope.bubble 	 = bubble.data;
+	$scope.conversa  = {};
+	$scope.conversas = [];
 
-	$scope.digitando = false;
+	if(bubble.data.conversas.length) {
+		for (var i = 0; i < bubble.data.conversas.length; i++) {
+			$scope.conversas.push(bubble.data.conversas[i]);
+		}
+	}
+	if($rootScope.user.conversas.length) {
+		for (var i = 0; i < $rootScope.user.conversas.length; i++) {
+			$scope.conversas.push($rootScope.user.conversas[i]);
+		}
+	}
 
-	$scope.infosAdm = {
-		canal_atual: $scope.chat._id,
-		bubble_id: $scope.chat._id,
-		nome: $rootScope.user.nome,
+	$scope.administrador = {
+		canal_atual: bubble.data._id,
+		bubble_id: bubble.data._id,
 		socket_id: $rootScope.user._id
 	}
 
@@ -51,6 +55,10 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
     		$scope.dadosClienteToggle = false;
     }
 
+    $scope.ultimaMsg = function(data) {
+    	return data.mensagens[data.mensagens.length-1];
+    }
+
     var checkFocus = function() {
     	return document.hasFocus();
     }
@@ -58,11 +66,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 	socket.on('connect', function() {
 
 		// Real Time Notify
-		socket.emit('novo administrador', $scope.infosAdm);
+		socket.emit('novo administrador', $scope.administrador);
 
 		socket.on('usuarios', function(data) {
 
-			for (var i = 0; i < data.length; i++) {
+			/*for (var i = 0; i < data.length; i++) {
 				
 				for (var x = 0; x < $scope.clientes.length; x++) {
 				
@@ -72,111 +80,31 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 					}
 				}
 
-				if($scope.infosAdm.client_socket_id == data[i].id) {
+				if($scope.administrador.client_socket_id == data[i].id) {
 					
 					$scope.safeApply(function() {
-						$scope.infosAdm.client_online = data[i].connected;
-						$scope.infosAdm.visto_ultimo = data[i].ultima_visulizacao;
+						$scope.administrador.client_online = data[i].connected;
+						$scope.administrador.visto_ultimo = data[i].ultima_visulizacao;
 			        });
 				}
-			}
+			}*/
 		});
-
-		var displayMsg = function(data) {
-
-			var _clientes = data.clientes;
-
-			if(data._id) {
-				data = data.conversas;
-			}
-
-			$scope.safeApply(function() {
-				$scope.messages.push(data);
-	        });
-
-	        if(_clientes) {
-		        for (var i = 0; i < _clientes.length; i++) {
-		        	if(_clientes[i].id == data.socket_id) {
-		        		var dados_cliente = _clientes[i];
-		        	}
-		        }
-	    	}
-
-	        if(!data.remetente) {
-	        	// Cliente enviando para administrador
-		        
-		        var cliente = $filter('filter')($scope.clientes, {client_socket_id: data.socket_id}, true)[0];
-
-		        if(!cliente) {
-		        	// Não existe
-		        	// Solicitou falar no chat pela 
-		        	// primeira vez
-		        	$scope.safeApply(function() {
-						$scope.clientes.push({
-			        		canal: data.canal,
-			        		client_socket_id: data.socket_id,
-			        		ultima_msg: data,
-			        		dados_cliente: dados_cliente
-			        	});
-			        });
-		        }
-
-		        for (var i = 0; i < $scope.messages.length; i++) {
-		        	if(cliente) {
-						if(!$scope.messages[i].visualizado) {
-							$scope.safeApply(function() {
-								typeof cliente.nao_visulizadas === "undefined" ? cliente.nao_visulizadas = 1 : cliente.nao_visulizadas = cliente.nao_visulizadas + 1;
-							});
-						}
-						if($scope.messages[i].client_socket_id == cliente.client_socket_id) {
-							cliente.ultima_msg = $scope.messages[i];
-						}
-					}
-				}
-
-				if($scope.infosAdm.client_socket_id == data.socket_id && checkFocus()) {
-					// Administrador esta com o focus na janela, ou seja:
-					// esta visualizando a aplicação
-					// E também
-					// Administrador esta com a conversa deste cliente que o chamou
-					// portanto então, a mensagem é considerada visulizada
-					for (var i = 0; i < $scope.messages.length; i++) {
-						if($scope.messages[i].socket_id == $scope.infosAdm.client_socket_id) {
-							$scope.messages[i].visualizado = true;
-						}
-					}
-
-					var mensagens = $filter('filter')($scope.messages, {socket_id: $scope.infosAdm.client_socket_id}, true);
-
-					$scope.safeApply(function() {
-						$scope.infosAdm.conversas = [];
-						$scope.infosAdm.conversas = angular.fromJson(angular.toJson(mensagens));
-					});
-
-					$timeout(function() {
-						visualizar();
-					});
-				}
-	    	}
-
-	        scrollBottom();
-		}
 
 		$window.onfocus = function(){
 			
-			if($scope.infosAdm.client_socket_id) {
+			if($scope.administrador.client_socket_id) {
 
 				for (var i = 0; i < $scope.messages.length; i++) {
-					if($scope.messages[i].socket_id == $scope.infosAdm.client_socket_id) {
+					if($scope.messages[i].socket_id == $scope.administrador.client_socket_id) {
 						$scope.messages[i].visualizado = true;
 					}
 				}
 
-				var mensagens = $filter('filter')($scope.messages, {socket_id: $scope.infosAdm.client_socket_id}, true);
+				var mensagens = $filter('filter')($scope.messages, {socket_id: $scope.administrador.client_socket_id}, true);
 
 				$scope.safeApply(function() {
-					$scope.infosAdm.conversas = [];
-					$scope.infosAdm.conversas = angular.fromJson(angular.toJson(mensagens));
+					$scope.administrador.conversas = [];
+					$scope.administrador.conversas = angular.fromJson(angular.toJson(mensagens));
 				});
 
 				$timeout(function() {
@@ -188,12 +116,10 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		$scope.enviaMsg = function(mensagem) {
 			
 			var send_mensagem = {
-				msg: mensagem, 
-				socket_id: $scope.infosAdm.socket_id, 
-				canal: $scope.infosAdm.canal_atual,
-				bubble_id: $scope.infosAdm.bubble_id,
-				client_socket_id: $scope.infosAdm.client_socket_id,
-				remetente: true
+				mensagem: mensagem,
+				remetente: true,
+				visulizada: false,
+				data: new Date()
 			}
 
 			socket.emit('enviar mensagem', send_mensagem);
@@ -204,40 +130,18 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 		$scope.trocarCliente = function(cliente) {
 
-			for (var i = 0; i < $scope.messages.length; i++) {
-				if($scope.messages[i].socket_id == cliente.client_socket_id) {
-					$scope.messages[i]['canal'] = $rootScope.user._id;
-					$scope.messages[i].visualizado = true;
-				}
-			}
-
-			for (var i = 0; i < $scope.clientes.length; i++) {
-
-				if($scope.clientes[i].client_socket_id == cliente.client_socket_id) {
-					$scope.clientes[i]['canal'] = $rootScope.user._id;
-					if($scope.clientes[i].client_digitando) $scope.infosAdm.client_digitando = $scope.clientes[i].client_digitando;
-					if($scope.clientes[i].client_online) $scope.infosAdm.client_online = $scope.clientes[i].client_online;
-				}
-			}
-
-			var mensagens = $filter('filter')($scope.messages, {socket_id: cliente.client_socket_id}, true);
-
-			$scope.safeApply(function() {
-				$scope.infosAdm.client_socket_id = cliente.client_socket_id;
-				$scope.infosAdm.canal_atual = $rootScope.user._id;
-				$scope.infosAdm.conversas = [];
-				$scope.infosAdm.conversas = angular.fromJson(angular.toJson(mensagens));
-			});
-
-			// Quando o administrador clica nessa conversa sem administrador, deve se tornar sua
-			// Copiar mensagens deste id para as conversas deste usuario
-			socket.emit('tornar minha', $scope.infosAdm);
-
 			$timeout(function() {
 				visualizar();
 			});
 
+			// Quando o administrador clica nessa conversa sem administrador, deve se tornar sua
+			// Copiar mensagens deste id para as conversas deste usuario
+			socket.emit('tornar minha', $scope.administrador);
+
 			scrollBottom();
+
+			$scope.administrador.canal_atual = cliente.canal_atual;
+			$scope.conversa = cliente;
 
 			// Sai da primeira tela
 			// Onde foi a primeira vez que entrou no Adm
@@ -246,17 +150,22 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		}
 
 		var visualizar = function() {
-			socket.emit('visualizar', $scope.infosAdm);
-			console.log($scope.infosAdm)
+			socket.emit('visualizar', $scope.administrador);
 		}
 
 		socket.on('nova mensagem', function(data) {
-			displayMsg(data);
+			
+			console.log('===============')
+			console.log(m)
+
+			var m = $filter('filter')($scope.conversas, {socket_id: data.socket_id}, true)[0];
+			//$scope.ultimaMsg(m);
+			//m.mensagens.push(data.mensagem);
 		});
 
 		// Recebe os canais de todos os particiapntes
 		// da sua equipe
-		socket.on('particulares', function(data) {
+		/*socket.on('particulares', function(data) {
 
 			for (var i = 0; i < data.length; i++) {
 
@@ -269,19 +178,20 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				}
 			}
 		});
+		*/
 
 		$scope.typing = function() {
 			$scope.digitando = $scope.message ? true : false;
 		}
 
 		$scope.$watch('digitando', function() {
-			socket.emit('digitando', {digitando: $scope.digitando, usuario: $scope.infosAdm});
+			socket.emit('digitando', {digitando: $scope.digitando, usuario: $scope.administrador});
 		});
 
 		socket.on('trocou canal', function(canal) {
 			// bem vindo ao canal
 			$timeout(function () {
-				$scope.infosAdm.canal_atual = canal;
+				$scope.administrador.canal_atual = canal;
 	        });
 		});
 
@@ -289,8 +199,8 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 			
 			$scope.safeApply(function() {
 
-				if(data.usuario.socket_id == $scope.infosAdm.client_socket_id) {
-					$scope.infosAdm.client_digitando = data.digitando;
+				if(data.usuario.socket_id == $scope.administrador.client_socket_id) {
+					$scope.administrador.client_digitando = data.digitando;
 				}
 
 				for (var i = 0; i < $scope.clientes.length; i++) {
@@ -303,24 +213,8 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 		// Recebe todas as mensagens que não foram pegas para si(respondidas)
 		// Mas que ficaram salvas
-		socket.on('nao particulares', function(data) {
-
-			for (var i = 0; i < data.conversas.length; i++) {
-
-				displayMsg(data.conversas[i]);
-
-				var found = $filter('filter')($scope.clientes, {client_socket_id: data.conversas[i].socket_id}, true);
-
-				$scope.safeApply(function() {
-
-					if(!found.length) {
-						$scope.clientes.push({
-			        		canal: data.conversas[i].canal,
-			        		client_socket_id: data.conversas[i].socket_id
-			        	});
-					}
-		        });
-			}
+		socket.on('conversas', function(data) {
+			//$scope.conversas = data;
 		});
 	});
 });

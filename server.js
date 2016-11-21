@@ -16,8 +16,8 @@ var api          = express.Router();
 var port         = process.env.PORT || 4000;
 
 var configDB     = require('./server/config/database');
-var Usuario      = require('./server/models/usuario');
-var Bubble       = require('./server/models/bubble');
+var Usuario 	 = require('./server/models/usuario');
+var Bubble  	 = require('./server/models/bubble');
 
 mongoose.connect(configDB.url, function(err, res) {
 	if(err){
@@ -48,84 +48,126 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 
 io.sockets.on('connection', function(socket) {
 
-	// Canal inicial
-	var canal    = 0;
 	// Todos usuarios que estão na aplicação
 	var usuarios = [];
 	// Usuario atual
 	var usuario  = {};
 
-	socket.join(canal);
-
 	function atualizaUsuarios() {
-		io.sockets.emit('usuarios', usuarios);
+		socket.emit('usuarios', usuarios);
 	}
 
 	function trocaCanal(novoCanal) {
-		socket.leave(canal);
 		socket.join(novoCanal);
-		canal = novoCanal;
-
-		socket.emit('trocou canal', canal);
+		usuario.canal_atual = novoCanal;
+		socket.emit('change:canal', usuario.canal_atual);
 	}
 
 	function novoUsuario(data) {
-
 		socket.socket_id = data.socket_id;
-
 		usuarios.push(data);
-
 		usuario = data;
-
 		trocaCanal(data.canal_atual);
-
 		atualizaUsuarios();
 	}
+
+	function novaMsgBubble(data) {
+		Bubble.update({
+		    "_id" : data.bubble_id,
+		    "conversas" : {
+		        $elemMatch : {"socket_id": data.socket_id}
+		    }
+		}, {
+		    "$push" : {
+		        "conversas.$.mensagens" : data.mensagem
+		    }
+		}, function(err,data) {
+			if(err) throw err;
+		});
+	}
+
+	function novaMsgAdm(data) {
+		Usuario.update({
+		    "_id" : data.canal_atual,
+		    "conversas" : {
+		        $elemMatch : {"socket_id": data.socket_id}
+		    }
+		}, {
+		    "$push" : {
+		        "conversas.$.mensagens" : data.mensagem
+		    }
+		}, function(err,data) {
+			if(err) throw err;
+		});
+	}
+
+	socket.on('novo administrador', function(data) {
+		novoUsuario(data);
+	});
 
 	socket.on('novo cliente', function(data) {
 
 		novoUsuario(data);
 
-		var query_usuarios = Usuario.find({ bubbles: { "$in" : [usuario.bubble_id]} });
-
-		query_usuarios.exec(function(err, administradores) {
+		Usuario.find({ bubbles: { "$in" : [usuario.bubble_id]} }, function(err, adms) {
 			
-			if (err) throw err;
+			if(err) throw err;
 
-			Bubble.findOne({_id: usuario.bubble_id}, function(err, nao_particulares){
+			Bubble.findOne({_id: usuario.bubble_id}, function(err, bub){
 				
-				if (err) throw err;
+				if(err) throw err;
 
-				socket.emit('nao particulares', nao_particulares);
-				socket.emit('particulares', administradores);
+				adms.push(bub);
+
+				socket.emit('conversas', adms.reverse());
 			});
 		});
 	});
 
 	socket.on('enviar mensagem', function(data) {
 
-		io.sockets.emit('nova mensagem', data);
+		// Para ele mesmo
+		// OU
+		// Para com quem esta enviando (Administrador)
+		// if(usuario.socket_id == data.socket_id || usuario.socket_id == data.canal_atual) {}
 
-		/*if (data.canal == data.bubble_id) {
+		if(usuario.bubble_id == usuario.canal_atual) {
 			
-			// A mensagem enviada pertence a todos
-			// Ou seja:
-			// Ficará salva nos documentos da aplicação
-			// E não nos usuarios
-			Bubble.update({_id: usuario.bubble_id},{
-				"$push": {conversas: conversaData}
-			},function(err, bubble) {
-				if(err) throw err;
+			io.sockets.emit('nova mensagem', data);
+
+			// Bubble
+			Bubble.findOne({_id: usuario.bubble_id}, function(err, bubble){
+				var clientes = bubble.conversas.filter(function(el){ return el.socket_id==usuario.socket_id});
+				if(!clientes.length) {
+					// Cliente ainda não existe
+					bubble.conversas.push(usuario);
+					bubble.save(function(err,bubble) {
+						if(err) throw err;
+						if(bubble.nModified) novaMsgBubble(data);
+					});
+				} else {
+					novaMsgBubble(data);
+				} 
 			});
 		} else {
 			
-			// Conversa em particular
-			Usuario.update({_id: data.canal},{
-				"$push": {conversas: conversaData}
-			},function(err) {
-				if(err) throw err;
+			io.sockets.in(usuario.canal_atual).emit('nova mensagem', data);
+
+			// Bubble
+			Usuario.findOne({_id: usuario.canal_atual}, function(err, user){
+				var clientes = user.conversas.filter(function(el){return el.socket_id==usuario.socket_id});
+				if(!clientes.length) {
+					// Cliente ainda não existe
+					user.conversas.push(usuario);
+					user.save(function(err,user) {
+						if(err) throw err;
+						if(user.nModified) novaMsgAdm(data);
+					});
+				} else {
+					novaMsgAdm(data);
+				} 
 			});
-		}*/
+		}
 	});
 
 	socket.on('visualizar', function(infosAdm) {
@@ -148,7 +190,7 @@ io.sockets.on('connection', function(socket) {
 		// Insere e salva no usuario
 		// As conversas que estavam para todos salvos no bubble
 		// e nao no usuario
-		Usuario.update({_id: infosAdm.canal_atual},{
+		/*Usuario.update({_id: infosAdm.canal_atual},{
 			"$push": {conversas: infosAdm.conversas[0]}
 		},function(err, user){
 
@@ -167,7 +209,7 @@ io.sockets.on('connection', function(socket) {
 					usuarios[infosAdm.client_socket_id].emit('tornou sua', infosAdm);
 				}
 			});
-		});
+		});*/
 	});
 
 	// Disconnect
@@ -208,10 +250,9 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('digitando', function(data) {
-		io.sockets.emit('digitando', data);
+		//io.sockets.emit('digitando', data);
 	});
 });
-
 // Public           //
 // Home - One Page //
 app.get('/', function(req, res){
@@ -237,9 +278,9 @@ app.get('/experimente-gratis', function(req, res){
 });
 
 
-/*
-	Internal
-*/
+// Internal
+// ===============
+
 // App
 require('./server/routes/app')(api);
 app.use('/', api);
@@ -248,9 +289,9 @@ app.use('/', api);
 require('./server/routes/api')(api, passport);
 app.use('/api', api);
 
-/*
-	Tratamentos de exceção
-*/
+// Tratamentos de exceção
+// ==============================  
+
 // Erro 404
 app.use(function(req, res) {
 	res.render('./pages-status/404.ejs');

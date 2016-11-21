@@ -9,7 +9,7 @@
 					      	<a href="#" class="perfil-toggle">
 	                            <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 	                            <div class="descricoes">
-	                            	<div>{{chat.dados.appname}}</div>
+	                            	<div>{{bubble.dados.appname}}</div>
 	                            </div>
 	                        </a>
 					      </li>
@@ -21,15 +21,16 @@
 				</nav>
 				<div class="chamados-clientes">
 					<!-- Conversas -->
-					<div ng-repeat="cliente in clientes" ng-class="{'bg-animate-color': cliente.canal == infosAdm.bubble_id, 'current-cliente': cliente.client_socket_id == infosAdm.client_socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)" ng-if="cliente.canal == infosAdm.bubble_id || cliente.canal == user._id">
+					<div ng-repeat="cliente in conversas" ng-class="{'bg-animate-color': cliente.canal_atual == administrador.bubble_id, 'current-cliente': cliente.socket_id == conversa.socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)">
 						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 						<div class="canal-nome">
-							<div>{{cliente.client_socket_id}}</div>
+							<div>{{cliente.socket_id}}</div>
+							<div>{{ultimaMsg(cliente).mensagem}}</div>
 							<div class="sub-desc"><span ng-class="{'loading': cliente.client_digitando}">{{cliente.client_digitando ? 'digitando ' : cliente.ultima_msg.msg}}</span></div>
 						</div>
-						<div class="canal-nome pull-right" ng-if="cliente.nao_visulizadas">
-							<div ng-bind="cliente.ultima_msg.criado | date:'HH:mm'" class="hrMsg"></div>
-							<div class="nao-visu bg-animate-color">{{cliente.nao_visulizadas}}</div>
+						<div class="canal-nome pull-right">
+							<div ng-bind="ultimaMsg(cliente).data | date:'HH:mm'" class="hrMsg"></div>
+							<div ng-if="cliente.nao_visulizadas" class="nao-visu bg-animate-color">{{cliente.nao_visulizadas}}</div>
 						</div>
 					</div>
 				</div>
@@ -42,7 +43,7 @@
 				      	<a ng-click="dadosCliente()" href="javascript:void(0)" class="perfil-toggle">
                             <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
                             <div class="descricoes">
-                            	<div>{{infosAdm.client_socket_id}}</div>
+                            	<div>{{conversa.socket_id}}</div>
                             	<div class="sub-desc">
                             		<div ng-class="{'loading': infosAdm.client_digitando}" ng-if="infosAdm.client_digitando">digitando </div>
                             		<div ng-if="!infosAdm.client_digitando">
@@ -61,17 +62,17 @@
 				  </div>
 				</nav>
 				<div class="chat-canal-0">
-			    	<div ng-show="textareaBody">
+			    	<div ng-show="textareaBody" class="row-height100">
 				    	<div class="eng-body-chat">
 					    	<div id="body" class="body-chat scrollme" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
 								<div class="eng-msgs">
-									<div ng-repeat="msg in messages" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
+									<div ng-repeat="msg in conversa.mensagens" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
 										<div class="msg" ng-class="{'right-msg': !msg.remetente}">
-											<div class="MsgEmSi wrapword">{{msg.msg}}</div>
+											<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
 											<div class="statusMsg" ng-if="msg.remetente">
 												<i class="material-icons" ng-class="{'vzldo': msg.visualizado}">&#xE877;</i>
 											</div>
-											<div ng-bind="msg.criado | date:'HH:mm'" class="hrMsg"></div>
+											<div ng-bind="msg.data | date:'HH:mm'" class="hrMsg"></div>
 										</div>
 									</div>
 								</div>

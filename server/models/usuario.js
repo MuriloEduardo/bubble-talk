@@ -21,11 +21,7 @@ var usuarioSchema = mongoose.Schema({
 	conversas: [
 		{
 			socket_id: String,
-			digitando: Boolean,
 			ultima_visualizacao: {type: Date},
-			ultima_mensagem: String,
-			nao_visualizadas: Number,
-			online: Boolean,
 			mensagens: [
 				{
 					mensagem: String,

@@ -85,15 +85,19 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="javascript:void(0)" ng-click="goInternalPages('app')">
-                        <div id="logotipo"><i class="material-icons">bubble_chart</i></div>
+                        <div id="logotipo">
+                            <i class="material-icons">&#xE6DD;</i>
+                        </div>
                     </a>
                 </div>
                 <ul class="nav navbar-left top-nav top-nav-no-padding">
                     <li ng-show="menuLeft">
-                        <a id="toggleMenu" href="javascript:void(0)"><i class="material-icons">menu</i></a>
+                        <a id="toggleMenu" href="javascript:void(0)">
+                            <i class="material-icons">&#xE5D2;</i>
+                        </a>
                     </li>
                     <li class="search-top">
-                        <i class="material-icons">search</i>
+                        <i class="material-icons">&#xE8B6;</i>
                         <input type="text" placeholder="Busque por conversas, clientes, dúvidas ...">
                     </li>
                 </ul>
@@ -202,18 +206,30 @@
                     </li>
                 </ul>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav side-nav bg-animate-color" ng-show="menuLeft">
+                    <ul class="nav navbar-nav side-nav text-center" ng-show="menuLeft">
                         <li ng-class="isActive('bubble')">
-                            <a href="javascript:void(0)" ng-click="goInternalPages('bubble')"><i class="material-icons">chat</i><span>Conversas</span></a>
+                            <a href="javascript:void(0)" ng-click="goInternalPages('bubble')">
+                                <p><i class="material-icons">chat</i></p>
+                                <span>Conversas</span>
+                            </a>
                         </li>
                         <li ng-class="isActive('aparencia')">
-                            <a href="javascript:void(0)"><i class="material-icons">format_paint</i><span>Aparência</span></a>
+                            <a href="javascript:void(0)">
+                                <p><i class="material-icons">format_paint</i></p>
+                                <span>Aparência</span>
+                            </a>
                         </li>
                         <li ng-class="isActive('equipe')">
-                            <a href="javascript:void(0)" ng-click="goInternalPages('equipe')"><i class="material-icons">people</i><span>Equipe</span></a>
+                            <a href="javascript:void(0)" ng-click="goInternalPages('equipe')">
+                                <p><i class="material-icons">people</i></p>
+                                <span>Equipe</span>
+                            </a>
                         </li>
                         <li ng-class="isActive('configuracoes')">
-                            <a href="javascript:void(0)"><i class="material-icons">settings</i><span>Configurações</span></a>
+                            <a href="javascript:void(0)">
+                                <p><i class="material-icons">settings</i></p>
+                                <span>Configurações</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -223,9 +239,7 @@
             </div>
         </div>
         <div class="modal fade" id="load-modal" tabindex="-1" role="dialog" aria-labelledby="load-modal">
-            <div class="modal-dialog" role="document">
-                <i class="rotate-animate material-icons load-icon-modal">cached</i>
-            </div>
+            <i class="rotate-animate material-icons load-icon-modal">&#xE3A5;</i>
         </div>
     </body>
 </html>
