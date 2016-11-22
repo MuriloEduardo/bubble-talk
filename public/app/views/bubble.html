@@ -1,3 +1,4 @@
+{{administrador.canal_atual}}
 <div class="row row-height100">
 	<div class="side-left col-md-11" ng-class="viewConversasEquipe ? 'col-md-9' : 'col-md-11'">
 		<div class="row conversas-container conversas-body">
@@ -25,8 +26,7 @@
 						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 						<div class="canal-nome">
 							<div>{{cliente.socket_id}}</div>
-							<div>{{ultimaMsg(cliente).mensagem}}</div>
-							<div class="sub-desc"><span ng-class="{'loading': cliente.client_digitando}">{{cliente.client_digitando ? 'digitando ' : cliente.ultima_msg.msg}}</span></div>
+							<div class="sub-desc wrapword"><span ng-class="{'loading': cliente.digitando}">{{cliente.digitando ? 'digitando ' : ultimaMsg(cliente).mensagem}}</span></div>
 						</div>
 						<div class="canal-nome pull-right">
 							<div ng-bind="ultimaMsg(cliente).data | date:'HH:mm'" class="hrMsg"></div>
@@ -66,7 +66,7 @@
 				    	<div class="eng-body-chat">
 					    	<div id="body" class="body-chat scrollme" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
 								<div class="eng-msgs">
-									<div ng-repeat="msg in conversa.mensagens" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
+									<div ng-repeat="msg in conversa.mensagens track by $index" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
 										<div class="msg" ng-class="{'right-msg': !msg.remetente}">
 											<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
 											<div class="statusMsg" ng-if="msg.remetente">

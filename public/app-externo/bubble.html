@@ -553,7 +553,7 @@
 					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="descApp">
 						<div>{{conversa.nome || conversa.dados.appname}}</div>
-						<div class="sub-des"><span ng-class="{'loading': cliente.client_digitando}">{{cliente.client_digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+						<div class="sub-des"><span ng-class="{'loading': cliente.digitando}">{{cliente.digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
 					</div>
 				</div>
 				<div class="conversasTit" ng-show="openConversasF">
@@ -603,7 +603,7 @@
 		</footer>
 		<!-- Listagem das Conversas -->
 		<div id="body-conversas" ng-show="openConversasF">
-			<div ng-repeat="conversa in conversas" class="eng-cada-canal">
+			<div ng-repeat="conversa in conversas" class="eng-cada-canal" ng-hide="cliente.particular && conversa._id == cliente.bubble_id">
 				<a href="javascript:void(0)" ng-click="trocarCanal(conversa._id)">
 					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="pri-des">{{conversa.nome || conversa.dados.appname}}</div>
@@ -659,7 +659,8 @@
 		// Eu aqui, sou um cliente
 		$scope.cliente = {
 			canal_atual: undefined,
-			socket_id: undefined
+			socket_id: undefined,
+			digitando: undefined
 		}
 
 		$scope.conversa = {};
@@ -714,32 +715,33 @@
 		}
 
 		$scope.typing = function() {
-			$scope.digitando = $scope.message ? true : false;
+			$scope.safeApply(function() {
+				$scope.cliente.digitando = $scope.message ? true : false;
+			});
 		}
 
 		$scope.trocarCanal = function(canal_id) {
 			$scope.cliente.canal_atual = canal_id;
 			$scope.openConversasF      = false;
-			$scope.conversa 	   = $scope.getConversas(canal_id);
+			$scope.conversa 	       = $scope.getConversas(canal_id);
 			
 			updateClienteStorage();
 
 			socket.emit('trocar canal', canal_id);
 		}
 
-		$scope.$watch('digitando', function() {
-			socket.emit('digitando', {digitando: $scope.digitando, usuario: $scope.cliente});
+		$scope.$watch('cliente.digitando', function() {
+			socket.emit('digitando', $scope.cliente);
 		});
 
 		socket.on('nova mensagem', function(data) {
-			console.log(data)
 			displayMsg(data.mensagem);
 		});
 
 		socket.on('digitando', function(data) {
-			if(data.usuario.socket_id != $scope.cliente.socket_id && data.usuario.socket_id == $scope.cliente.canal_atual) {
+			if(data.socket_id != $scope.cliente.socket_id && data.socket_id == $scope.cliente.canal_atual) {
 				$scope.safeApply(function() {
-					$scope.cliente.client_digitando = data.digitando;
+					$scope.cliente.digitando = data.digitando;
 				});
 			}
 		});
@@ -747,23 +749,24 @@
 		socket.on('change:canal', function(canal) {
 			$scope.safeApply(function() {
 				$scope.cliente.canal_atual = canal;
+				var m = $scope.getConversas(canal);
 	        });
 	        updateClienteStorage();
 		});
 
-		socket.on('tornou sua', function(infosAdm) {
+		socket.on('change:particular', function(data) {
+			var c = $scope.getConversas(data.socket_id);
+			if(c.conversas.length) {
+				c.conversas.push(data.cliente.mensagens);
+			} else{
+				c.conversas = data.cliente.mensagens;
+			}
 
-			$scope.cliente.conversa_particular = true;
+			$scope.cliente.particular = true;
 
 			// Administrador clicou na conversa sem dono
 			// E agora essa conversa vai ser entre os dois
-			$scope.trocarCanal(infosAdm);
-
-			var messages = $filter('filter')($scope.messages, {socket_id: infosAdm.client_socket_id}, true);
-			
-			for (var i = 0; i < messages.length; i++) {
-				messages[i].canal = infosAdm.canal_atual
-			}
+			$scope.trocarCanal(data.socket_id);
 		});
 
 		socket.on('visualizou', function(cliente) {
@@ -816,7 +819,7 @@
 			            if (!event.shiftKey) {
 			              event.preventDefault();
 			              scope.$apply(attrs.enterSubmit);
-			              scope.digitando = false;
+			              scope.cliente.digitando = false;
 			            }
 		          	}
 		        });
