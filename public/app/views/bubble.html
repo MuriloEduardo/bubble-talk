@@ -20,7 +20,17 @@
 					    </ul>
 				  	</div>
 				</nav>
-				<div class="chamados-clientes">
+				<div class="eng-sem-cliente" ng-show="!conversas.length">
+					<div class="sem-clientes">
+						<p><i class="material-icons">&#xE7F3;</i></p>
+						<p>
+							<h3>Óh não!</h3>
+							<h4>Ainda sem conversas</h4>
+						</p>
+						<p>Quando algum dos seus usuarios lhe chamar, você com certeza será avisado.</p>
+					</div>
+				</div>
+				<div class="chamados-clientes" ng-show="conversas.length">
 					<!-- Conversas -->
 					<div ng-repeat="cliente in conversas" ng-class="{'bg-animate-color': cliente.canal_atual == administrador.bubble_id, 'current-cliente': cliente.socket_id == conversa.socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)">
 						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>

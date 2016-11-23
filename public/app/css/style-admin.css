@@ -93,7 +93,6 @@ ul.navbar-nav[ng-show="menuLeft"] {
 #page-wrapper {
     height:100%;
     padding-left: 45px;
-    padding-top: 90px;
     background-color: rgba(255,255,255,.2);
 }
 .huge {
@@ -104,7 +103,6 @@ ul.navbar-nav[ng-show="menuLeft"] {
 @media(min-width:768px) {
     #wrapper {
         padding-left: 185px;
-        padding-top: 45px;
         height: 100%;
     }
 }
@@ -833,6 +831,7 @@ label{
 }
 .container-content {
     height: 100%;
+    padding-top: 130px;
 }
 .container-content .row-height100 {
     height: 100%;
@@ -1054,4 +1053,18 @@ form {margin:0;}
     background: #d7dbd7;
     height: 100%;
     padding-top: 50px;
+}
+.eng-sem-cliente {
+    background-color: #f7f9fa;
+    height: 100%;
+    border-left: solid thin #e7e7e7;
+    border-bottom: solid thin #e7e7e7;
+}
+.sem-clientes {
+    padding:30px;
+    text-align: center;
+    color: #ccc;
+}
+.sem-clientes h3 {
+    margin-top: 0;
 }

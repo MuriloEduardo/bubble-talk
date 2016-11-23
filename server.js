@@ -124,7 +124,7 @@ io.sockets.on('connection', function(socket) {
 		});
 	});
 
-	socket.on('enviar mensagem', function(data) {
+	socket.on('sent:mensagem', function(data) {
 
 		// Para ele mesmo
 		// OU
@@ -141,9 +141,9 @@ io.sockets.on('connection', function(socket) {
 				if(!clientes.length) {
 					// Cliente ainda não existe
 					bubble.conversas.push(usuario);
-					bubble.save(function(err,bubble) {
+					bubble.save(function(err,res) {
 						if(err) throw err;
-						if(bubble.nModified) novaMsgBubble(data);
+						novaMsgBubble(data);
 					});
 				} else {
 					novaMsgBubble(data);
@@ -156,12 +156,13 @@ io.sockets.on('connection', function(socket) {
 			// Usuario
 			Usuario.findOne({_id: usuario.canal_atual}, function(err, user){
 				var clientes = user.conversas.filter(function(el){return el.socket_id==usuario.socket_id});
+				console.log(clientes)
+				console.log(data)
 				if(!clientes.length) {
-					// Cliente ainda não existe
 					user.conversas.push(usuario);
 					user.save(function(err,user) {
 						if(err) throw err;
-						if(user.nModified) novaMsgAdm(data);
+						novaMsgAdm(data);
 					});
 				} else {
 					novaMsgAdm(data);
@@ -171,12 +172,8 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('visualizar', function(infosAdm) {
-
 		if(usuarios[infosAdm.client_socket_id]) {
-
 			usuarios[infosAdm.client_socket_id].emit('visualizou', infosAdm);
-
-			// Salvar no banco de dados
 			Usuario.update({_id: infosAdm.canal_atual},{
 				"$set": {conversas: infosAdm.conversas}
 			},function(err) {
@@ -186,9 +183,7 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('change:particular', function(data) {
-		
 		io.sockets.emit('change:particular', {socket_id:data.administrador.socket_id,cliente:data.cliente});
-		
 		Usuario.findOne({_id: data.administrador.socket_id}, function(err, user){
 			user.conversas.push(data.cliente);
 			user.save(function(err,res) {
@@ -221,8 +216,6 @@ io.sockets.on('connection', function(socket) {
 			console.log('usuario')
 			console.log(res)
 			console.log('=============')
-
-			
 		});*/
 
 		// Insere e salva no usuario
@@ -288,7 +281,6 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('digitando', function(data) {
-		console.log(data)
 		if(data.canal_atual == data.bubble_id) {
 			io.sockets.emit('digitando', data);
 		} else {

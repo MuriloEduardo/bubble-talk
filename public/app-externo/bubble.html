@@ -708,7 +708,7 @@
 
 			$scope.cliente.mensagem = send_mensagem;
 
-			socket.emit('enviar mensagem', $scope.cliente);
+			socket.emit('sent:mensagem', $scope.cliente);
 
 			// Reset form
 			$scope.message = undefined;

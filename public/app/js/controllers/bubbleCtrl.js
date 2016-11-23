@@ -18,12 +18,14 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 	if(bubble.data.conversas.length) {
 		for (var i = 0; i < bubble.data.conversas.length; i++) {
+			if(!bubble.data.conversas[i].mensagens.length) return false;
 			bubble.data.conversas[i].canal = bubble.data._id;
 			$scope.conversas.push(bubble.data.conversas[i]);
 		}
 	}
 	if($rootScope.user.conversas.length) {
 		for (var i = 0; i < $rootScope.user.conversas.length; i++) {
+			if(!$rootScope.user.conversas[i].mensagens.length) return false;
 			$rootScope.user.conversas[i].canal = $rootScope.user._id;
 			$scope.conversas.push($rootScope.user.conversas[i]);
 		}
@@ -124,7 +126,9 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				data: new Date()
 			}
 
-			socket.emit('enviar mensagem', send_mensagem);
+			$scope.administrador.mensagem = send_mensagem;
+
+			socket.emit('sent:mensagem', $scope.administrador);
 
 			// Deixa o text area em branco novamente
 			$scope.message = undefined;
@@ -168,12 +172,14 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 		socket.on('nova mensagem', function(data) {
 			var m = $filter('filter')($scope.conversas, {socket_id: data.socket_id}, true)[0];
-			$scope.safeApply(function() {
-				if(m) {
+			if(m) {
+				$scope.safeApply(function() {
 					// Conversa ja existia no banco
 					// So continuar dando push
 					m.mensagens.push(data.mensagem);
-				} else {
+				});
+			} else {
+				$scope.safeApply(function() {
 					// Nova conversa
 					$scope.conversas.push({
 						bubble_id: data.bubble_id,
@@ -181,8 +187,8 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 						socket_id: data.socket_id,
 						mensagens: [data.mensagem]
 					});
-				}
-			});
+				});
+			}
 			scrollBottom();
 		});
 
