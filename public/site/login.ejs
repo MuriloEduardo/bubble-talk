@@ -46,19 +46,6 @@
 					<div class="form-group">
 						<h2 class="text-center">Entre, fique a vontade!</h2>
 					</div>
-					<div class="row">
-						<div class="col-md-6 col-sm-6 col-xs-6">
-							<div class="form-group">
-								<button class="btn btn-primary form-control">Facebook</button>
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6">
-							<div class="form-group">
-								<button class="btn btn-danger form-control">Google</button>
-							</div>
-						</div>
-					</div>
-					<div class="separator"><div>ou</div></div>
 					<div class="alert alert-danger" ng-show="message_login">
 						<a href="#" target="_self" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 						<span ng-bind-html="message_login"></span>
@@ -73,17 +60,26 @@
 							<input type="password" class="form-control" placeholder="Sua senha" name="senha" ng-model="dados.senha" required>
 						</div>
 						<div class="form-group esqueci">
-							<a href="/experimente-gratis">Recupere sua senha facilmente</a>
-						</div>
-						<div>
-							<input type="checkbox" id="remember" name="remember" ng-model="dados.remember">
-							<label for="remember">Lembrar-me</label>
+							<a href="/experimente-gratis">Vish! Esqueci minha senha</a>
 						</div>
 						<div class="form-group">
 							<button type="submit" class="btn btn-default form-control" ng-disabled="loginForm.$invalid" ng-click="sended=true">
-								<i class="material-icons rotate-animate" ng-show="sended">cached</i>
+								<img src="../img/ring-alt-xs.svg" ng-show="sended" alt="Carregando..." class="pull-left">
 								<span>Entrar</span>
 							</button>
+						</div>
+						<div class="separator"><div>ou</div></div>
+						<div class="row">
+							<div class="col-md-6 col-sm-6 col-xs-6">
+								<div class="form-group">
+									<button class="btn btn-primary form-control">Facebook</button>
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-6 col-xs-6">
+								<div class="form-group">
+									<button class="btn btn-danger form-control">Google</button>
+								</div>
+							</div>
 						</div>
 					</form>
 					<br>

@@ -175,25 +175,41 @@ io.sockets.on('connection', function(socket) {
 	socket.on('visualizar', function(data) {
 		io.sockets.in(data.usuario.canal_atual).emit('visualizou', data.usuario);
 		var _id = data.usuario.cliente_socket_id ? data.usuario.cliente_socket_id : data.usuario.socket_id;
-		Usuario.findOne({_id: data.usuario.canal_atual}, function(err, user){
-			if(user) {
-				var cliente = user.conversas.filter(function(el){return el.socket_id==_id})[0];
-				if(cliente) {
-					var msgs = data.conversa.conversas ? data.conversa.conversas : data.conversa.mensagens;
-					cliente.mensagens = msgs;
-				}
-			}
-			user.save(function(err) {
-				if(err) throw err;
-			});
+		var msgs = data.conversa.conversas ? data.conversa.conversas : data.conversa.mensagens;
+		Usuario.update({
+		    "_id" : data.usuario.canal_atual,
+		    "conversas" : {
+		        $elemMatch : {"socket_id": _id}
+		    }
+		}, {
+		    "$set" : {
+		        "conversas.$.mensagens" : msgs
+		    }
+		}, function(err) {
+			if(err) throw err;
 		});
 	});
 
 	socket.on('change:particular', function(data) {
 		io.sockets.emit('change:particular', data);
 		Usuario.findOne({_id: data.administrador.socket_id}, function(err, user){
-			user.conversas.push(data.cliente);
-			user.save(function(err,res) {
+			var c = user.conversas.filter(function(el){return el.socket_id==data.cliente.socket_id})[0];
+			console.log(c)
+			// PRESTAR ATENÇÃO //
+			// Se ja existe uma conversa com este socket_id
+			// Significa que o cliente conversou em particular com este usuario
+			// Mas voltou a enviar mensagens para todos da equipe
+			// E novamente este usuario tornou esta conversa particular
+			if(c) {
+				//c.mensagens.push(data.cliente.
+				console.log("c")
+				console.log(c)
+				console.log("data.cliente")
+				console.log(data.cliente)
+			} else {
+				user.conversas.push(data.cliente);
+			}
+			user.save(function(err) {
 				if(err) throw err;
 				Bubble.update({
 				    "_id" : data.administrador.bubble_id
@@ -201,53 +217,11 @@ io.sockets.on('connection', function(socket) {
 					"$pull" : {
 				        "conversas" : {"socket_id": data.cliente.socket_id}
 				    }
-				}, function(err,res) {
+				}, function(err) {
 					if(err) throw err;
 				});
 			});
 		});
-
-		/*Usuario.update({
-		    "_id" : data.administrador.socket_id,
-		    "conversas" : {
-		        $elemMatch : {"socket_id": data.cliente.socket_id}
-		    }
-		}, {
-		    "$push" : {
-		        "conversas.$.mensagens" : data.cliente.mensagens
-		    }
-		}, function(err,res) {
-			if(err) throw err;
-
-			console.log('=============')
-			console.log('usuario')
-			console.log(res)
-			console.log('=============')
-		});*/
-
-		// Insere e salva no usuario
-		// As conversas que estavam para todos salvos no bubble
-		// e nao no usuario
-		/*Usuario.update({_id: data.administrador.socket_id},{
-			"$set": {conversas: data.cliente.mensagens}
-		},function(err, user){
-
-			if(err) throw err;
-			// Exclui as ja citadas mensagens que estavam no buuble, por ser de todos
-			// e agora torna-se deste usuario que clicou
-			Bubble.update({_id: data.administrador.bubble_id},{
-				"$pull": {conversas: {socket_id: infosAdm.client_socket_id}}
-			},function(err){
-
-				if(err) throw err;
-				
-				trocaCanal(infosAdm.canal_atual);
-
-				if(usuarios[infosAdm.client_socket_id]) {
-					usuarios[infosAdm.client_socket_id].emit('tornou sua', infosAdm);
-				}
-			});
-		});*/
 	});
 
 	// Disconnect

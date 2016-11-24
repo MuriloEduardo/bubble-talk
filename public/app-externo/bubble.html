@@ -603,7 +603,7 @@
 		</footer>
 		<!-- Listagem das Conversas -->
 		<div id="body-conversas" ng-show="openConversasF">
-			<div ng-repeat="conversa in conversas" class="eng-cada-canal" ng-hide="cliente.particular && conversa._id == cliente.bubble_id">
+			<div ng-repeat="conversa in conversas" class="eng-cada-canal">
 				<a href="javascript:void(0)" ng-click="trocarCanal(conversa._id)">
 					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="pri-des">{{conversa.nome || conversa.dados.appname}}</div>

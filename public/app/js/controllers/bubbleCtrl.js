@@ -52,14 +52,17 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 	};
 
 	var scrollBottom = function() {
-		$scope.$broadcast('rebuild:messages');
+		$scope.safeApply(function() {
+			$scope.$broadcast('rebuild:messages');
+	    });
 	}
 
 	$scope.dadosCliente = function() {
-    	if(!$scope.dadosClienteToggle)
+    	if(!$scope.dadosClienteToggle) {
     		$scope.dadosClienteToggle = true;
-    	else
+    	} else {
     		$scope.dadosClienteToggle = false;
+    	}
     }
 
     $scope.ultimaMsg = function(data) {
@@ -78,11 +81,13 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
     var displayVisualiza = function() {
     	var m = $filter('filter')($scope.conversas, {socket_id: $scope.administrador.cliente_socket_id, canal_atual: $scope.administrador.canal_atual}, true)[0];
-		for (var i = 0; i < m.mensagens.length; i++) {
-			if(!m.mensagens[i].remetente) {
-				$scope.safeApply(function() {
-					m.mensagens[i].visulizada = true;
-		        });
+		if(m) {
+			for (var i = 0; i < m.mensagens.length; i++) {
+				if(!m.mensagens[i].remetente) {
+					$scope.safeApply(function() {
+						m.mensagens[i].visulizada = true;
+			        });
+				}
 			}
 		}
     }
@@ -118,6 +123,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 			if($scope.administrador.cliente_socket_id && $scope.administrador.cliente_socket_id==$scope.conversa.socket_id) {
 				$timeout(function(){
 					visualizar();
+					scrollBottom();
 					displayVisualiza();
 				});
 			}
@@ -158,6 +164,8 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				// nao clicou em nenhum conversa
 				$scope.textareaBody = true;
 				$scope.conversa = cliente;
+				console.log(cliente)
+				console.log($scope.conversas)
 				$scope.administrador.cliente_socket_id = cliente.socket_id;
 			});
 
@@ -165,12 +173,12 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				// Quando o administrador clica nessa conversa sem administrador, deve se tornar sua
 				// Copiar mensagens deste id para as conversas deste usuario
 				socket.emit('change:particular', {cliente:cliente,administrador:$scope.administrador});
+				cliente.canal_atual = $scope.administrador.socket_id;
 			}
-
-			scrollBottom();
 
 			$timeout(function(){
 				visualizar();
+				scrollBottom();
 				displayVisualiza();
 			});
 		}
@@ -222,7 +230,6 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				if(m) m.digitando = data.digitando;
 			});
 		});
-
 
 		socket.on('visualizou', function(data) {
 			if($scope.administrador.cliente_socket_id) {
