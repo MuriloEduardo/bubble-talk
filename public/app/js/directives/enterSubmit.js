@@ -11,7 +11,7 @@ app.directive('enterSubmit', function() {
 		            if (!event.shiftKey) {
 		              event.preventDefault();
 		              scope.$apply(attrs.enterSubmit);
-		              scope.digitando = false;
+		              scope.administrador.digitando = false;
 		            }
 	          	}
 	        });

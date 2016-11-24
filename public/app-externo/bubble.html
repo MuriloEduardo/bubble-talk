@@ -553,7 +553,7 @@
 					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="descApp">
 						<div>{{conversa.nome || conversa.dados.appname}}</div>
-						<div class="sub-des"><span ng-class="{'loading': cliente.digitando}">{{cliente.digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+						<div class="sub-des"><span ng-class="{'loading': conversa.digitando}">{{conversa.digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
 					</div>
 				</div>
 				<div class="conversasTit" ng-show="openConversasF">
@@ -575,7 +575,7 @@
 			<div class="aviso-top-fixed" ng-if="!cliente.conversa_particular && cliente.canal_atual == cliente.bubble_id">
 				Quando o primeiro da equipe lhe responder, se iniciará uma conversa particular.
 			</div>
-			<div ng-repeat="msg in conversa.conversas" class="row-msd-uniq">
+			<div ng-repeat="msg in conversa.conversas" class="row-msd-uniq" ng-if="msg.mensagem.length">
 				<div class="msg" ng-class="{'right-msg': msg.remetente}">
 					<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
 					<div class="statusMsg" ng-if="!msg.remetente">
@@ -652,7 +652,7 @@
 		}
 	}
 
-	angular.module('bubble-app', ['ngAnimate', 'LocalStorageModule']).controller('chatCtrl', function($scope, $http, localStorageService, $filter, $timeout){
+	angular.module('bubble-app', ['ngAnimate', 'LocalStorageModule']).controller('chatCtrl', function($scope, $http, localStorageService, $filter, $timeout, $window){
 
 		var socket = io.connect('http://127.0.0.1:4000/');
 		
@@ -679,6 +679,12 @@
 
 		var updateClienteStorage = function() {
 			localStorageService.set('usuario', $scope.cliente);
+		}
+
+		var visualizar = function() {
+			if($scope.conversa && $scope.openChatF && $scope.conversa._id==$scope.cliente.canal_atual) {
+				socket.emit('visualizar', {usuario:$scope.cliente,conversa:$scope.conversa});
+			}
 		}
 
 		$scope.getcliente = function() {
@@ -715,15 +721,19 @@
 		}
 
 		$scope.typing = function() {
-			$scope.safeApply(function() {
-				$scope.cliente.digitando = $scope.message ? true : false;
-			});
+			$scope.cliente.digitando = $scope.message ? true : false;
+		}
+
+		$window.onfocus = function(){
+			$timeout(function() { visualizar() });
 		}
 
 		$scope.trocarCanal = function(canal_id) {
 			$scope.cliente.canal_atual = canal_id;
 			$scope.openConversasF      = false;
 			$scope.conversa 	       = $scope.getConversas(canal_id);
+
+			$timeout(function() { visualizar() });
 			
 			updateClienteStorage();
 
@@ -734,14 +744,19 @@
 			socket.emit('digitando', $scope.cliente);
 		});
 
+		$scope.$watch('openChatF', function(e) {
+			$timeout(function() { visualizar() });
+		});
+
 		socket.on('nova mensagem', function(data) {
-			displayMsg(data.mensagem);
+			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
+			if(_id==$scope.cliente.socket_id) displayMsg(data.mensagem);
 		});
 
 		socket.on('digitando', function(data) {
-			if(data.socket_id != $scope.cliente.socket_id && data.socket_id == $scope.cliente.canal_atual) {
+			if($scope.conversa && data.socket_id != $scope.cliente.socket_id && data.socket_id == $scope.cliente.canal_atual) {
 				$scope.safeApply(function() {
-					$scope.cliente.digitando = data.digitando;
+					$scope.conversa.digitando = data.digitando;
 				});
 			}
 		});
@@ -749,32 +764,28 @@
 		socket.on('change:canal', function(canal) {
 			$scope.safeApply(function() {
 				$scope.cliente.canal_atual = canal;
-				var m = $scope.getConversas(canal);
 	        });
 	        updateClienteStorage();
 		});
 
 		socket.on('change:particular', function(data) {
-			var c = $scope.getConversas(data.socket_id);
-			if(c.conversas.length) {
-				c.conversas.push(data.cliente.mensagens);
-			} else{
-				c.conversas = data.cliente.mensagens;
-			}
-
-			$scope.cliente.particular = true;
+			var c = $scope.getConversas(data.administrador.socket_id);
+			c.conversas = data.cliente.mensagens;
 
 			// Administrador clicou na conversa sem dono
 			// E agora essa conversa vai ser entre os dois
-			$scope.trocarCanal(data.socket_id);
+			$scope.cliente.particular = true;
+			$scope.trocarCanal(data.administrador.socket_id);
 		});
 
-		socket.on('visualizou', function(cliente) {
-			for (var i = 0; i < $scope.messages.length; i++) {
-				if($scope.messages[i].client_socket_id == cliente.client_socket_id) {
-					$scope.safeApply(function() {
-						$scope.messages[i].visualizado = true;
-					});
+		socket.on('visualizou', function(data) {
+			if($scope.conversa && data.socket_id!=$scope.cliente.socket_id) {
+				for (var i = 0; i < $scope.conversa.conversas.length; i++) {
+					if(!$scope.conversa.conversas[i].remetente) {
+						$scope.safeApply(function() {
+							$scope.conversa.conversas[i].visulizada = true;
+				        });
+					}
 				}
 			}
 		});

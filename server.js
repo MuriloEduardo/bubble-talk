@@ -87,16 +87,17 @@ io.sockets.on('connection', function(socket) {
 	}
 
 	function novaMsgAdm(data) {
+		var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
 		Usuario.update({
 		    "_id" : data.canal_atual,
 		    "conversas" : {
-		        $elemMatch : {"socket_id": data.socket_id}
+		        $elemMatch : {"socket_id": _id}
 		    }
 		}, {
 		    "$push" : {
 		        "conversas.$.mensagens" : data.mensagem
 		    }
-		}, function(err,data) {
+		}, function(err) {
 			if(err) throw err;
 		});
 	}
@@ -153,14 +154,14 @@ io.sockets.on('connection', function(socket) {
 			
 			io.sockets.in(data.canal_atual).emit('nova mensagem', data);
 
+			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
+
 			// Usuario
-			Usuario.findOne({_id: usuario.canal_atual}, function(err, user){
-				var clientes = user.conversas.filter(function(el){return el.socket_id==usuario.socket_id});
-				console.log(clientes)
-				console.log(data)
+			Usuario.findOne({_id: data.canal_atual}, function(err, user){
+				var clientes = user.conversas.filter(function(el){return el.socket_id==_id});
 				if(!clientes.length) {
 					user.conversas.push(usuario);
-					user.save(function(err,user) {
+					user.save(function(err) {
 						if(err) throw err;
 						novaMsgAdm(data);
 					});
@@ -171,19 +172,25 @@ io.sockets.on('connection', function(socket) {
 		}
 	});
 
-	socket.on('visualizar', function(infosAdm) {
-		if(usuarios[infosAdm.client_socket_id]) {
-			usuarios[infosAdm.client_socket_id].emit('visualizou', infosAdm);
-			Usuario.update({_id: infosAdm.canal_atual},{
-				"$set": {conversas: infosAdm.conversas}
-			},function(err) {
+	socket.on('visualizar', function(data) {
+		io.sockets.in(data.usuario.canal_atual).emit('visualizou', data.usuario);
+		var _id = data.usuario.cliente_socket_id ? data.usuario.cliente_socket_id : data.usuario.socket_id;
+		Usuario.findOne({_id: data.usuario.canal_atual}, function(err, user){
+			if(user) {
+				var cliente = user.conversas.filter(function(el){return el.socket_id==_id})[0];
+				if(cliente) {
+					var msgs = data.conversa.conversas ? data.conversa.conversas : data.conversa.mensagens;
+					cliente.mensagens = msgs;
+				}
+			}
+			user.save(function(err) {
 				if(err) throw err;
 			});
-		}
+		});
 	});
 
 	socket.on('change:particular', function(data) {
-		io.sockets.emit('change:particular', {socket_id:data.administrador.socket_id,cliente:data.cliente});
+		io.sockets.emit('change:particular', data);
 		Usuario.findOne({_id: data.administrador.socket_id}, function(err, user){
 			user.conversas.push(data.cliente);
 			user.save(function(err,res) {
@@ -248,18 +255,18 @@ io.sockets.on('connection', function(socket) {
 		
 		if(!socket.socket_id) return;
 
-		/*for (var i = 0; i < dados_users.length; i++) {
+		/*for (var i = 0; i < dadosusuarios.length; i++) {
 			
-			if(socket.socket_id == dados_users[i].id) {
+			if(socket.socket_id == dadosusuarios[i].id) {
 
-				dados_users[i] = {
+				dadosusuarios[i] = {
 					id: socket.socket_id,
 					connected: socket.connected,
 					ultima_visulizacao: new Date()
 				}
 
 				Usuario.update({_id: usuarios[socket.socket_id].canal_atual},{
-					"$push": {clientes: dados_users[i]}
+					"$push": {clientes: dadosusuarios[i]}
 				},function(err, docs) {
 			
 					if(err) throw err;

@@ -749,6 +749,9 @@ label{
 .cada-canal .canal-nome span {
     font-size: 12px;
 }
+.cada-canal .canal-nome span.loading {
+    /*font-weight: bold;*/
+}
 .cada-canal .hrMsg {
     font-size: 10px;
 }
@@ -767,7 +770,7 @@ label{
     left: 0;
     width: 100%;
     height: 6px;
-    background: #009688;
+    background: #58e870;
 }
 .chat-canal-0 .body-chat {
     width: 100%;
@@ -994,7 +997,7 @@ form {margin:0;}
   vertical-align: bottom;
   -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
   animation: ellipsis steps(4,end) 900ms infinite;
-  content: "\2026"; /* ascii code for the ellipsis character */
+  content: "\2026";
   width: 0px;
 }
 
@@ -1031,23 +1034,29 @@ form {margin:0;}
     background: transparent !important;
 }
 .nao-visu {
-    width: auto;
-    height: auto;
+    width: 21px;
+    height: 21px;
+    line-height: 21px;
     color: #fff;
-    margin: 2.5px 0;
+    margin: 2.5px;
     font-weight: bold;
     text-align: center;
     border-radius: 100%;
-    line-height: 22px;
     font-size: 10px;
-    padding: 1px 0;
+    float: right;
+    background-color: #58e870;
+}
+
+/* Esconde */
+.nao-visu.ng-hide-add {
+  animation: .3s zoomOut;
+}
+/* Exibe */
+.nao-visu.ng-hide-remove {
+  animation: .2s zoomIn;
 }
 .cada-canal.bg-animate-color {
     color: #333;
-}
-.cada-canal.bg-animate-color .nao-visu {
-    background: #fff !important;
-    color: #24c7b1 !important;
 }
 .container-bubble {
     background: #d7dbd7;
@@ -1056,7 +1065,8 @@ form {margin:0;}
 }
 .eng-sem-cliente {
     background-color: #f7f9fa;
-    height: 100%;
+    height: calc(100% - 61px);
+    overflow-y: hidden;
     border-left: solid thin #e7e7e7;
     border-bottom: solid thin #e7e7e7;
 }
@@ -1067,4 +1077,13 @@ form {margin:0;}
 }
 .sem-clientes h3 {
     margin-top: 0;
+}
+.sd {
+    background: rgba(88,232,112,.2);
+}
+.cada-canal.ng-enter {
+  animation: .9s bounceInUp;
+}
+.cada-canal.ng-leave {
+  animation: .9s bounceOutDown;
 }

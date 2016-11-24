@@ -1,4 +1,3 @@
-{{administrador.canal_atual}}
 <div class="row row-height100">
 	<div class="side-left col-md-11" ng-class="viewConversasEquipe ? 'col-md-9' : 'col-md-11'">
 		<div class="row conversas-container conversas-body">
@@ -32,7 +31,7 @@
 				</div>
 				<div class="chamados-clientes" ng-show="conversas.length">
 					<!-- Conversas -->
-					<div ng-repeat="cliente in conversas" ng-class="{'bg-animate-color': cliente.canal_atual == administrador.bubble_id, 'current-cliente': cliente.socket_id == conversa.socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)">
+					<div ng-repeat="cliente in conversas" ng-class="{'sd': cliente.canal_atual == administrador.bubble_id, 'current-cliente': cliente.socket_id == conversa.socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)">
 						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 						<div class="canal-nome">
 							<div>{{cliente.socket_id}}</div>
@@ -40,7 +39,7 @@
 						</div>
 						<div class="canal-nome pull-right">
 							<div ng-bind="ultimaMsg(cliente).data | date:'HH:mm'" class="hrMsg"></div>
-							<div ng-if="cliente.nao_visulizadas" class="nao-visu bg-animate-color">{{cliente.nao_visulizadas}}</div>
+							<div class="nao-visu" ng-show="naoVisualizadas(cliente)">{{naoVisualizadas(cliente)}}</div>
 						</div>
 					</div>
 				</div>
@@ -54,12 +53,12 @@
                             <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
                             <div class="descricoes">
                             	<div>{{conversa.socket_id}}</div>
-                            	<div class="sub-desc">
-                            		<div ng-class="{'loading': infosAdm.client_digitando}" ng-if="infosAdm.client_digitando">digitando </div>
-                            		<div ng-if="!infosAdm.client_digitando">
-                            			<span ng-hide="infosAdm.client_online">visto por último às {{infosAdm.visto_ultimo | date:'HH:mm'}}</span>
-                            			<span ng-show="infosAdm.client_online">online</span>
-                        			</div>
+                            	<div class="sub-desc wrapword">
+                            		<div ng-class="{'loading': conversa.digitando}" ng-show="conversa.digitando">digitando </div>
+                            		<div ng-show="!conversa.digitando">
+                            			<span ng-hide="conversa.online">visto por último às {{cliente.visto_ultimo | date:'HH:mm'}}</span>
+                            			<span ng-show="conversa.online">online</span>
+                            		</div>
                             	</div>
                             </div>
                         </a>
@@ -80,7 +79,7 @@
 										<div class="msg" ng-class="{'right-msg': !msg.remetente}">
 											<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
 											<div class="statusMsg" ng-if="msg.remetente">
-												<i class="material-icons" ng-class="{'vzldo': msg.visualizado}">&#xE877;</i>
+												<i class="material-icons" ng-class="{'vzldo': msg.visulizada}">&#xE877;</i>
 											</div>
 											<div ng-bind="msg.data | date:'HH:mm'" class="hrMsg"></div>
 										</div>
@@ -119,9 +118,6 @@
 					<span>Lorem Ipsum</span>
 				</div>
 			</div>
-			<!-- <div ng-repeat="msg in messages" ng-if="msg.canal == infosAdm.canal_atual">
-				{{msg.msg}}
-			</div> -->
 		</section>
 	</div>
 </div>
