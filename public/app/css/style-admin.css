@@ -749,6 +749,9 @@ label{
 .cada-canal .canal-nome span {
     font-size: 12px;
 }
+.cada-canal .canal-nome span.loading {
+    /*font-weight: bold;*/
+}
 .cada-canal .hrMsg {
     font-size: 10px;
 }
@@ -1031,15 +1034,15 @@ form {margin:0;}
     background: transparent !important;
 }
 .nao-visu {
-    width: auto;
-    height: auto;
+    width: 21px;
+    height: 21px;
+    line-height: 21px;
     color: #fff;
-    margin: 2.5px 0;
+    margin: 2.5px;
     font-weight: bold;
     text-align: center;
     border-radius: 100%;
     font-size: 10px;
-    padding: 4px 9px;
     float: right;
     background-color: #58e870;
 }
@@ -1062,7 +1065,8 @@ form {margin:0;}
 }
 .eng-sem-cliente {
     background-color: #f7f9fa;
-    height: 100%;
+    height: calc(100% - 61px);
+    overflow-y: hidden;
     border-left: solid thin #e7e7e7;
     border-bottom: solid thin #e7e7e7;
 }
@@ -1073,4 +1077,13 @@ form {margin:0;}
 }
 .sem-clientes h3 {
     margin-top: 0;
+}
+.sd {
+    background: rgba(88,232,112,.2);
+}
+.cada-canal.ng-enter {
+  animation: .9s bounceInUp;
+}
+.cada-canal.ng-leave {
+  animation: .9s bounceOutDown;
 }

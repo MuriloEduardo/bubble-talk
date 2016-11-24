@@ -174,21 +174,18 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('visualizar', function(data) {
 		io.sockets.in(data.usuario.canal_atual).emit('visualizou', data.usuario);
-
 		var _id = data.usuario.cliente_socket_id ? data.usuario.cliente_socket_id : data.usuario.socket_id;
-
 		Usuario.findOne({_id: data.usuario.canal_atual}, function(err, user){
 			if(user) {
 				var cliente = user.conversas.filter(function(el){return el.socket_id==_id})[0];
 				if(cliente) {
-					var mensagens = data.conversa.conversas ? data.conversa.conversas : data.conversa.mensagens;
-					console.log(mensagens)
-					cliente.mensagens = mensagens;
-					user.save(function(err) {
-						if(err) throw err;
-					});
+					var msgs = data.conversa.conversas ? data.conversa.conversas : data.conversa.mensagens;
+					cliente.mensagens = msgs;
 				}
 			}
+			user.save(function(err) {
+				if(err) throw err;
+			});
 		});
 	});
 
