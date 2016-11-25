@@ -193,19 +193,16 @@ io.sockets.on('connection', function(socket) {
 	socket.on('change:particular', function(data) {
 		io.sockets.emit('change:particular', data);
 		Usuario.findOne({_id: data.administrador.socket_id}, function(err, user){
-			var c = user.conversas.filter(function(el){return el.socket_id==data.cliente.socket_id})[0];
-			console.log(c)
+			var c = user.conversas.filter(function(el){return el.socket_id==data.cliente.socket_id});
 			// PRESTAR ATENÇÃO //
 			// Se ja existe uma conversa com este socket_id
-			// Significa que o cliente conversou em particular com este usuario
+			// Significa que o cliente conversou em particular com este administrador
 			// Mas voltou a enviar mensagens para todos da equipe
-			// E novamente este usuario tornou esta conversa particular
+			// E novamente este administrador tornou esta conversa particular
 			if(c) {
-				//c.mensagens.push(data.cliente.
-				console.log("c")
-				console.log(c)
-				console.log("data.cliente")
-				console.log(data.cliente)
+				for (var i = 0; i < data.cliente.mensagens.length; i++) {
+					c.push(data.cliente.mensagens[i]);
+				}
 			} else {
 				user.conversas.push(data.cliente);
 			}

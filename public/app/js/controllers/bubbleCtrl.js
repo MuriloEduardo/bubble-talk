@@ -1,4 +1,4 @@
-app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Notification, $routeParams, $filter, $window){
+app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Notification, $routeParams, $filter, $window, ngAudio){
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
@@ -40,6 +40,8 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		socket_id: $rootScope.user._id
 	}
 
+	var sound_msg = ngAudio.load('../sounds/web-tone.mp3');
+
 	$scope.safeApply = function(fn) {
 		var phase = this.$root.$$phase;
 		if(phase == '$apply' || phase == '$digest') {
@@ -51,9 +53,14 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		}
 	};
 
+	$timeout(function(){
+		$scope.$broadcast('rebuild:conversas');
+	});
+
 	var scrollBottom = function() {
 		$scope.safeApply(function() {
 			$scope.$broadcast('rebuild:messages');
+			$scope.$broadcast('rebuild:conversas');
 	    });
 	}
 
@@ -158,24 +165,28 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		});
 
 		$scope.trocarCliente = function(cliente) {
+			var m = $filter('filter')($scope.conversas, {socket_id: cliente.socket_id}, true);
+			if(m.length>1) {
+				for (var i = 0; i < m[0].mensagens.length; i++) {
+					m[1].mensagens.push(m[0].mensagens[i]);
+				}
+				var index = $scope.conversas.indexOf(m[0]);
+				if(index>=0) $scope.conversas.splice(index,1);
+			}
 			$scope.safeApply(function() {
 				// Sai da primeira tela
 				// Onde foi a primeira vez que entrou no Adm
 				// nao clicou em nenhum conversa
 				$scope.textareaBody = true;
 				$scope.conversa = cliente;
-				console.log(cliente)
-				console.log($scope.conversas)
 				$scope.administrador.cliente_socket_id = cliente.socket_id;
 			});
-
 			if(cliente.canal_atual == $scope.administrador.bubble_id) {
 				// Quando o administrador clica nessa conversa sem administrador, deve se tornar sua
 				// Copiar mensagens deste id para as conversas deste usuario
 				socket.emit('change:particular', {cliente:cliente,administrador:$scope.administrador});
 				cliente.canal_atual = $scope.administrador.socket_id;
 			}
-
 			$timeout(function(){
 				visualizar();
 				scrollBottom();
@@ -188,6 +199,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		}
 
 		socket.on('nova mensagem', function(data) {
+			$timeout(function(){
+				if(!checkFocus()) {
+					sound_msg.paused ? sound_msg.play() : sound_msg.restart()
+				}
+			});
 			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
 			var m = $filter('filter')($scope.conversas, {socket_id: _id, canal_atual: data.canal_atual}, true)[0];
 			if(m) {

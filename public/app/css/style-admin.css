@@ -724,8 +724,7 @@ label{
     border-right: none;
 }
 .chat-canal-0 {
-    background-color: #f7f9fa;
-    height: 100%;
+    height: calc(100% - 146px);
 }
 
 .avisos-canal-0::after {
@@ -748,10 +747,10 @@ label{
     background-color: #e5ddd5;
     background-image: url('../../img/bg.jpg');
     background-repeat: repeat;
-    height: calc(100% - 145px);
+    height: 100%;
 }
 .scrollme {
-    height: calc(100% - 145px);
+    height: calc(100% - 61px);
 }
 .chat-canal-0 footer {
     position: relative;
@@ -780,8 +779,9 @@ label{
     vertical-align: middle;
     color: #777;
     padding: 100px;
-    height: 100%;
+    height: calc(100% + 146px);
     border: solid thin #e7e7e7;
+    background-color: #f7f9fa;
 }
 .bola-gradient {
     width:150px;
@@ -911,11 +911,14 @@ label{
 .msg .statusMsg {
     float: right;
 }
-.msg .statusMsg i {
+.statusMsg i {
     font-size: 15px;
     color: #999
 }
-.msg .statusMsg i.vzldo{ color: #60caf1; }
+.statusMsg i.vzldo{ color: #60caf1; }
+.canal-nome .statusMsg {
+    margin-right: 3px;
+}
 .aviso-top-fixed{
     position: absolute;
     width: 250px;
@@ -983,6 +986,7 @@ form {margin:0;}
 .eng-msgs {
     padding: 10px 0;
     float: left;
+    width: 100%;
 }
 .ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos {
     transition: all .8s cubic-bezier(.25,.8,.25,1);
@@ -1018,7 +1022,7 @@ form {margin:0;}
 }
 /* Exibe */
 .nao-visu.ng-hide-remove {
-  animation: .2s zoomIn;
+  animation: .3s zoomIn;
 }
 .cada-canal.bg-animate-color {
     color: #333;
@@ -1047,8 +1051,8 @@ form {margin:0;}
     background: rgba(88,232,112,.2);
 }
 .cada-canal.ng-enter {
-  animation: .9s bounceInUp;
+  animation: .3s zoomIn;
 }
 .cada-canal.ng-leave {
-  animation: .9s bounceOutDown;
+  animation: .3s zoomOut;
 }

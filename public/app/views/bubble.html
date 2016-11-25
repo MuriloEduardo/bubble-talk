@@ -29,12 +29,15 @@
 						<p>Quando algum dos seus usuarios lhe chamar, você com certeza será avisado.</p>
 					</div>
 				</div>
-				<div class="chamados-clientes" ng-show="conversas.length">
+				<div class="chamados-clientes scrollme" ng-show="conversas.length" ng-scrollbar rebuild-on-resize rebuild-on="rebuild:conversas">
 					<!-- Conversas -->
 					<div ng-repeat="cliente in conversas" ng-class="{'sd': cliente.canal_atual == administrador.bubble_id, 'current-cliente': cliente.socket_id == conversa.socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)">
 						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 						<div class="canal-nome">
 							<div>{{cliente.socket_id}}</div>
+							<div class="statusMsg pull-left" ng-if="ultimaMsg(cliente).remetente">
+								<i class="material-icons" ng-class="{'vzldo': ultimaMsg(cliente).visulizada}">&#xE877;</i>
+							</div>
 							<div class="sub-desc wrapword"><span ng-class="{'loading': cliente.digitando}">{{cliente.digitando ? 'digitando ' : ultimaMsg(cliente).mensagem}}</span></div>
 						</div>
 						<div class="canal-nome pull-right">
