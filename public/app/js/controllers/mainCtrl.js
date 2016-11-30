@@ -1,4 +1,4 @@
-app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams){
+app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams, $http){
 
 	// Abre e fecha menu esquerdo
 	$('#toggleMenu').click(function(){
@@ -10,6 +10,15 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams)
 	// Aparecerão ou não
 	$rootScope.menuLeft = false;
 
+	$http.get('/api/bubbles').success(function(res) {
+		// Variavel com todos os dados do usuario
+		$rootScope.user = res.user;
+
+		// Se usuario for convidado
+		// Manda para tela de perfil para ser cadastrado informações minimas
+		if(!res.user.nome) $rootScope.go('sua-conta');
+    });
+
 	// Mostrar ou não load de carregamento das views
 	// Será ativada ao clicar para trocar
 	// E escondida quando chegar em outro controller
@@ -18,20 +27,6 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams)
 		var i = (status) ? 'show' : 'hide';
 
 		$('#load-modal').modal(i);
-	}
-
-	// Método responsavel por carregar na variavel "user"
-	// todos os dados do usuario vindo do passport
-	$scope.loadUser = function(user) {
-
-		user = JSON.parse(user);
-
-		// Variavel com todos os dados do usuario
-		$rootScope.user = user;
-
-		// Se usuario for convidado
-		// Manda para tela de perfil para ser cadastrado informações minimas
-		if(!user.nome) $rootScope.go('sua-conta');
 	}
 
 	// Navega entre as pages depois do appname
@@ -57,9 +52,11 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams)
 
 	// Retornar para view somente o primeiro nome
 	$scope.firstName = function(user) {
-		if(user.nome)
-			return user.nome.split(' ')[0];
-		else
-			return user.local.email.split('@')[0];
+		if($rootScope.user) {
+			if($rootScope.user.nome)
+				return $rootScope.user.nome.split(' ')[0];
+			else
+				return $rootScope.user.local.email.split('@')[0];
+		}
 	}
 });

@@ -1,6 +1,6 @@
 app.controller('suaContaCtrl', function($scope, $rootScope, $http, Notification){
 
-	$scope.user.local.senha = '';
+	if($rootScope.user) $scope.user.local.senha = '';
 	
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
@@ -13,7 +13,7 @@ app.controller('suaContaCtrl', function($scope, $rootScope, $http, Notification)
 	$rootScope.loadViews(false);
 
 	$scope.edit = function(user){
-		$http.post('/api/usuario/' + user._id, user).success(function(data){
+		$http.post('/api/usuario/' + $rootScope.user._id, user).success(function(data){
 			if(data._id){
 				Notification.success('Dados alterados com sucesso!');
 			}

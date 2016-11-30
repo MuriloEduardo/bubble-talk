@@ -32,8 +32,7 @@ module.exports = function(router, passport, io){
 		successRedirect: '/app',
 		failureRedirect: '/login',
 		failureFlash: true
-	}),
-	function(req, res) {
+	}),function(req, res) {
 		console.log('req.body')
 		console.log(req.body)
 		return
@@ -234,7 +233,9 @@ module.exports = function(router, passport, io){
 	// LISTAR TODAS OS CHATS DO USUARIO LOGADO //
 	router.get('/bubbles', isLoggedIn, function(req, res){
 		Bubble.find({_id: { $in: req.user.bubbles.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
-			res.json(data);
+			console.log('=======================================')
+			console.log(req)
+			res.json({bubble:data,user:req.user});
 		});
 	});
 

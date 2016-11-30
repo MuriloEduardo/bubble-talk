@@ -1,4 +1,4 @@
-app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Notification, $routeParams, $filter, $window, ngAudio){
+app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Notification, $routeParams, $filter, $window){
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
@@ -40,14 +40,14 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		socket_id: $rootScope.user._id
 	}
 
-	var sound_msg = ngAudio.load('../sounds/web-tone.mp3');
-
 	$scope.safeApply = function(fn) {
 		var phase = this.$root.$$phase;
 		if(phase == '$apply' || phase == '$digest') {
 			if(fn && (typeof(fn) === 'function')) {
 				fn();
 			}
+		} else if(phase == null){ 
+			fn();
 		} else {
 			this.$apply(fn);
 		}
@@ -105,9 +105,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		socket.emit('novo administrador', $scope.administrador);
 
 		socket.on('usuarios', function(data) {
-			if(data.socket_id == $scope.administrador.socket_id) return false;
+			if(data.socket_id == data.canal_atual && data.canal_atual != $scope.administrador.socket_id) return false;
 			var u = $filter('filter')($scope.conversas, {socket_id: data.socket_id}, true)[0];
-			if(u) u.connected = data.connected;
+			$scope.safeApply(function() {
+				if(u) u.connected = data.connected;
+	        });
 		});
 
 		$window.onfocus = function(){
@@ -140,27 +142,30 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 		socket.on('change:particular', function(data) {
 			if($scope.administrador.socket_id != data.administrador.socket_id) {
-				var index = $scope.conversas.indexOf(data.cliente);
-				$scope.conversas.splice(index,1);
+				var m = $filter('filter')($scope.conversas, {socket_id: data.cliente.socket_id, canal_atual: data.cliente.bubble_id}, true)[0];
+				var index = $scope.conversas.indexOf(m);
+				$scope.safeApply(function() {
+					if(index>=0) $scope.conversas.splice(index,1);
+		        });
 			}
 		});
 
 		$scope.trocarCliente = function(cliente) {
 			var m = $filter('filter')($scope.conversas, {socket_id: cliente.socket_id}, true);
 			if(m.length>1) {
-				var cliente = $filter('filter')(m, {socket_id: cliente.socket_id}, true)[0];
-				console.log(x)
-				for (var i = 0; i < m[1].mensagens.length; i++) {
-					m[0].mensagens.push(m[1].mensagens[i]);
+				var cliente_bubble = $filter('filter')(m, {socket_id: cliente.socket_id, canal_atual: $scope.administrador.bubble_id}, true)[0];
+				var cliente_particular = $filter('filter')(m, {socket_id: cliente.socket_id, canal_atual: $scope.administrador.socket_id}, true)[0];
+				for (var i = 0; i < cliente_bubble.mensagens.length; i++) {
+					cliente_particular.mensagens.push(cliente_bubble.mensagens[i]);
 				}
 				cliente = {
-					bubble_id: m[0].bubble_id,
-					digitando: m[0].digitando,
-					mensagens: m[0].mensagens,
-					socket_id: m[0].socket_id,
-					canal_atual: m[1].canal_atual
+					bubble_id: cliente_particular.bubble_id,
+					digitando: cliente_particular.digitando,
+					mensagens: cliente_particular.mensagens,
+					socket_id: cliente_particular.socket_id,
+					canal_atual: cliente_particular.bubble_id
 				};
-				var index = $scope.conversas.indexOf(m[1]);
+				var index = $scope.conversas.indexOf(cliente_bubble);
 				if(index>=0) $scope.conversas.splice(index,1);
 			}
 			if(cliente.canal_atual == cliente.bubble_id) {
@@ -184,11 +189,6 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		}
 
 		socket.on('nova mensagem', function(data) {
-			$timeout(function(){
-				if(!checkFocus()) {
-					sound_msg.paused ? sound_msg.play() : sound_msg.restart()
-				}
-			});
 			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
 			var m = $filter('filter')($scope.conversas, {socket_id: _id, canal_atual: data.canal_atual}, true)[0];
 			if(m) {

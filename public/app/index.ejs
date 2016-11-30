@@ -54,13 +54,11 @@
         <!-- Scrol Personalizado com AngularJS -->
         <script src="../libs/angular-scrollbar/ng-scrollbar.min.js"></script>
 
-        <!-- Serviços de Audios -->
-        <script src="../libs/angular-audio/angular.audio.js"></script>
-
         <script src="js/app.js"></script>
 
         <script src="js/configs/routeConfig.js"></script>
         <script src="js/configs/notificationConfig.js"></script>
+        <script src="js/configs/safeApply.js"></script>
 
         <script src="js/services/servicesAPI.js"></script>
 
@@ -75,7 +73,7 @@
 
         <script src="js/directives/enterSubmit.js"></script>
     </head>
-    <body ng-controller="mainCtrl" ng-init="loadUser('<%= user %>')">
+    <body ng-controller="mainCtrl">
         <div id="wrapper" ng-style="!menuLeft && {'padding-left':'0'}">
             <!-- Navigation -->
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">

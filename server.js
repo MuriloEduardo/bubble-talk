@@ -195,6 +195,7 @@ io.sockets.on('connection', function(socket) {
 		io.sockets.in(data.usuario.canal_atual).emit('visualizou', data.usuario);
 		var _id = data.usuario.cliente_socket_id ? data.usuario.cliente_socket_id : data.usuario.socket_id;
 		var msgs = data.conversa.conversas ? data.conversa.conversas : data.conversa.mensagens;
+		atualizaUsuarios();
 		Usuario.update({
 		    "_id" : data.usuario.canal_atual,
 		    "conversas" : {
