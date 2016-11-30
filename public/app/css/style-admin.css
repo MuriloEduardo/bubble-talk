@@ -55,7 +55,6 @@ ul.navbar-nav[ng-show="menuLeft"] {
 }
 #page-wrapper {
     height:100%;
-    padding-left: 45px;
     background-color: rgba(255,255,255,.2);
 }
 .huge {
@@ -110,18 +109,19 @@ ul.navbar-nav[ng-show="menuLeft"] {
     color: #999;
 }
 .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover{
-    background-color:rgba(255, 255, 255, .3);
+    background-color:rgba(255, 255, 255, .2);
+    color: #fff;
 }
 .top-nav>li>a:hover,
 .top-nav>.open>a,
 .top-nav>.open>a:hover {
     color: #fff;
-    background: #009688;
+    background: rgba(255, 255, 255, .2);
 }
 .top-nav>li>a:focus,
 .top-nav>.open>a:focus {
-    background: transparent;
-    color: #c6c6c6;
+    color: #fff;
+    background: rgba(255, 255, 255, .3);
 }
 .top-nav i{
     position:relative;
@@ -156,7 +156,7 @@ ul.navbar-nav[ng-show="menuLeft"] {
     float: left;
     position: absolute;
     margin-top: 0;
-    border: 1px solid rgba(0,0,0,.15);
+    border: 1px solid #fff;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     background-color: #fff;
@@ -166,6 +166,17 @@ ul.navbar-nav[ng-show="menuLeft"] {
 
 .top-nav>.open>.dropdown-menu>li>a {
     white-space: normal;
+}
+.top-nav>.open>.dropdown-menu::before {
+    width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #fff;
+  position: absolute;
+  content: '';
+  top: -10px;
+  right: 5px;
 }
 
 ul.message-dropdown {
@@ -194,7 +205,6 @@ ul.alert-dropdown {
 }
 .side-nav {
     background: #fff;
-    box-shadow: 0 3px 6px rgba(130,130,130,.16), 0 3px 6px rgba(130,130,130,.23);
 }
 /* Side Navigation */
 
@@ -232,10 +242,10 @@ ul.alert-dropdown {
     }
 }
 .navbar-brand{
-    height:80px;
-    padding:10px 15px;
+    height:89px;
+    padding:15px;
     text-align:center;
-    width:225px;
+    width:205px;
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
@@ -248,7 +258,6 @@ ul.alert-dropdown {
 .navbar-inverse{
     background-color: #009688;
     border:none;
-    box-shadow: 0 3px 6px rgba(130,130,130,.16), 0 3px 6px rgba(130,130,130,.23);
 }
 .side-nav{
     -webkit-transition: all .2s ease-in-out;
@@ -355,9 +364,11 @@ ul.alert-dropdown {
     border-radius:100%;
     color:#009688;
     text-align:center;
+    float: left;
+    margin-right: 15px;
     line-height:86px;
     display:inline-block;
-    box-shadow: 0 3px 6px rgba(255,255,255,.16), 0 3px 6px rgba(255,255,255,.23);
+    box-shadow: 0 6px 9px rgba(255,255,255,.16), 0 6px 12px rgba(255,255,255,.23);
     background-color: #fff;
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
@@ -365,17 +376,18 @@ ul.alert-dropdown {
 }
 #logotipo i{
     font-size:40px;
-    text-shadow: 2px 2px 20px rgba(0, 150, 136,.35);
-}
-#logotipo:hover {
-    box-shadow: 0 6px 9px rgba(255,255,255,.16), 0 6px 12px rgba(255,255,255,.23);
 }
 #logotipo:active {
     box-shadow: 0 4px 7px rgba(255,255,255,.16), 0 4px 10px rgba(255,255,255,.23);
 }
-
+.logo-txt {
+    text-align: left;
+    float: left;
+    color: #fff;
+    padding: 20px 0;
+    text-shadow: 0 6px 9px rgba(255,255,255,.26), 0 6px 12px rgba(255,255,255,.33);
+}
 /* Toggle menu fixed left */
-#wrapper.toggledmenuleft .navbar-brand,
 #wrapper.toggledmenuleft .side-nav,
 #wrapper.toggledmenuleft .side-nav li{
     width:100px;
@@ -442,38 +454,33 @@ ul.alert-dropdown {
 .btn{
     border:none;
 }
-.btn-primary{
-    background-color: #00f2d4;
-}
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary:active:hover{
-    background: -webkit-linear-gradient(180deg, #00f2d4, #00d5fc);
-    background: -moz-linear-gradient(180deg, #00f2d4, #00d5fc);
-    background: -o-linear-gradient(180deg, #00f2d4, #00d5fc);
-    background: -ms-linear-gradient(180deg, #00f2d4, #00d5fc);
-    background: linear-gradient(180deg, #00f2d4, #00d5fc);
-    border:none;
-    outline: none;
-}
+.btn-primary{background-color: #009688;}
+.btn-warning{background-color: #674d94;}
+.btn-danger{background-color: #7abdb4;}
 .btn-with-icon{
     line-height: 22px;
 }
+.btn-with-icon i {
+    float: left;
+    margin-right: 10px;
+}
 .cada-chat{
-    color: #fff;
+    color: #009688;
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
     border-radius: 4px;
-    padding: 15px;
+    padding: 15px 30px;
+    margin:10px 30px;
     cursor: pointer;
     border-bottom: solid thin rgba(255,255,255,.3);
     overflow: hidden;
     position: relative;
     margin-bottom: 15px;
+    background-color: rgba(0, 150, 136,.1);
 }
 .cada-chat:hover{
+    background-color: rgba(0, 150, 136,.2);
 }
 .cada-chat:before{
     content: "\E84E";
@@ -486,7 +493,8 @@ ul.alert-dropdown {
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
-    line-height: 88px;
+    line-height: 74px;
+    text-align: center;
     padding: 0 10px;
     content: attr(data-icon);
     font-family: 'Material Icons';
@@ -501,13 +509,14 @@ ul.alert-dropdown {
     vertical-align: middle;
 }
 .bubble{
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 100%;
     border:solid 2px rgba(255,255,255,.3);
     background-size: cover;
+    background-color: #009688;
     background-position: center;
-    margin-right: 10px;
+    margin-right: 15px;
     background-size: cover;
     background-position: center;
 }
@@ -712,8 +721,7 @@ label{
 .cada-canal .canal-nome span {
     font-size: 12px;
 }
-.cada-canal .canal-nome span.loading {
-    /*font-weight: bold;*/
+.loading {
     font-style: italic;
 }
 .cada-canal .hrMsg {
@@ -799,7 +807,8 @@ label{
 }
 .container-content {
     height: 100%;
-    padding-top: 130px;
+    padding-top: 120px;
+    padding-left: 45px;
 }
 .container-content .row-height100 {
     height: 100%;
@@ -1055,4 +1064,9 @@ form {margin:0;}
 }
 .cada-canal.ng-leave {
   animation: .3s zoomOut;
+}
+#new-bubble {
+    padding: 0 30px 15px 30px;
+    float: left;
+    width: 100%;
 }

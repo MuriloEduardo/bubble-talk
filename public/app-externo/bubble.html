@@ -729,7 +729,6 @@
 		}
 
 		$scope.trocarCanal = function(canal_id) {
-			$scope.cliente.canal_atual = canal_id;
 			$scope.openConversasF      = false;
 			$scope.conversa 	       = $scope.getConversas(canal_id);
 
@@ -771,6 +770,9 @@
 		socket.on('change:particular', function(data) {
 			var c = $scope.getConversas(data.administrador.socket_id);
 			c.conversas = data.cliente.mensagens;
+
+			var g = $scope.getConversas(data.administrador.bubble_id);
+			g.conversas = [];
 
 			// Administrador clicou na conversa sem dono
 			// E agora essa conversa vai ser entre os dois

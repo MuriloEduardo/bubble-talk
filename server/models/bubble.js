@@ -21,7 +21,7 @@ var bubbleSchema = mongoose.Schema({
 	conversas: [
 		{
 			socket_id: String,
-			ultima_visualizacao: {type: Date},
+			connected: {status: Boolean, date: Date},
 			mensagens: [
 				{
 					mensagem: String,

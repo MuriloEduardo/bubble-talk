@@ -46,15 +46,35 @@ app.set('views', path.resolve(__dirname, 'public', 'site'));
 
 app.use(express.static(path.resolve(__dirname, 'public')));
 
+// Todos usuarios que estão na aplicação
+var usuarios = [];
+// Usuario atual
+var usuario  = {};
+
 io.sockets.on('connection', function(socket) {
 
-	// Todos usuarios que estão na aplicação
-	var usuarios = [];
-	// Usuario atual
-	var usuario  = {};
-
 	function atualizaUsuarios() {
-		socket.emit('usuarios', usuarios);
+		usuario.connected = {status:socket.connected,date:new Date()};
+		io.sockets.emit('usuarios',usuario);
+		if(usuario.bubble_id==usuario.socket_id) {
+			// No Bubble
+			Bubble.update({"_id" : usuario.bubble_id,"conversas" : {$elemMatch : {"socket_id": usuario.socket_id}}}, {
+			    "$set" : {
+			        "conversas.$.connected" : usuario.connected
+			    }
+			}, function(err) {
+				if(err) throw err;
+			});
+		} else {
+			// No Usuario
+			Usuario.update({"_id" : usuario.canal_atual,"conversas" : {$elemMatch : {"socket_id": usuario.socket_id}}}, {
+			    "$set" : {
+			        "conversas.$.connected" : usuario.connected
+			    }
+			}, function(err) {
+				if(err) throw err;
+			});
+		}
 	}
 
 	function trocaCanal(novoCanal) {
@@ -130,18 +150,20 @@ io.sockets.on('connection', function(socket) {
 		// Para ele mesmo
 		// OU
 		// Para com quem esta enviando (Administrador)
-		// if(usuario.socket_id == data.socket_id || usuario.socket_id == data.canal_atual) {}
+		var user_data = {
+			canal_atual: data.canal_atual,
+			socket_id: data.socket_id,
+			bubble_id: data.bubble_id
+		};
 
-		if(usuario.bubble_id == usuario.canal_atual) {
-			
+		if(data.bubble_id == data.canal_atual) {
 			io.sockets.emit('nova mensagem', data);
-
 			// Bubble
-			Bubble.findOne({_id: usuario.bubble_id}, function(err, bubble){
-				var clientes = bubble.conversas.filter(function(el){ return el.socket_id==usuario.socket_id});
+			Bubble.findOne({_id: data.bubble_id}, function(err, bubble){
+				var clientes = bubble.conversas.filter(function(el){ return el.socket_id==data.socket_id});
 				if(!clientes.length) {
 					// Cliente ainda não existe
-					bubble.conversas.push(usuario);
+					bubble.conversas.push(user_data);
 					bubble.save(function(err,res) {
 						if(err) throw err;
 						novaMsgBubble(data);
@@ -151,16 +173,13 @@ io.sockets.on('connection', function(socket) {
 				} 
 			});
 		} else {
-			
 			io.sockets.in(data.canal_atual).emit('nova mensagem', data);
-
 			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
-
 			// Usuario
 			Usuario.findOne({_id: data.canal_atual}, function(err, user){
 				var clientes = user.conversas.filter(function(el){return el.socket_id==_id});
 				if(!clientes.length) {
-					user.conversas.push(usuario);
+					user.conversas.push(user_data);
 					user.save(function(err) {
 						if(err) throw err;
 						novaMsgAdm(data);
@@ -199,63 +218,40 @@ io.sockets.on('connection', function(socket) {
 			// Significa que o cliente conversou em particular com este administrador
 			// Mas voltou a enviar mensagens para todos da equipe
 			// E novamente este administrador tornou esta conversa particular
-			if(c) {
+			if(c.length) {
 				for (var i = 0; i < data.cliente.mensagens.length; i++) {
-					c.push(data.cliente.mensagens[i]);
+					user.conversas.push(data.cliente.mensagens[i]);
 				}
 			} else {
 				user.conversas.push(data.cliente);
 			}
 			user.save(function(err) {
 				if(err) throw err;
-				Bubble.update({
-				    "_id" : data.administrador.bubble_id
-				},{
-					"$pull" : {
-				        "conversas" : {"socket_id": data.cliente.socket_id}
-				    }
-				}, function(err) {
-					if(err) throw err;
-				});
 			});
+		});
+		Bubble.update({
+		    "_id" : data.administrador.bubble_id
+		},{
+			"$pull" : {
+		        "conversas" : {"socket_id": data.cliente.socket_id}
+		    }
+		}, function(err,r) {
+			if(err) throw err;
+			console.log('++++++++++++++++++++++++++++++++++++++++')
+			console.log(r)
 		});
 	});
 
 	// Disconnect
 	socket.on('disconnect', function(data) {
-		
 		if(!socket.socket_id) return;
-
-		/*for (var i = 0; i < dadosusuarios.length; i++) {
-			
-			if(socket.socket_id == dadosusuarios[i].id) {
-
-				dadosusuarios[i] = {
-					id: socket.socket_id,
-					connected: socket.connected,
-					ultima_visulizacao: new Date()
-				}
-
-				Usuario.update({_id: usuarios[socket.socket_id].canal_atual},{
-					"$push": {clientes: dadosusuarios[i]}
-				},function(err, docs) {
-			
-					if(err) throw err;
-
-					delete usuarios[socket.socket_id];
-				});
-			}
-		}*/
-
+		var u = usuarios.filter(function(el){return el.socket_id==socket.socket_id});
+		usuarios.splice(usuarios.indexOf(u[0]), 1);
 		atualizaUsuarios();
 	});
 
 	socket.on('trocar canal', function(novoCanal) {
 		trocaCanal(novoCanal);
-	});
-
-	socket.on('novo administrador', function(data) {
-		novoUsuario(data);
 	});
 
 	socket.on('digitando', function(data) {

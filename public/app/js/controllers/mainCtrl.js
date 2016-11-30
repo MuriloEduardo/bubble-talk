@@ -58,7 +58,7 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams)
 	// Retornar para view somente o primeiro nome
 	$scope.firstName = function(user) {
 		if(user.nome)
-			return user.nome;
+			return user.nome.split(' ')[0];
 		else
 			return user.local.email.split('@')[0];
 	}

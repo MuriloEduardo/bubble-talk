@@ -35,7 +35,7 @@
 						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 						<div class="canal-nome">
 							<div>{{cliente.socket_id}}</div>
-							<div class="statusMsg pull-left" ng-if="ultimaMsg(cliente).remetente">
+							<div class="statusMsg pull-left" ng-if="ultimaMsg(cliente).remetente && !cliente.digitando">
 								<i class="material-icons" ng-class="{'vzldo': ultimaMsg(cliente).visulizada}">&#xE877;</i>
 							</div>
 							<div class="sub-desc wrapword"><span ng-class="{'loading': cliente.digitando}">{{cliente.digitando ? 'digitando ' : ultimaMsg(cliente).mensagem}}</span></div>
@@ -58,9 +58,9 @@
                             	<div>{{conversa.socket_id}}</div>
                             	<div class="sub-desc wrapword">
                             		<div ng-class="{'loading': conversa.digitando}" ng-show="conversa.digitando">digitando </div>
-                            		<div ng-show="!conversa.digitando">
-                            			<span ng-hide="conversa.online">visto por último às {{cliente.visto_ultimo | date:'HH:mm'}}</span>
-                            			<span ng-show="conversa.online">online</span>
+                            		<div ng-show="!conversa.digitando && conversa.connected">
+                            			<span ng-hide="conversa.connected.status">visto por último às {{conversa.connected.date | date:'HH:mm'}}</span>
+                            			<span ng-show="conversa.connected.status">online</span>
                             		</div>
                             	</div>
                             </div>

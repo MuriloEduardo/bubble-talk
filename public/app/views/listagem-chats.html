@@ -1,7 +1,12 @@
 <div class="row">
-	<div class="col-md-10 col-md-offset-1">
-		<div class="col-md-8">
-			<div class="cada-chat bg-animate-color" data-icon="input" ng-repeat="chat in allChats" ng-click="openChat(chat._id)">
+	<div class="col-md-12">
+		<div class="col-md-12">
+			<div id="new-bubble">
+				<a href="javascript:void(0)" ng-click="go('new-bubble')" class="btn btn-primary pull-right btn-with-icon"><i class="material-icons">add_shopping_cart</i> Novo Bubble</a>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="cada-chat" data-icon="input" ng-repeat="chat in allChats" ng-click="openChat(chat._id)">
 				<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}"></div>
 				<div class="desc-bubble">
 					<div class="nome">
@@ -10,16 +15,6 @@
 					<div class="infos">
 						Teste teste teste teste teste
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="panel panel-default comprar-new-chat">
-				<div class="panel-body">
-					<div class="form-group top-new-chat">
-						Você pode adicionar diversos chat's à sua conta. 
-					</div>
-					<a href="javascript:void(0)" ng-click="go('new-bubble')" class="btn btn-primary form-control btn-with-icon"><i class="material-icons pull-left">add_shopping_cart</i> Novo Chat</a>
 				</div>
 			</div>
 		</div>

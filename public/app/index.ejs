@@ -91,6 +91,9 @@
                         <div id="logotipo">
                             <i class="material-icons">&#xE6DD;</i>
                         </div>
+                        <div class="logo-txt">
+                            <div>Bubble Talk</div>
+                        </div>
                     </a>
                 </div>
                 <ul class="nav navbar-left top-nav top-nav-no-padding">
@@ -238,7 +241,7 @@
                 </div>
             </nav>
             <div id="page-wrapper">
-                <div class="container-fluid container-content" ng-view></div>
+                <div  ng-style="!menuLeft && {'padding-left':'15px'}" class="container-fluid container-content" ng-view></div>
             </div>
         </div>
         <div class="modal fade" id="load-modal" tabindex="-1" role="dialog" aria-labelledby="load-modal">

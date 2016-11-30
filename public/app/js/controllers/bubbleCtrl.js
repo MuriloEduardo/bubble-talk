@@ -105,25 +105,9 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		socket.emit('novo administrador', $scope.administrador);
 
 		socket.on('usuarios', function(data) {
-
-			/*for (var i = 0; i < data.length; i++) {
-				
-				for (var x = 0; x < $scope.clientes.length; x++) {
-				
-					if($scope.clientes[x].client_socket_id == data[i].id) {
-						$scope.clientes[x].client_online = data[i].connected;
-						$scope.clientes[x].visto_ultimo = data[i].ultima_visulizacao;
-					}
-				}
-
-				if($scope.administrador.client_socket_id == data[i].id) {
-					
-					$scope.safeApply(function() {
-						$scope.administrador.client_online = data[i].connected;
-						$scope.administrador.visto_ultimo = data[i].ultima_visulizacao;
-			        });
-				}
-			}*/
+			if(data.socket_id == $scope.administrador.socket_id) return false;
+			var u = $filter('filter')($scope.conversas, {socket_id: data.socket_id}, true)[0];
+			if(u) u.connected = data.connected;
 		});
 
 		$window.onfocus = function(){
@@ -155,38 +139,39 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		}
 
 		socket.on('change:particular', function(data) {
-			if($scope.administrador.socket_id != data.socket_id) {
-				$scope.safeApply(function() {
-					$scope.conversas = $scope.conversas.filter(function(i) { 
-						return i.socket_id !== data.socket_id;
-					});
-				});
+			if($scope.administrador.socket_id != data.administrador.socket_id) {
+				var index = $scope.conversas.indexOf(data.cliente);
+				$scope.conversas.splice(index,1);
 			}
 		});
 
 		$scope.trocarCliente = function(cliente) {
 			var m = $filter('filter')($scope.conversas, {socket_id: cliente.socket_id}, true);
 			if(m.length>1) {
-				for (var i = 0; i < m[0].mensagens.length; i++) {
-					m[1].mensagens.push(m[0].mensagens[i]);
+				var cliente = $filter('filter')(m, {socket_id: cliente.socket_id}, true)[0];
+				console.log(x)
+				for (var i = 0; i < m[1].mensagens.length; i++) {
+					m[0].mensagens.push(m[1].mensagens[i]);
 				}
-				var index = $scope.conversas.indexOf(m[0]);
+				cliente = {
+					bubble_id: m[0].bubble_id,
+					digitando: m[0].digitando,
+					mensagens: m[0].mensagens,
+					socket_id: m[0].socket_id,
+					canal_atual: m[1].canal_atual
+				};
+				var index = $scope.conversas.indexOf(m[1]);
 				if(index>=0) $scope.conversas.splice(index,1);
 			}
+			if(cliente.canal_atual == cliente.bubble_id) {
+				socket.emit('change:particular', {cliente:cliente,administrador:$scope.administrador});
+				cliente.canal_atual = $scope.administrador.socket_id;
+			}
 			$scope.safeApply(function() {
-				// Sai da primeira tela
-				// Onde foi a primeira vez que entrou no Adm
-				// nao clicou em nenhum conversa
 				$scope.textareaBody = true;
 				$scope.conversa = cliente;
 				$scope.administrador.cliente_socket_id = cliente.socket_id;
 			});
-			if(cliente.canal_atual == $scope.administrador.bubble_id) {
-				// Quando o administrador clica nessa conversa sem administrador, deve se tornar sua
-				// Copiar mensagens deste id para as conversas deste usuario
-				socket.emit('change:particular', {cliente:cliente,administrador:$scope.administrador});
-				cliente.canal_atual = $scope.administrador.socket_id;
-			}
 			$timeout(function(){
 				visualizar();
 				scrollBottom();
