@@ -991,13 +991,13 @@ form {margin:0;}
     width: 1.25em;    
   }
 }
-.ngsb-wrap .ngsb-scrollbar {
-    width: 6px !important;
-}
 .eng-msgs {
     padding: 10px 0;
     float: left;
     width: 100%;
+}
+.ngsb-wrap .ngsb-scrollbar {
+    width: 6px !important;
 }
 .ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos {
     transition: all .8s cubic-bezier(.25,.8,.25,1);
