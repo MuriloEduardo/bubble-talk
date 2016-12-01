@@ -21,6 +21,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 			if(bubble.data.conversas[i].mensagens.length) {
 				bubble.data.conversas[i].canal_atual = bubble.data._id;
 				$scope.conversas.push(bubble.data.conversas[i]);
+				console.log(bubble.data.conversas[i])
 			}
 		}
 	}
@@ -46,8 +47,6 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 			if(fn && (typeof(fn) === 'function')) {
 				fn();
 			}
-		} else if(phase == null){ 
-			fn();
 		} else {
 			this.$apply(fn);
 		}
@@ -168,6 +167,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				var index = $scope.conversas.indexOf(cliente_bubble);
 				if(index>=0) $scope.conversas.splice(index,1);
 			}
+			console.log(cliente)
 			if(cliente.canal_atual == cliente.bubble_id) {
 				socket.emit('change:particular', {cliente:cliente,administrador:$scope.administrador});
 				cliente.canal_atual = $scope.administrador.socket_id;
@@ -227,9 +227,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 		socket.on('digitando', function(data) {
 			var m = $filter('filter')($scope.conversas, {socket_id: data.socket_id,canal_atual:data.canal_atual}, true)[0];
-			$scope.safeApply(function() {
-				if(m) m.digitando = data.digitando;
-			});
+			if(m) {
+				$scope.safeApply(function() {
+					m.digitando = data.digitando;
+				});
+			}
 		});
 
 		socket.on('visualizou', function(data) {

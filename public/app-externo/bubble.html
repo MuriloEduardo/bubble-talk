@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<link rel="stylesheet" href="file:///C:/Users/USU%C3%81RIO/Desktop/bubble-v0/public/libs/angular-scrollbar/ng-scrollbar.min.css">
 <style>
 	#bubble-app *{ box-sizing: border-box; }
 	#bubble-app a,
@@ -199,9 +200,7 @@
 		background-image: url('../img/bg.jpg');
 		background-repeat: repeat;
 		width: 100%;
-		height: calc(100% - 155px);
-		padding: 15px 0;
-		overflow-y: auto;
+		height: calc(100% - 160px);
 		position: relative;
 		top: 100px;
 		transition: all 0.3s cubic-bezier(.25,.8,.25,1);
@@ -453,6 +452,10 @@
 		padding: 10px;
 		box-shadow: 0 1px .5px rgba(0,0,0,.13);
 	}
+	/* Esconde */
+	.aviso-top-fixed.ng-hide-add {
+	  animation: .8s fadeOutUp;
+	}
 	form {margin:0;}
 	.wrapword{
 		white-space: -moz-pre-wrap !important;
@@ -484,9 +487,6 @@
 	.sub-des {
 		font-size: 12px;
 		margin-top: 5px;
-	}
-	.bubble-all {
-    	padding: 80px 0 15px 0 !important;
 	}
 	.dropdownEmoji-box {
 		position: absolute;
@@ -540,6 +540,22 @@
 	    width: 1.25em;    
 	  }
 	}
+	.ngsb-container {
+		min-height: 100%;
+	}
+	.ngsb-wrap {
+	}
+	.eng-msgs {
+		float: left;
+		padding: 75px 0 10px 0;
+		width: 100%;
+		transition: all 1s cubic-bezier(.25,.8,.25,1);
+	}
+	.eng-msgs.no {
+		padding: 10px 0;
+	}
+	.eng-cada-canal.canal-equipe a {
+	}
 </style>
 <div id="bubble-app" ng-class="{'openChat': openChatF}" ng-app="bubble-app">
 	<div id="body-chat" ng-controller="chatCtrl" ng-init="cliente.bubble_id='57a162fc1918b4b808f2879a'">
@@ -570,18 +586,22 @@
 				</div>
 			</a>
 		</header>
+		<div>
+		</div>
 		<!-- Chat -->
-		<div id="body" ng-show="!openConversasF" ng-class="{'bubble-all': !cliente.conversa_particular && cliente.canal_atual == cliente.bubble_id}">
-			<div class="aviso-top-fixed" ng-if="!cliente.conversa_particular && cliente.canal_atual == cliente.bubble_id">
-				Quando o primeiro da equipe lhe responder, se iniciará uma conversa particular.
-			</div>
-			<div ng-repeat="msg in conversa.conversas" class="row-msd-uniq" ng-if="msg.mensagem.length">
-				<div class="msg" ng-class="{'right-msg': msg.remetente}">
-					<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
-					<div class="statusMsg" ng-if="!msg.remetente">
-						<i class="material-icons" ng-class="{'vzldo': msg.visulizada}">&#xE877;</i>
+		<div id="body" class="scrollme" ng-show="!openConversasF" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
+			<div class="eng-msgs" ng-class="{'no': cliente.particular}">
+				<div ng-click="toScrollBottom()" class="aviso-top-fixed" ng-show="!cliente.particular && cliente.canal_atual == cliente.bubble_id">
+					Quando o primeiro da equipe lhe responder, se iniciará uma conversa em particular.
+				</div>
+				<div ng-repeat="msg in conversa.conversas" class="row-msd-uniq" ng-if="msg.mensagem.length">
+					<div class="msg" ng-class="{'right-msg': msg.remetente}">
+						<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
+						<div class="statusMsg" ng-if="!msg.remetente">
+							<i class="material-icons" ng-class="{'vzldo': msg.visulizada}">&#xE877;</i>
+						</div>
+						<div ng-bind="msg.data | date:'HH:mm'" class="hrMsg"></div>
 					</div>
-					<div ng-bind="msg.data | date:'HH:mm'" class="hrMsg"></div>
 				</div>
 			</div>
 		</div>
@@ -603,7 +623,7 @@
 		</footer>
 		<!-- Listagem das Conversas -->
 		<div id="body-conversas" ng-show="openConversasF">
-			<div ng-repeat="conversa in conversas" class="eng-cada-canal">
+			<div ng-repeat="conversa in conversas" class="eng-cada-canal" ng-class="{'canal-equipe': conversa._id == cliente.bubble_id}">
 				<a href="javascript:void(0)" ng-click="trocarCanal(conversa._id)">
 					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="pri-des">{{conversa.nome || conversa.dados.appname}}</div>
@@ -621,6 +641,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-local-storage/0.5.0/angular-local-storage.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-animate.min.js" type="text/javascript"></script>
 <script src="https://cdn.socket.io/socket.io-1.4.5.js" type="text/javascript"></script>
+<script src="file:///C:/Users/USU%C3%81RIO/Desktop/bubble-v0/public/libs/angular-scrollbar/ng-scrollbar.min.js" type="text/javascript"></script>
 <script>
 	
 	var ba  = document.getElementById('bubble-app');
@@ -652,7 +673,7 @@
 		}
 	}
 
-	angular.module('bubble-app', ['ngAnimate', 'LocalStorageModule']).controller('chatCtrl', function($scope, $http, localStorageService, $filter, $timeout, $window){
+	angular.module('bubble-app', ['ngAnimate', 'LocalStorageModule', 'ngScrollbar']).controller('chatCtrl', function($scope, $http, localStorageService, $filter, $timeout, $window){
 
 		var socket = io.connect('http://127.0.0.1:4000/');
 		
@@ -701,6 +722,11 @@
 	        });
 		}
 
+		$scope.toScrollBottom = function() {
+			var el = document.getElementsByClassName('ngsb-container');
+			el.scrollTop = scrollTop.offsetHeight;
+		}
+
 		$scope.enviaMsg = function(mensagem) {
 
 			if(!mensagem) return;
@@ -725,6 +751,12 @@
 			$scope.cliente.digitando = $scope.message ? true : false;
 		}
 
+		var scrollBottom = function() {
+			$scope.safeApply(function() {
+				$scope.$broadcast('rebuild:messages');
+		    });
+		}
+
 		$window.onfocus = function(){
 			$timeout(function() { visualizar() });
 		}
@@ -736,6 +768,7 @@
 			$timeout(function() { visualizar() });
 			
 			updateClienteStorage();
+			scrollBottom();
 
 			socket.emit('trocar canal', canal_id);
 		}
@@ -746,11 +779,13 @@
 
 		$scope.$watch('openChatF', function(e) {
 			$timeout(function() { visualizar() });
+			scrollBottom();
 		});
 
 		socket.on('nova mensagem', function(data) {
 			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
 			if(_id==$scope.cliente.socket_id) displayMsg(data.mensagem);
+			scrollBottom();
 		});
 
 		socket.on('digitando', function(data) {

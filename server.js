@@ -156,6 +156,9 @@ io.sockets.on('connection', function(socket) {
 			bubble_id: data.bubble_id
 		};
 
+		console.log(data)
+		console.log('================================')
+
 		if(data.bubble_id == data.canal_atual) {
 			io.sockets.emit('nova mensagem', data);
 			// Bubble
@@ -238,8 +241,6 @@ io.sockets.on('connection', function(socket) {
 		    }
 		}, function(err,r) {
 			if(err) throw err;
-			console.log('++++++++++++++++++++++++++++++++++++++++')
-			console.log(r)
 		});
 	});
 
@@ -303,9 +304,9 @@ app.use('/api', api);
 // ==============================  
 
 // Erro 404
-app.use(function(req, res) {
+/*app.use(function(req, res) {
 	res.render('./pages-status/404.ejs');
-});
+});*/
 // Erro 500
 app.use(function(error, req, res, next) {
 	res.render('./pages-status/500.ejs', {error: error});
