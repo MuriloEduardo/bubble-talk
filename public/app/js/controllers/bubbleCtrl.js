@@ -15,30 +15,34 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 	$scope.bubble 	 = bubble.data;
 	$scope.conversa  = {};
 	$scope.conversas = [];
+	$scope.equipe    = [];
+
+	$scope.administrador = {
+		canal_atual: $rootScope.user._id,
+		bubble_id: bubble.data._id,
+		socket_id: $rootScope.user._id
+	}
+
+	console.info($rootScope.user.nome)
 
 	if(bubble.data.conversas.length) {
 		for (var i = 0; i < bubble.data.conversas.length; i++) {
-			if(bubble.data.conversas[i].mensagens.length) {
+			if(bubble.data.conversas[i].mensagens&&bubble.data.conversas[i].mensagens.length) {
 				bubble.data.conversas[i].canal_atual = bubble.data._id;
+				bubble.data.conversas[i].bubble_id = $scope.administrador.bubble_id;
 				$scope.conversas.push(bubble.data.conversas[i]);
-				console.log(bubble.data.conversas[i])
 			}
 		}
 	}
 
 	if($rootScope.user.conversas.length) {
 		for (var i = 0; i < $rootScope.user.conversas.length; i++) {
-			if($rootScope.user.conversas[i].mensagens.length) {
+			if($rootScope.user.conversas[i].mensagens&&$rootScope.user.conversas[i].mensagens.length) {
 				$rootScope.user.conversas[i].canal_atual = $rootScope.user._id;
+				$rootScope.user.conversas[i].bubble_id = $scope.administrador.bubble_id;
 				$scope.conversas.push($rootScope.user.conversas[i]);
 			}
 		}
-	}
-
-	$scope.administrador = {
-		canal_atual: $rootScope.user._id,
-		bubble_id: bubble.data._id,
-		socket_id: $rootScope.user._id
 	}
 
 	$scope.safeApply = function(fn) {
@@ -100,19 +104,36 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 	socket.on('connect', function() {
 
+		socket.on('conversas', function(data) {
+			for (var i=0;i<data.length;i++) {
+				if(data[i]._id!=$scope.administrador.bubble_id&&data[i]._id!=$scope.administrador.socket_id) {
+					$scope.safeApply(function() {
+						$scope.equipe.push(data[i]);
+					});
+				}
+			}
+		});
+
 		// Real Time Notify
-		socket.emit('novo administrador', $scope.administrador);
+		socket.emit('novo usuario', $scope.administrador);
 
 		socket.on('usuarios', function(data) {
-			if(data.socket_id == data.canal_atual && data.canal_atual != $scope.administrador.socket_id) return false;
-			var u = $filter('filter')($scope.conversas, {socket_id: data.socket_id}, true)[0];
-			$scope.safeApply(function() {
-				if(u) u.connected = data.connected;
-	        });
+			for (var i = 0; i < data.length; i++) {
+				var y = $filter('filter')($scope.equipe, {_id: data[i].canal_atual}, true)[0];
+				$scope.safeApply(function() {
+					if(y) y.connected = data[i].connected;
+					console.log(data[i].connected)
+				});
+
+				var u = $filter('filter')($scope.conversas, {socket_id: data[i].socket_id}, true)[0];
+				$scope.safeApply(function() {
+					if(u) u.connected = data[i].connected;
+		        });
+			}
 		});
 
 		$window.onfocus = function(){
-			if($scope.administrador.cliente_socket_id && $scope.administrador.cliente_socket_id==$scope.conversa.socket_id) {
+			if($scope.administrador.cliente_socket_id && $scope.administrador.cliente_socket_id==$scope.conversa.socket_id && $scope.conversa.canal_atual == $scope.administrador.canal_atual) {
 				$timeout(function(){
 					visualizar();
 					scrollBottom();
@@ -151,12 +172,14 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 
 		$scope.trocarCliente = function(cliente) {
 			var m = $filter('filter')($scope.conversas, {socket_id: cliente.socket_id}, true);
+
 			if(m.length>1) {
 				var cliente_bubble = $filter('filter')(m, {socket_id: cliente.socket_id, canal_atual: $scope.administrador.bubble_id}, true)[0];
 				var cliente_particular = $filter('filter')(m, {socket_id: cliente.socket_id, canal_atual: $scope.administrador.socket_id}, true)[0];
 				for (var i = 0; i < cliente_bubble.mensagens.length; i++) {
 					cliente_particular.mensagens.push(cliente_bubble.mensagens[i]);
 				}
+
 				cliente = {
 					bubble_id: cliente_particular.bubble_id,
 					digitando: cliente_particular.digitando,
@@ -167,7 +190,6 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				var index = $scope.conversas.indexOf(cliente_bubble);
 				if(index>=0) $scope.conversas.splice(index,1);
 			}
-			console.log(cliente)
 			if(cliente.canal_atual == cliente.bubble_id) {
 				socket.emit('change:particular', {cliente:cliente,administrador:$scope.administrador});
 				cliente.canal_atual = $scope.administrador.socket_id;
@@ -189,24 +211,34 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 		}
 
 		socket.on('nova mensagem', function(data) {
+
 			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
 			var m = $filter('filter')($scope.conversas, {socket_id: _id, canal_atual: data.canal_atual}, true)[0];
-			if(m) {
-				$scope.safeApply(function() {
-					// Conversa ja existia no banco
-					// So continuar dando push
-					m.mensagens.push(data.mensagem);
-				});
-			} else {
-				$scope.safeApply(function() {
-					// Nova conversa
-					$scope.conversas.push({
-						bubble_id: data.bubble_id,
-						canal_atual: data.canal_atual,
-						socket_id: data.socket_id,
-						mensagens: [data.mensagem]
+
+			if(data.canal_atual==$scope.administrador.bubble_id||data.canal_atual==$scope.administrador.socket_id) {
+				if(m) {
+					$scope.safeApply(function() {
+						// Conversa ja existia no banco
+						// So continuar dando push
+						m.mensagens.push(data.mensagem);
 					});
-				});
+				} else {
+					$scope.safeApply(function() {
+						// Nova conversa
+						$scope.conversas.push({
+							bubble_id: data.bubble_id,
+							canal_atual: data.canal_atual,
+							socket_id: data.socket_id,
+							mensagens: [data.mensagem]
+						});
+					});
+				}
+			} else {
+				// Conversas da equipe
+				var m = $filter('filter')($scope.equipe, {_id: data.canal_atual}, true)[0];
+				var x = $filter('filter')(m.conversas, {socket_id: _id}, true)[0];
+				// Dar push nas mensagens da equipe
+
 			}
 			scrollBottom();
 		});
@@ -230,6 +262,13 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 			if(m) {
 				$scope.safeApply(function() {
 					m.digitando = data.digitando;
+				});
+			}
+
+			var e = $filter('filter')($scope.equipe, {_id: data.canal_atual}, true)[0];
+			if(e) {
+				$scope.safeApply(function() {
+					e.client_digitando = data.digitando;
 				});
 			}
 		});

@@ -1,126 +1,127 @@
-<div class="row row-height100">
-	<div class="side-left col-md-11" ng-class="viewConversasEquipe ? 'col-md-9' : 'col-md-11'">
-		<div class="row conversas-container conversas-body">
-			<div class="col-side col-md-4 col-sm-5 no-pddng-l no-pddng-r">
-				<nav class="navbar navbar-default">
-					<div class="container-fluid">
+<section id="conversas-section">
+	<div class="row row-height100">
+		<div class="side-left col-md-11">
+			<div class="row conversas-container conversas-body">
+				<div class="col-side col-md-4 col-sm-5 no-pddng-l no-pddng-r">
+					<nav class="navbar navbar-default">
+						<div>
+						    <ul class="nav navbar-nav">
+						      <li>
+						      	<a href="#" class="perfil-toggle">
+		                            <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+		                            <div class="descricoes">
+		                            	<div>{{bubble.dados.appname}}</div>
+		                            </div>
+		                        </a>
+						      </li>
+						    </ul>
+						    <ul class="nav navbar-nav navbar-right">
+						      <li><a href="#"><i class="material-icons">&#xE5D4;</i></a></li>
+						    </ul>
+					  	</div>
+					</nav>
+					<div class="eng-sem-cliente" ng-show="!conversas.length">
+						<div class="sem-clientes">
+							<p><i class="material-icons">&#xE7F3;</i></p>
+							<p>
+								<h3>Óh não!</h3>
+								<h4>Ainda sem conversas</h4>
+							</p>
+							<p>Quando algum dos seus usuarios lhe chamar, você com certeza será avisado.</p>
+						</div>
+					</div>
+					<div class="chamados-clientes scrollme" ng-show="conversas.length" ng-scrollbar rebuild-on-resize rebuild-on="rebuild:conversas">
+						<!-- Conversas -->
+						<div ng-repeat="cliente in conversas" ng-class="{'sd': cliente.canal_atual == administrador.bubble_id, 'current-cliente': cliente.socket_id == conversa.socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)">
+							<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+							<div class="canal-nome">
+								<div>{{cliente.socket_id}}</div>
+								<div class="statusMsg pull-left" ng-if="ultimaMsg(cliente).remetente && !cliente.digitando">
+									<i class="material-icons" ng-class="{'vzldo': ultimaMsg(cliente).visulizada}">&#xE877;</i>
+								</div>
+								<div class="sub-desc wrapword"><span ng-class="{'loading': cliente.digitando}">{{cliente.digitando ? 'digitando ' : ultimaMsg(cliente).mensagem}}</span></div>
+							</div>
+							<div class="canal-nome pull-right">
+								<div ng-bind="ultimaMsg(cliente).data | date:'HH:mm'" class="hrMsg"></div>
+								<div class="nao-visu" ng-show="naoVisualizadas(cliente)">{{naoVisualizadas(cliente)}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-side col-md-8 col-sm-7 no-pddng-l no-pddng-r">
+					<nav class="navbar navbar-default" ng-show="textareaBody">
+					  <div class="container-fluid">
 					    <ul class="nav navbar-nav">
 					      <li>
-					      	<a href="#" class="perfil-toggle">
+					      	<a ng-click="dadosCliente()" href="javascript:void(0)" class="perfil-toggle">
 	                            <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
 	                            <div class="descricoes">
-	                            	<div>{{bubble.dados.appname}}</div>
+	                            	<div>{{conversa.socket_id}}</div>
+	                            	<div class="sub-desc wrapword">
+	                            		<div ng-class="{'loading': conversa.digitando}" ng-show="conversa.digitando">digitando </div>
+	                            		<div ng-show="!conversa.digitando && conversa.connected">
+	                            			<span ng-hide="conversa.connected.status">visto por último às {{conversa.connected.date | date:'HH:mm'}}</span>
+	                            			<span ng-show="conversa.connected.status">online</span>
+	                            		</div>
+	                            	</div>
 	                            </div>
 	                        </a>
 					      </li>
 					    </ul>
 					    <ul class="nav navbar-nav navbar-right">
+					      <li><a href="#"><i class="material-icons">&#xE24C;</i></a></li>
 					      <li><a href="#"><i class="material-icons">&#xE5D4;</i></a></li>
 					    </ul>
-				  	</div>
-				</nav>
-				<div class="eng-sem-cliente" ng-show="!conversas.length">
-					<div class="sem-clientes">
-						<p><i class="material-icons">&#xE7F3;</i></p>
-						<p>
-							<h3>Óh não!</h3>
-							<h4>Ainda sem conversas</h4>
-						</p>
-						<p>Quando algum dos seus usuarios lhe chamar, você com certeza será avisado.</p>
-					</div>
-				</div>
-				<div class="chamados-clientes scrollme" ng-show="conversas.length" ng-scrollbar rebuild-on-resize rebuild-on="rebuild:conversas">
-					<!-- Conversas -->
-					<div ng-repeat="cliente in conversas" ng-class="{'sd': cliente.canal_atual == administrador.bubble_id, 'current-cliente': cliente.socket_id == conversa.socket_id}" class="cada-canal" ng-click="trocarCliente(cliente)">
-						<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
-						<div class="canal-nome">
-							<div>{{cliente.socket_id}}</div>
-							<div class="statusMsg pull-left" ng-if="ultimaMsg(cliente).remetente && !cliente.digitando">
-								<i class="material-icons" ng-class="{'vzldo': ultimaMsg(cliente).visulizada}">&#xE877;</i>
-							</div>
-							<div class="sub-desc wrapword"><span ng-class="{'loading': cliente.digitando}">{{cliente.digitando ? 'digitando ' : ultimaMsg(cliente).mensagem}}</span></div>
-						</div>
-						<div class="canal-nome pull-right">
-							<div ng-bind="ultimaMsg(cliente).data | date:'HH:mm'" class="hrMsg"></div>
-							<div class="nao-visu" ng-show="naoVisualizadas(cliente)">{{naoVisualizadas(cliente)}}</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-side col-md-8 col-sm-7 no-pddng-l no-pddng-r">
-				<nav class="navbar navbar-default" ng-show="textareaBody">
-				  <div class="container-fluid">
-				    <ul class="nav navbar-nav">
-				      <li>
-				      	<a ng-click="dadosCliente()" href="javascript:void(0)" class="perfil-toggle">
-                            <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
-                            <div class="descricoes">
-                            	<div>{{conversa.socket_id}}</div>
-                            	<div class="sub-desc wrapword">
-                            		<div ng-class="{'loading': conversa.digitando}" ng-show="conversa.digitando">digitando </div>
-                            		<div ng-show="!conversa.digitando && conversa.connected">
-                            			<span ng-hide="conversa.connected.status">visto por último às {{conversa.connected.date | date:'HH:mm'}}</span>
-                            			<span ng-show="conversa.connected.status">online</span>
-                            		</div>
-                            	</div>
-                            </div>
-                        </a>
-				      </li>
-				    </ul>
-				    <ul class="nav navbar-nav navbar-right">
-				      <li><a href="#"><i class="material-icons">&#xE24C;</i></a></li>
-				      <li><a href="#"><i class="material-icons">&#xE5D4;</i></a></li>
-				    </ul>
-				  </div>
-				</nav>
-				<div class="chat-canal-0">
-			    	<div ng-show="textareaBody" class="row-height100">
-				    	<div class="eng-body-chat">
-					    	<div id="body" class="body-chat scrollme" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
-								<div class="eng-msgs">
-									<div ng-repeat="msg in conversa.mensagens track by $index" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
-										<div class="msg" ng-class="{'right-msg': !msg.remetente}">
-											<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
-											<div class="statusMsg" ng-if="msg.remetente">
-												<i class="material-icons" ng-class="{'vzldo': msg.visulizada}">&#xE877;</i>
+					  </div>
+					</nav>
+					<div class="chat-canal-0">
+				    	<div ng-show="textareaBody" class="row-height100">
+					    	<div class="eng-body-chat">
+						    	<div id="body" class="body-chat scrollme" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
+									<div class="eng-msgs">
+										<div ng-repeat="msg in conversa.mensagens track by $index" class="row-msd-uniq" ng-if="msg.client_socket_id == infosAdm.client_socket_id">
+											<div class="msg" ng-class="{'right-msg': !msg.remetente}">
+												<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
+												<div class="statusMsg" ng-if="msg.remetente">
+													<i class="material-icons" ng-class="{'vzldo': msg.visulizada}">&#xE877;</i>
+												</div>
+												<div ng-bind="msg.data | date:'HH:mm'" class="hrMsg"></div>
 											</div>
-											<div ng-bind="msg.data | date:'HH:mm'" class="hrMsg"></div>
 										</div>
 									</div>
-								</div>
+						    	</div>
 					    	</div>
+					    	<footer>
+					    		<textarea class="form-control" placeholder="Digite uma mensagem" ng-model="message" ng-change="typing()" enter-submit="enviaMsg(message)"></textarea>
+					    		<a href="#" class="actions emoticos">
+									<i class="material-icons">&#xE420;</i>
+								</a>
+								<a href="#" class="actions anexo" ng-show="!message">
+									<i class="material-icons">&#xE226;</i>
+								</a>
+								<a href="javascript:void(0)" ng-click="enviaMsg(message)" class="actions send" ng-show="message">
+									<i class="material-icons">&#xE163;</i>
+								</a>
+					    	</footer>
 				    	</div>
-				    	<footer>
-				    		<textarea class="form-control" placeholder="Digite uma mensagem" ng-model="message" ng-change="typing()" enter-submit="enviaMsg(message)"></textarea>
-				    		<a href="#" class="actions emoticos">
-								<i class="material-icons">&#xE420;</i>
-							</a>
-							<a href="#" class="actions anexo" ng-show="!message">
-								<i class="material-icons">&#xE226;</i>
-							</a>
-							<a href="javascript:void(0)" ng-click="enviaMsg(message)" class="actions send" ng-show="message">
-								<i class="material-icons">&#xE163;</i>
-							</a>
-				    	</footer>
-			    	</div>
-			    	<div ng-show="!textareaBody" class="avisos-canal-0">
-			    		<p><div class="bola-gradient"></div></p>
-			    		<p><h2>Hey!</h2></p>
-			    		<p>Clique sobre uma nova conversa ao lado para tornar-la sua e particular.</p>
-			    	</div>
-			    </div>
-			</div>
-		</div>
-	</div>
-	<div class="side-right col-md-1" ng-mouseover="viewConversasEquipe = true" ng-mouseleave="viewConversasEquipe = false" ng-class="viewConversasEquipe ? 'col-md-3' : 'col-md-1'">
-		<section class="canais-container">
-			<div ng-repeat="canal in equipe" class="cada-canal" ng-if="canal._id != user._id">
-				<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
-				<div class="canal-nome">
-					<div>{{canal.nome}}</div>
-					<span>Lorem Ipsum</span>
+				    	<div ng-show="!textareaBody" class="avisos-canal-0">
+				    		<p><div class="bola-gradient"></div></p>
+				    		<p><h2>Hey!</h2></p>
+				    		<p>Clique sobre uma nova conversa ao lado para tornar-la sua e particular.</p>
+				    	</div>
+				    </div>
 				</div>
 			</div>
-		</section>
+		</div>
+		<div class="side-right col-md-1">
+			<section class="canais-container">
+				<div ng-repeat="canal in equipe" class="cada-canal cada-canal-equipe" ng-if="canal._id != user._id">
+					<div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}" title="{{canal.nome}}">
+						<div class="user-online" ng-if="canal.connected.status"></div>
+						<div class="eng-notifis" ng-class="{'digitando_equi':canal.client_digitando}" ng-if="canal.client_digitando"></div>
+					</div>
+				</div>
+			</section>
+		</div>
 	</div>
-</div>
+</section>

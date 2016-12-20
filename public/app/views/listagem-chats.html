@@ -1,19 +1,23 @@
 <div class="row">
 	<div class="col-md-12">
-		<div class="col-md-12">
-			<div id="new-bubble">
-				<a href="javascript:void(0)" ng-click="go('new-bubble')" class="btn btn-primary pull-right btn-with-icon"><i class="material-icons">add_shopping_cart</i> Novo Bubble</a>
+		<div class="row">
+			<div class="col-md-12">
+				<div id="new-bubble">
+					<a href="javascript:void(0)" ng-click="go('new-bubble')" class="btn btn-primary pull-right btn-with-icon"><i class="material-icons">add_shopping_cart</i> Novo Bubble</a>
+				</div>
 			</div>
 		</div>
-		<div class="col-md-12">
-			<div class="cada-chat" data-icon="&#xE315;" ng-repeat="chat in allChats" ng-click="openChat(chat._id)">
-				<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}"></div>
-				<div class="desc-bubble">
-					<div class="nome">
-						{{chat.dados.appname | spaceless}}
-					</div>
-					<div class="infos">
-						Teste teste teste teste teste
+		<div class="row">
+			<div class="col-md-12">
+				<div class="cada-chat panel" data-icon="&#xE315;" ng-repeat="chat in allChats" ng-click="openChat(chat._id)">
+					<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}"></div>
+					<div class="desc-bubble">
+						<div class="nome">
+							{{chat.dados.appname | spaceless}}
+						</div>
+						<div class="infos">
+							Teste teste teste teste teste
+						</div>
 					</div>
 				</div>
 			</div>

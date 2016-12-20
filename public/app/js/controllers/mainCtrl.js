@@ -1,5 +1,16 @@
 app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams, $http){
 
+	$scope.safeApply = function(fn) {
+		var phase = this.$root.$$phase;
+		if(phase == '$apply' || phase == '$digest') {
+			if(fn && (typeof(fn) === 'function')) {
+				fn();
+			}
+		} else {
+			this.$apply(fn);
+		}
+	};
+
 	// Abre e fecha menu esquerdo
 	$('#toggleMenu').click(function(){
 		$('#wrapper').toggleClass('toggledmenuleft');
@@ -17,16 +28,17 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams,
 		// Se usuario for convidado
 		// Manda para tela de perfil para ser cadastrado informações minimas
 		if(!res.user.nome) $rootScope.go('sua-conta');
+
+		$scope.safeApply(function() {
+			$scope.$broadcast('rebuild:menuLeftScroll');
+	    });
     });
 
 	// Mostrar ou não load de carregamento das views
 	// Será ativada ao clicar para trocar
 	// E escondida quando chegar em outro controller
 	$rootScope.loadViews = function(status) {
-
-		var i = (status) ? 'show' : 'hide';
-
-		$('#load-modal').modal(i);
+		$('#load-modal').modal(status?'show':'hide');
 	}
 
 	// Navega entre as pages depois do appname

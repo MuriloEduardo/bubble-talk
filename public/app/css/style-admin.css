@@ -43,6 +43,7 @@ ul.navbar-nav[ng-show="menuLeft"] {
 }
 #wrapper {
     padding-left: 0;
+    height: 100%;
 }
 #wrapper,
 #wrapper .side-nav,
@@ -63,9 +64,9 @@ ul.navbar-nav[ng-show="menuLeft"] {
 }
 
 @media(min-width:768px) {
-    #wrapper {
+    #wrapper.opened {
         padding-left: 185px;
-        height: 100%;
+        background-color: #e9ebee;
     }
 }
 .form-control:focus{
@@ -74,7 +75,7 @@ ul.navbar-nav[ng-show="menuLeft"] {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(0,213,252,.6);
 }
 /* Top Navigation */
-.navbar-inverse .navbar-nav>li>a{
+.navbar-inverse .navbar-nav li a{
     color:#009688;
     border-bottom: solid 2px transparent;
 }
@@ -84,44 +85,46 @@ ul.navbar-nav[ng-show="menuLeft"] {
 .top-nav-no-padding{
     padding:0;
 }
-.top-nav>li {
+.top-nav li {
     display: inline-block;
     float: left;
 }
 
-.navbar-inverse .navbar-nav>.active>a,
-.navbar-inverse .navbar-nav>li>a:hover,
-.navbar-inverse .navbar-nav>.active>a:hover {
+.navbar-inverse .navbar-nav .active a,
+.navbar-inverse .navbar-nav li a:hover,
+.navbar-inverse .navbar-nav .active a:hover {
     color: #009688;
     border-bottom-color: #009688;
 }
 
-.top-nav>li>a {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    line-height: 20px;
-    color: #fff;
-}
-.top-nav>li>.input-group {
+.top-nav li .input-group {
     padding-top: 30px;
     padding-bottom: 30px;
     line-height: 20px;
     color: #999;
 }
-.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover{
+.navbar-inverse .navbar-nav .active a, 
+.navbar-inverse .navbar-nav .active a:focus,
+.navbar-inverse .navbar-nav .active a:hover{
     background-color:rgba(255, 255, 255, .2);
     color: #fff;
 }
-.top-nav>li>a:hover,
-.top-nav>.open>a,
-.top-nav>.open>a:hover {
+.side-nav .active a {
+    color: #009688!important;
+}
+.top-nav li a:hover,
+.top-nav .open a,
+.top-nav .open a:hover {
     color: #fff;
     background: rgba(255, 255, 255, .2);
 }
-.top-nav>li>a:focus,
-.top-nav>.open>a:focus {
+.top-nav li a:focus,
+.top-nav .open a:focus {
     color: #fff;
     background: rgba(255, 255, 255, .3);
+}
+.nav li a:focus, .nav li a:hover {
+    text-decoration: none;
 }
 .top-nav i{
     position:relative;
@@ -134,12 +137,12 @@ ul.navbar-nav[ng-show="menuLeft"] {
 .search-top i{
     position:absolute;
     color:#c6c6c6;
-    top:32px;
+    top:24px;
     left:28px;
 }
 .search-top input{
     padding:15px 15px 15px 50px;
-    margin:19px 0;
+    margin:10px 0;
     border:none;
     border-radius:4px;
     width:325px;
@@ -152,7 +155,7 @@ ul.navbar-nav[ng-show="menuLeft"] {
     outline:none;
     width:425px;
 }
-.top-nav>.open>.dropdown-menu {
+.top-nav .open .dropdown-menu {
     float: left;
     position: absolute;
     margin-top: 0;
@@ -164,10 +167,10 @@ ul.navbar-nav[ng-show="menuLeft"] {
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
 }
 
-.top-nav>.open>.dropdown-menu>li>a {
+.top-nav .open .dropdown-menu li a {
     white-space: normal;
 }
-.top-nav>.open>.dropdown-menu::before {
+.top-nav .open .dropdown-menu::before {
     width: 0; 
   height: 0; 
   border-left: 10px solid transparent;
@@ -205,13 +208,14 @@ ul.alert-dropdown {
 }
 .side-nav {
     background: #fff;
+    display: none;
 }
 /* Side Navigation */
 
 @media(min-width:768px) {
     .side-nav {
         position: fixed;
-        top: 89px;
+        top: 70px;
         left: 185px;
         width: 185px;
         margin-left: -185px;
@@ -220,13 +224,11 @@ ul.alert-dropdown {
         overflow-y: auto;
         bottom: 0;
         overflow-x: hidden;
-        padding-bottom: 40px;
-        -webkit-transition: all .2s ease-in-out;
-        -moz-transition: all .2s ease-in-out;
-        transition: all .2s ease-in-out;
+        -webkit-transition: all 1s ease-in-out;
+        -moz-transition: all 1s ease-in-out;
+        transition: all 1s ease-in-out;
     }
-
-    .side-nav>li>a {
+    .side-nav li a {
         width: 185px;
         -webkit-transition: all .2s ease-in-out;
         -moz-transition: all .2s ease-in-out;
@@ -242,13 +244,10 @@ ul.alert-dropdown {
     }
 }
 .navbar-brand{
-    height:89px;
-    padding:15px;
+    height:70px;
+    padding:10px 20px 10px 5px;
     text-align:center;
-    width:205px;
-    -webkit-transition: all .2s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
+    width:auto;
 }
 .side-nav li a span{
     -webkit-transition: all .2s ease-in-out;
@@ -264,24 +263,31 @@ ul.alert-dropdown {
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
 }
+.side-nav .dropdown {
+    margin: 10px;
+    position: relative;
+}
 .side-nav li a i{
     font-size:24px;
     margin-right: 10px;
     vertical-align:middle;
 }
-.side-nav>li>ul {
+.side-nav li ul {
     padding: 0;
 }
 
-.side-nav>li>ul>li>a {
+.side-nav li ul li a {
     display: block;
     padding: 10px 15px 10px 38px;
     text-decoration: none;
     color: #999;
 }
 
-.side-nav>li>ul>li>a:hover {
+.side-nav li ul li a:hover {
     color: #fff;
+}
+.side-nav li {
+    width: 100%;
 }
 
 /* Flot Chart Containers */
@@ -359,14 +365,14 @@ ul.alert-dropdown {
 }
 
 #logotipo{
-    width:60px;
-    height:60px;
+    width:50px;
+    height:50px;
     border-radius:100%;
     color:#009688;
     text-align:center;
     float: left;
     margin-right: 15px;
-    line-height:86px;
+    line-height:72px;
     display:inline-block;
     box-shadow: 0 6px 9px rgba(255,255,255,.16), 0 6px 12px rgba(255,255,255,.23);
     background-color: #fff;
@@ -375,7 +381,7 @@ ul.alert-dropdown {
     transition: all .2s ease-in-out;
 }
 #logotipo i{
-    font-size:40px;
+    font-size:36px;
 }
 #logotipo:active {
     box-shadow: 0 4px 7px rgba(255,255,255,.16), 0 4px 10px rgba(255,255,255,.23);
@@ -384,7 +390,7 @@ ul.alert-dropdown {
     text-align: left;
     float: left;
     color: #fff;
-    padding: 20px 0;
+    padding: 16px 0;
     text-shadow: 0 6px 9px rgba(255,255,255,.26), 0 6px 12px rgba(255,255,255,.33);
 }
 /* Toggle menu fixed left */
@@ -395,6 +401,7 @@ ul.alert-dropdown {
 #wrapper.toggledmenuleft .side-nav li a{
     width:100px;
     text-align:center;
+    height: 65px;
 }
 @media(min-width:768px) {
     #wrapper.toggledmenuleft{
@@ -411,9 +418,8 @@ ul.alert-dropdown {
     color: #fff;
     background: #009688;
 }
-.perfil-toggle{
-    padding-top: 24.5px !important;
-    padding-bottom: 24.5px !important;
+.perfil-toggle {
+    padding: 15px!important;
 }
 .perfil-toggle #foto-perfil,
 .perfil-toggle .descricoes {
@@ -685,8 +691,9 @@ label{
     font-size: 16px;
 }
 .col-side {
-    height: calc(100% - 15px);
+    height: calc(100% - 25px);
     background-color: #fff;
+    overflow: hidden;
 }
 .conversas-body{
     height: 100%;
@@ -709,6 +716,12 @@ label{
     cursor: pointer;
     color: #777;
     border-bottom: solid thin #f7f7f7;
+}
+.cada-canal-equipe {
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    position: relative;
 }
 .cada-canal:hover {
     background-color: #f4f5f5;
@@ -809,9 +822,7 @@ label{
 }
 .container-content {
     height: 100%;
-    padding-top: 120px;
-    padding-left: 45px;
-    background-color: #e9ebee;
+    padding-top: 100px;
 }
 .container-content .row-height100 {
     height: 100%;
@@ -1067,8 +1078,86 @@ form {margin:0;}
 .cada-canal.ng-leave {
   animation: .3s zoomOut;
 }
+.navbar-nav li a {
+    line-height: 20px;
+}
+.nav li a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.side-nav.nav li a {
+    right: 6px;
+}
 #new-bubble {
     padding: 0 30px 15px 30px;
     float: left;
     width: 100%;
+}
+.openMenuLeft {
+    display: block;
+}
+#conversas-section {
+    padding-left: 30px;
+    height: 100%;
+}
+.top-nav li a {
+    padding: 20px 15px;
+    color: #fff;
+}
+.digitando_equi.ng-enter {
+  animation: .3s zoomIn;
+}
+.digitando_equi.ng-leave {
+  animation: .3s zoomOut;
+}
+.eng-notifis {
+    font-weight: bold;
+    position: absolute;
+    float: right;
+    top: 2.5px;
+    right: 2.5px;
+    width: 30px;
+    height: 20px;
+    border-radius: 20px;
+    background-color: #58e870;
+    color: #fff;
+    line-height: 20px;
+    text-align: center;
+    -webkit-box-shadow: 0 1.5px 3px rgba(100,100,100,.175);
+    box-shadow: 0 1.5px 3px rgba(100,100,100,.175);
+}
+.digitando_equi::before,
+.digitando_equi:before {
+    overflow: hidden;
+    font-size: 16px;
+    position: relative;
+    top: -4px;
+    display: inline-block;
+    vertical-align: bottom;
+    -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+    animation: ellipsis steps(4,end) 900ms infinite;
+    content: "\2026";
+    width: 0px;
+}
+.eng-notifis span {
+    font-size: 12px;
+}
+.user-online.ng-enter {
+  animation: .3s zoomIn;
+}
+.user-online.ng-leave {
+  animation: .3s zoomOut;
+}
+.user-online {
+    width: 10px;
+    height: 10px;
+    background-color: #58e870;
+    border-radius: 100%;
+    position: absolute;
+    left: 16px;
+    top: 25px;
+    float: left;
+    -webkit-box-shadow: 0 1.5px 3px rgba(100,100,100,.175);
+    box-shadow: 0 1.5px 3px rgba(100,100,100,.175);
 }

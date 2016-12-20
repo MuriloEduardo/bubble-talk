@@ -18,6 +18,10 @@ var usuarioSchema = mongoose.Schema({
 	data_cadastro: {type: Date, default: Date.now},
 	bubbles: [],
 	notificacoes: [],
+	connected: {
+		status: Boolean,
+		date: {type: Date, default: Date.now}
+	},
 	conversas: [
 		{
 			socket_id: String,

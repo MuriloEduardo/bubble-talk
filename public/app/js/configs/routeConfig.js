@@ -23,13 +23,8 @@ app.config(function ($routeProvider, $locationProvider) {
     })
 
     .when('/:app_id', {
-        templateUrl: 'views/bubble.html',
-        controller: 'bubbleCtrl',
-        resolve: {
-            bubble: function (Api, $route, $location){
-                return Api.getBubble($route.current.params.app_id);
-            }
-        }
+        templateUrl: 'views/dashboard.html',
+        controller: 'dashboardCtrl'
     })
 
     .when('/:app_id/bubble', {

@@ -21,9 +21,9 @@ var Bubble  	 = require('./server/models/bubble');
 
 mongoose.connect(configDB.url, function(err, res) {
 	if(err){
-		console.log('Nao foi possivel conectar a:' + configDB.url + ' com o erro: ' + err);
+		console.info('Nao foi possivel conectar a:' + configDB.url + ' com o erro: ' + err);
 	}else{
-		console.log('Conectado a ' + configDB.url);
+		console.info('Conectado a ' + configDB.url);
 	}
 });
 
@@ -49,44 +49,57 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 // Todos usuarios que estão na aplicação
 var usuarios = [];
 // Usuario atual
-var usuario  = {};
+var usuario_socket  = {};
 
 io.sockets.on('connection', function(socket) {
 
+	function statusAdm(_id,status) {}
+	function statusClient(_id,status) {}
+
 	function atualizaUsuarios() {
-		usuario.connected = {status:socket.connected,date:new Date()};
-		io.sockets.emit('usuarios',usuario);
-		if(usuario.bubble_id==usuario.socket_id) {
-			// No Bubble
-			Bubble.update({"_id" : usuario.bubble_id,"conversas" : {$elemMatch : {"socket_id": usuario.socket_id}}}, {
-			    "$set" : {
-			        "conversas.$.connected" : usuario.connected
+
+		var u = usuarios.filter(function(el){return el.socket_id==socket.socket_id})[0];
+		if(u) u.connected = {status:socket.connected,date:new Date()};
+		io.sockets.emit('usuarios',usuarios);
+	    
+	    if(usuario_socket.socket_id==usuario_socket.canal_atual&&usuario_socket.canal_atual!=usuario_socket.bubble_id) {
+	    	Usuario.update({
+				"_id": usuario_socket.canal_atual
+			},{
+			    "$set": {
+			        "connected": usuario_socket.connected,
 			    }
-			}, function(err) {
+		    }, function(err) {
 				if(err) throw err;
 			});
-		} else {
-			// No Usuario
-			Usuario.update({"_id" : usuario.canal_atual,"conversas" : {$elemMatch : {"socket_id": usuario.socket_id}}}, {
-			    "$set" : {
-			        "conversas.$.connected" : usuario.connected
+	    } else {
+	    	Usuario.update({
+				"_id": usuario_socket.canal_atual,
+				"conversas": {
+					$elemMatch: {
+						"socket_id": usuario_socket.socket_id
+					}
+				}
+			},{
+			    "$set": {
+			        "conversas.$.connected": usuario_socket.connected
 			    }
-			}, function(err) {
+		    }, function(err) {
 				if(err) throw err;
 			});
-		}
+	    }
 	}
 
 	function trocaCanal(novoCanal) {
 		socket.join(novoCanal);
-		usuario.canal_atual = novoCanal;
+		usuario_socket.canal_atual = novoCanal;
 		socket.emit('change:canal', novoCanal);
 	}
 
 	function novoUsuario(data) {
 		socket.socket_id = data.socket_id;
 		usuarios.push(data);
-		usuario = data;
+		usuario_socket = data;
 		trocaCanal(data.canal_atual);
 		atualizaUsuarios();
 	}
@@ -122,19 +135,15 @@ io.sockets.on('connection', function(socket) {
 		});
 	}
 
-	socket.on('novo administrador', function(data) {
-		novoUsuario(data);
-	});
-
-	socket.on('novo cliente', function(data) {
+	socket.on('novo usuario', function(data) {
 
 		novoUsuario(data);
 
-		Usuario.find({ bubbles: { "$in" : [usuario.bubble_id]} }, function(err, adms) {
+		Usuario.find({ bubbles: { "$in" : [usuario_socket.bubble_id]} }, function(err, adms) {
 			
 			if(err) throw err;
 
-			Bubble.findOne({_id: usuario.bubble_id}, function(err, bub){
+			Bubble.findOne({_id: usuario_socket.bubble_id}, function(err, bub){
 				
 				if(err) throw err;
 
@@ -156,11 +165,9 @@ io.sockets.on('connection', function(socket) {
 			bubble_id: data.bubble_id
 		};
 
-		console.log(data)
-		console.log('================================')
+		io.sockets.emit('nova mensagem', data);
 
 		if(data.bubble_id == data.canal_atual) {
-			io.sockets.emit('nova mensagem', data);
 			// Bubble
 			Bubble.findOne({_id: data.bubble_id}, function(err, bubble){
 				var clientes = bubble.conversas.filter(function(el){ return el.socket_id==data.socket_id});
@@ -176,7 +183,6 @@ io.sockets.on('connection', function(socket) {
 				} 
 			});
 		} else {
-			io.sockets.in(data.canal_atual).emit('nova mensagem', data);
 			var _id = data.cliente_socket_id ? data.cliente_socket_id : data.socket_id;
 			// Usuario
 			Usuario.findOne({_id: data.canal_atual}, function(err, user){
@@ -229,18 +235,12 @@ io.sockets.on('connection', function(socket) {
 			} else {
 				user.conversas.push(data.cliente);
 			}
-			user.save(function(err) {
+			user.save(function(err,res_user) {
 				if(err) throw err;
+				Bubble.update({"_id":data.administrador.bubble_id},{"$pull":{"conversas":{"socket_id":data.cliente.socket_id}}},function(err,res_bubble){
+					if(err) throw err;
+				});
 			});
-		});
-		Bubble.update({
-		    "_id" : data.administrador.bubble_id
-		},{
-			"$pull" : {
-		        "conversas" : {"socket_id": data.cliente.socket_id}
-		    }
-		}, function(err,r) {
-			if(err) throw err;
 		});
 	});
 
@@ -257,11 +257,7 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('digitando', function(data) {
-		if(data.canal_atual == data.bubble_id) {
-			io.sockets.emit('digitando', data);
-		} else {
-			io.sockets.in(data.canal_atual).emit('digitando', data);
-		}
+		io.sockets.emit('digitando', data);
 	});
 });
 // Public           //
@@ -316,5 +312,5 @@ app.use(function(error, req, res, next) {
 	Run
 */
 server.listen(port, function(){
-	console.log('Rodando em ' + port);
+	console.info('Rodando em ' + port);
 });

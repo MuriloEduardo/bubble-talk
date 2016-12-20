@@ -274,7 +274,7 @@
 		padding: 3px 0;
 	}
 	.perfilInfos .descApp div{ text-overflow: ellipsis; }
-	.perfilInfos .descApp div:first-child{
+	.perfilInfos .descApp .nomeAppHeader{
 		font-size: 16px;
 		margin-bottom: 5px;
 		white-space: nowrap;
@@ -430,7 +430,7 @@
 		font-size: 15px;
 		color: #999
 	}
-	.msg .statusMsg i.vzldo{ color: #60caf1; }
+	.vzldo{ color: #60caf1!important; }
 	.aviso-top-fixed{
 		position: relative;
 		width: 90%;
@@ -475,8 +475,14 @@
 		background-color: transparent;
 	    background-image: url('https://s-media-cache-ak0.pinimg.com/originals/dd/0f/d5/dd0fd59858519e2772b20e3c8f9bc004.jpg') !important;
 	}
+	.eng-ft-per {
+		float: left;
+		width: 22%;
+	}
 	.eng-cada-canal .pri-des {
-		margin: 5px 0;
+		margin-top: 5px;
+		float: left;
+		width: 78%;
 	}
 	.sub-des {
 		font-size: 12px;
@@ -512,6 +518,9 @@
 	/* Exibe */
 	.dropdownEmoji-box.ng-hide-remove {
 	  animation: .2s zoomIn;
+	}
+	.loading {
+		font-style: italic;
 	}
 	.loading:after {
 	  overflow: hidden;
@@ -568,11 +577,66 @@
 		width: 40px;
 		height: 40px;
 		text-align: center;
-		float: right;
 		border-radius: 100%;
 		background-color: #fff;
-		color: 
+		color: #009688;
+		position: fixed;
+		right: 25px;
+		box-shadow: 0 1px 3px rgba(150,150,150,.12), 0 1px 2px rgba(150,150,150,.24);
+		bottom: 180px;
+		cursor: pointer;
 	}
+	#scroll-to-bottom i {
+		line-height: 42px;
+	}
+	#scroll-to-bottom:hover {
+		background-color: rgba(255,255,255,.8);
+	}
+	.canal-extras { 
+		float: right; 
+		width: 20%;
+		text-align: right;
+	}
+	.sub-desc { 
+		float: left; 
+		width: 80%;
+	}
+	.sec-des {
+		font-size: 12px;
+		float: left;
+	}
+	.sec-des i {
+		font-size: 16px;
+		line-height: 0;
+		position: relative;
+		top: 3px;
+	}
+	.digitando {
+		padding-top: 7px;
+		float: left;
+		font-style: italic;
+	}
+	.nao-visu {
+	    width: 21px;
+	    height: 21px;
+	    line-height: 21px;
+	    color: #fff;
+	    font-weight: bold;
+	    text-align: center;
+	    border-radius: 100%;
+	    font-size: 10px;
+	    float: right;
+	    background-color: #58e870;
+	}
+	.canal-extras .hrMsg {
+		font-size: 12px;
+		margin: 5px 0 3px 0;
+	}
+	.ultima-txts {
+		float: left;
+		padding-top: 5px;
+	}
+	.italic { font-style: italic; }
 </style>
 <div id="bubble-app" ng-class="{'openChat': openChatF}" ng-app="bubble-app">
 	<div id="body-chat" ng-controller="chatCtrl" ng-init="cliente.bubble_id='57a162fc1918b4b808f2879a'">
@@ -585,8 +649,18 @@
 				<div class="infosApp" ng-show="!openConversasF">
 					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
 					<div class="descApp">
-						<div>{{conversa.nome || conversa.dados.appname}}</div>
-						<div class="sub-des"><span ng-class="{'loading': conversa.digitando}">{{conversa.digitando ? 'digitando ' : 'última mensagem às 15:32'}}</span></div>
+						<div class="nomeAppHeader">{{conversa.nome || conversa.dados.appname}}</div>
+						<div class="sub-des">
+							<div ng-show="conversa.digitando">
+								<span ng-class="{'loading': conversa.digitando}">digitando </span>
+							</div>
+							<div ng-show="conversa.connected.status&&!conversa.digitando">
+								<span>online</span>
+							</div>
+							<div ng-show="!conversa.connected.status&&!conversa.digitando">
+								<span>visto por último às {{conversa.connected.date | date:'HH:mm'}}</span>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="conversasTit" ng-show="openConversasF">
@@ -608,9 +682,7 @@
 		<!-- Chat -->
 		<div id="body" class="scrollme" ng-show="!openConversasF" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
 			<div class="eng-msgs">
-				<div ng-click="toScrollBottom()" class="aviso-top-fixed" ng-show="!cliente.particular && cliente.canal_atual == cliente.bubble_id">
-					Quando o primeiro da equipe lhe responder, se iniciará uma conversa em particular.
-				</div>
+				<div class="aviso-top-fixed" ng-if="cliente.canal_atual==cliente.bubble_id">{{aviso_1}}</div>
 				<div ng-repeat="msg in conversa.conversas" class="row-msd-uniq" ng-if="msg.mensagem.length">
 					<div class="msg" ng-class="{'right-msg': msg.remetente}">
 						<div class="MsgEmSi wrapword">{{msg.mensagem}}</div>
@@ -645,11 +717,37 @@
 		<div id="body-conversas" ng-show="openConversasF">
 			<div ng-repeat="conversa in conversas" class="eng-cada-canal" ng-class="{'canal-equipe': conversa._id == cliente.bubble_id}">
 				<a href="javascript:void(0)" ng-click="trocarCanal(conversa._id)">
-					<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
-					<div class="pri-des">{{conversa.nome || conversa.dados.appname}}</div>
-					<div class="sub-des">Última mensagem à 13 min atrás</div>
-					<div ng-repeat="msg in messages" ng-if="msg.conversa == 0">
-						<div ng-bind="msg.criado | date:'HH:mm'" ng-if="$last"></div>
+					<div class="sub-desc">
+						<div class="eng-ft-per">
+							<div id="foto-perfil" class="imgApp" ng-class="{'no-img-perfil': !cliente.img_perfil}" ng-style="{'background-image': 'url()'}"></div>
+						</div>
+						<div class="pri-des">{{conversa.nome || 'Equipe '+conversa.dados.appname}}</div>
+						<div class="sec-des">
+							<div ng-if="conversa.digitando&&ultimaMsg(conversa)" class="digitando" ng-class="{'loading': conversa.digitando}">
+								<span>digitando</span>
+							</div>
+							<div ng-if="!conversa.digitando&&ultimaMsg(conversa)" class="ultima-txts">
+								<i class="material-icons" ng-if="!ultimaMsg(conversa).remetente&&!conversa.digitando&&ultimaMsg(conversa)" ng-class="{'vzldo': ultimaMsg(conversa).visulizada}">&#xE877;</i>
+								<span>{{ultimaMsg(conversa).mensagem | limitTo: 16}}{{ultimaMsg(conversa).mensagem.length>16?' ...':''}}</span>
+							</div>
+							<div ng-if="!ultimaMsg(conversa)" class="ultima-txts">
+								<div ng-if="!conversa.connected.status">
+									<div ng-if="conversa.nome">
+										visto por último às {{conversa.connected.date | date:'HH:mm'}}
+									</div>
+									<div ng-if="conversa.dados.appname" class="italic">
+										{{aviso_1 | limitTo: 35}}{{aviso_1.length>35?' ...':''}}
+									</div>
+								</div>
+								<div ng-if="conversa.connected.status">
+									<span>online</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="canal-extras">
+						<div ng-bind="ultimaMsg(conversa).data | date:'HH:mm'" class="hrMsg"></div>
+						<div class="nao-visu" ng-show="naoVisualizadas(conversa._id)">{{naoVisualizadas(conversa._id)}}</div>
 					</div>
 				</a>
 			</div>
@@ -706,6 +804,8 @@
 		$scope.conversa = {};
 		$scope.conversas = [];
 
+		$scope.aviso_1 = 'Quando o primeiro da equipe lhe responder, se iniciará uma conversa em particular.';
+
 		$scope.safeApply = function(fn) {
 			var phase = this.$root.$$phase;
 			if(phase == '$apply' || phase == '$digest') {
@@ -745,6 +845,22 @@
 			var el = document.getElementsByClassName('ngsb-container');
 			el.scrollTop = scrollTop.offsetHeight;
 		}
+
+		$scope.ultimaMsg = function(data) {
+	    	return data.conversas[data.conversas.length-1];
+	    }
+
+	    $scope.naoVisualizadas = function(administrador_id) {
+	    	var count = 0,
+	    	c = $scope.getConversas(administrador_id);
+	    	if(!c.conversas) return false;
+	    	for (var i = 0; i < c.conversas.length; i++) {
+	    		if(c.conversas[i].remetente&&!c.conversas[i].visulizada) {
+	    			count++;
+	    		}
+	    	}
+	    	return count;
+	    }
 
 		$scope.enviaMsg = function(mensagem) {
 
@@ -837,10 +953,12 @@
 
 		socket.on('visualizou', function(data) {
 			if($scope.conversa && data.socket_id!=$scope.cliente.socket_id) {
+				var adm = $scope.getConversas(data.canal_atual);
 				for (var i = 0; i < $scope.conversa.conversas.length; i++) {
 					if(!$scope.conversa.conversas[i].remetente) {
 						$scope.safeApply(function() {
 							$scope.conversa.conversas[i].visulizada = true;
+							adm.conversas[i].visulizada = true;
 				        });
 					}
 				}
@@ -854,8 +972,17 @@
 			var x = $filter('filter')(m.conversas, {socket_id: $scope.cliente.socket_id})[0];
 			if(x) m.conversas = x.mensagens;
 
+			console.log(data)
 			$scope.conversas = data;
-			$scope.conversa = $filter('filter')(data, {_id: $scope.cliente[e]})[0];
+			$scope.conversa = m;
+		});
+
+		socket.on('usuarios', function(data) {
+			var m = $filter('filter')($scope.conversas, {_id: data.socket_id})[0];
+			console.log(m);
+			$scope.safeApply(function() {
+				if(m) m.connected = data.connected;
+	        });
 		});
 
 		socket.on('connect', function() {
@@ -872,7 +999,7 @@
 			$scope.trocarCanal($scope.cliente.canal_atual);
 
 			// Real Time Notify
-			socket.emit('novo cliente', $scope.cliente);
+			socket.emit('novo usuario', $scope.cliente);
 		});
 	}).directive('enterSubmit', function() {
 	    return {
