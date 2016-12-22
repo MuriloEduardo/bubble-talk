@@ -22,7 +22,7 @@
     "nodemailer-smtp-transport": "^2.6.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "socket.io": "^1.4.8"
+    "socket.io": "^1.4.5"
   },
   "devDependencies": {
     "mocha": "^3.2.0",

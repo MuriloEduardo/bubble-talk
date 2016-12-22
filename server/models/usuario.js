@@ -25,7 +25,10 @@ var usuarioSchema = mongoose.Schema({
 	conversas: [
 		{
 			socket_id: String,
-			connected: {status: Boolean, date: Date},
+			connected: {
+				status: Boolean, 
+				date: {type: Date, default: Date.now}
+			},
 			mensagens: [
 				{
 					mensagem: String,

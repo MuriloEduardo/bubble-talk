@@ -1,9 +1,10 @@
-var Usuario = require('../models/usuario');
-var Bubble = require('../models/bubble');
-var mongoose = require('mongoose');
-var nodemailer = require('nodemailer');
+var Usuario 	  = require('../models/usuario');
+var Bubble        = require('../models/bubble');
+var mongoose 	  = require('mongoose');
+var nodemailer    = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
-var path = require('path');
+var isLoggedIn    = require('../models/isLoggedIn');
+var path 		  = require('path');
 
 var conta = nodemailer.createTransport({
     service: 'Gmail',
@@ -189,7 +190,7 @@ module.exports = function(router, passport, io){
 		});
 	});
 
-	// EDITAR UMA LOJA //
+	// EDITAR UM BUBBLE //
 	router.post('/bubbles/:id', isLoggedIn, function(req, res){
 		Bubble.findOne({_id: req.params.id}, function(err, data){
 			
@@ -209,7 +210,7 @@ module.exports = function(router, passport, io){
 		});
 	});
 
-	// LISTAR UM CHAT //
+	// LISTAR UM BUBBLE //
 	router.get('/bubbles/:app_id', isLoggedIn, function(req, res){
 
 		Bubble.findOne({'_id': req.params.app_id}, function(err, data1){
@@ -223,36 +224,17 @@ module.exports = function(router, passport, io){
 		});
 	});
 
-	//EXCLUIR UM CHAT //
+	//EXCLUIR UM BUBBLE //
 	router.delete('/bubbles/:id', isLoggedIn, function(req, res){
 		Bubble.remove({_id: req.params.id}, function(err){
 			res.json({result: err ? 'error' : 'ok'});
 		});
 	});
 
-	// LISTAR TODAS OS CHATS DO USUARIO LOGADO //
+	// LISTAR TODAS OS BUBBLES DO USUARIO LOGADO //
 	router.get('/bubbles', isLoggedIn, function(req, res){
 		Bubble.find({_id: { $in: req.user.bubbles.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
-			console.log('=======================================')
-			console.log(req)
 			res.json({bubble:data,user:req.user});
 		});
 	});
-
-	//////////////////
-	// APP EXTERNO //
-	////////////////
-	
-	// Arquivo para carregar todos arquivos locais
-	// e libs necessárias
-	router.get('/app-externo', function(req, res){
-		res.sendFile('app-externo/bubble-talk.js', { root: path.join(__dirname, '../../public') });
-	});
-};
-
-function isLoggedIn(req, res, next) {
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect('/login');
 };

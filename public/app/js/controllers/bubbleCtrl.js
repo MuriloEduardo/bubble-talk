@@ -122,7 +122,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				var y = $filter('filter')($scope.equipe, {_id: data[i].canal_atual}, true)[0];
 				$scope.safeApply(function() {
 					if(y) y.connected = data[i].connected;
-					console.log(data[i].connected)
+					console.log(data[i])
 				});
 
 				var u = $filter('filter')($scope.conversas, {socket_id: data[i].socket_id}, true)[0];
@@ -288,5 +288,9 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 				}
 			}
 		});
+
+		$scope.$on('$destroy', function (event) {
+	        socket.removeAllListeners();
+	    });
 	});
 });
