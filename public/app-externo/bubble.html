@@ -972,7 +972,6 @@
 			var x = $filter('filter')(m.conversas, {socket_id: $scope.cliente.socket_id})[0];
 			if(x) m.conversas = x.mensagens;
 
-			console.log(data)
 			$scope.conversas = data;
 			$scope.conversa = m;
 		});
@@ -990,15 +989,15 @@
 			// Se ainda não tiver um socket_id no localStorage
 			// Primeira vez que acessa
 			if(!localStorageService.get('usuario')) {
-				$scope.cliente.socket_id = socket.id;
+				$scope.cliente.socket_id  = socket.id;
+				$scope.cliente.client      = true;
 				$scope.cliente.canal_atual = $scope.cliente.bubble_id;
 			} else {
 				$scope.cliente = localStorageService.get('usuario');
 			}
 
 			$scope.trocarCanal($scope.cliente.canal_atual);
-
-			// Real Time Notify
+			
 			socket.emit('novo usuario', $scope.cliente);
 		});
 	}).directive('enterSubmit', function() {

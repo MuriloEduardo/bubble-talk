@@ -28,6 +28,9 @@
         <!-- Scrol Personalizado com AngularJS -->
         <link rel="stylesheet" href="../libs/angular-scrollbar/ng-scrollbar.min.css">
 
+        <!-- Icones Material - Google -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -38,7 +41,7 @@
     <body ng-controller="mainCtrl">
         <div id="wrapper" ng-class="{'opened':menuLeft}">
             <!-- Navigation -->
-            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-class="{'open':menuLeft}">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse" ng-show="menuLeft">
@@ -56,21 +59,12 @@
                         </div>
                     </a>
                 </div>
-                <ul class="nav navbar-left top-nav top-nav-no-padding">
-                    <li ng-show="menuLeft">
-                        <a id="toggleMenu" href="javascript:void(0)">
-                            <i class="material-icons">&#xE5D2;</i>
-                        </a>
-                    </li>
-                    <!-- <li class="search-top">
-                        <i class="material-icons">&#xE8B6;</i>
-                        <input type="text" placeholder="Busque por conversas, clientes, dúvidas ...">
-                    </li> -->
-                </ul>
                 <!-- Top Menu Items -->
                 <ul class="nav navbar-right top-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="material-icons">announcement</i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="material-icons">&#xE85A;</i>
+                        </a>
                         <ul class="dropdown-menu message-dropdown">
                             <li class="message-preview">
                                 <a href="#">
@@ -123,7 +117,9 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="material-icons">notifications</i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="material-icons">&#xE7F4;</i>
+                        </a>
                         <ul class="dropdown-menu alert-dropdown">
                             <li>
                                 <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
@@ -151,6 +147,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle perfil-toggle" data-toggle="dropdown">
+                            <span>{{firstName()}}</span>
                             <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
                         </a>
                         <ul class="dropdown-menu">
@@ -171,45 +168,50 @@
                     </li>
                 </ul>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav side-nav text-center scrollme" ng-class="{'openMenuLeft':menuLeft}" ng-scrollbar rebuild-on-resize rebuild-on="rebuild:menuLeftScroll">
-                        <li>
-                            <div class="dropdown">
-                              <button class="btn btn-primary dropdown-toggle form-control" type="button" data-toggle="dropdown">Online
-                              <span class="caret"></span></button>
-                              <ul class="dropdown-menu">
-                                <li><a href="#">Offline</a></li>
-                                <li><a href="#">Ausente</a></li>
-                                <li><a href="#">Ocupado</a></li>
-                              </ul>
-                            </div>
+                    <ul class="nav navbar-nav side-nav text-center" ng-class="{'openMenuLeft':menuLeft}">
+                        <li id="app_dropdown" class="dropdown">
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
+                                <span>{{bubble.dados.appname}}</span>
+                                <i class="material-icons pull-right">&#xE313;</i>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">One more separated link</a></li>
+                            </ul>
                         </li>
                         <li ng-class="isActive(app_id)">
                             <a href="javascript:void(0)" ng-click="goInternalPages(app_id)">
-                                <p><i class="material-icons">&#xE88A;</i></p>
-                                <span>Painel de Controle</span>
+                                <!-- <p><i class="material-icons">&#xE88A;</i></p> -->
+                                <span>Painel</span>
                             </a>
                         </li>
                         <li ng-class="isActive('bubble')">
                             <a href="javascript:void(0)" ng-click="goInternalPages('bubble')">
-                                <p><i class="material-icons">&#xE0B7;</i></p>
+                                <!-- <p><i class="material-icons">&#xE0B7;</i></p> -->
                                 <span>Conversas</span>
                             </a>
                         </li>
                         <li ng-class="isActive('aparencia')">
                             <a href="javascript:void(0)">
-                                <p><i class="material-icons">&#xE243;</i></p>
+                                <!-- <p><i class="material-icons">&#xE243;</i></p> -->
                                 <span>Aparência</span>
                             </a>
                         </li>
                         <li ng-class="isActive('equipe')">
                             <a href="javascript:void(0)" ng-click="goInternalPages('equipe')">
-                                <p><i class="material-icons">&#xE7FB;</i></p>
+                                <!-- <p><i class="material-icons">&#xE7FB;</i></p> -->
                                 <span>Equipe</span>
                             </a>
                         </li>
                         <li ng-class="isActive('configuracoes')">
                             <a href="javascript:void(0)">
-                                <p><i class="material-icons">&#xE8B8;</i></p>
+                                <!-- <p><i class="material-icons">&#xE8B8;</i></p> -->
                                 <span>Configurações</span>
                             </a>
                         </li>

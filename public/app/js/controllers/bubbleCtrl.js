@@ -1,4 +1,4 @@
-app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Notification, $routeParams, $filter, $window){
+app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $window){
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
@@ -10,37 +10,43 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, bubble, Noti
 	// E escondida quando chegar em outro controller
 	$rootScope.loadViews(false);
 
-	var socket = io.connect('http://127.0.0.1:4000/');
+	console.log('$rootScope')
+	console.log($rootScope)
+	var socket = io.connect('http://127.0.0.1:4000/'),
+		bubble = $rootScope.bubble,
+		Usuario = $rootScope.user;
+		
+		console.log('Usuario')
+		console.log(Usuario)
 
-	$scope.bubble 	 = bubble.data;
 	$scope.conversa  = {};
 	$scope.conversas = [];
 	$scope.equipe    = [];
 
 	$scope.administrador = {
-		canal_atual: $rootScope.user._id,
-		bubble_id: bubble.data._id,
-		socket_id: $rootScope.user._id
+		canal_atual: Usuario._id,
+		bubble_id: bubble._id,
+		socket_id: Usuario._id
 	}
 
-	console.info($rootScope.user.nome)
+	console.info(Usuario.nome)
 
-	if(bubble.data.conversas.length) {
-		for (var i = 0; i < bubble.data.conversas.length; i++) {
-			if(bubble.data.conversas[i].mensagens&&bubble.data.conversas[i].mensagens.length) {
-				bubble.data.conversas[i].canal_atual = bubble.data._id;
-				bubble.data.conversas[i].bubble_id = $scope.administrador.bubble_id;
-				$scope.conversas.push(bubble.data.conversas[i]);
+	if(bubble.conversas.length) {
+		for (var i = 0; i < bubble.conversas.length; i++) {
+			if(bubble.conversas[i].mensagens&&bubble.conversas[i].mensagens.length) {
+				bubble.conversas[i].canal_atual = bubble._id;
+				bubble.conversas[i].bubble_id = $scope.administrador.bubble_id;
+				$scope.conversas.push(bubble.conversas[i]);
 			}
 		}
 	}
 
-	if($rootScope.user.conversas.length) {
-		for (var i = 0; i < $rootScope.user.conversas.length; i++) {
-			if($rootScope.user.conversas[i].mensagens&&$rootScope.user.conversas[i].mensagens.length) {
-				$rootScope.user.conversas[i].canal_atual = $rootScope.user._id;
-				$rootScope.user.conversas[i].bubble_id = $scope.administrador.bubble_id;
-				$scope.conversas.push($rootScope.user.conversas[i]);
+	if(Usuario.conversas.length) {
+		for (var i = 0; i < Usuario.conversas.length; i++) {
+			if(Usuario.conversas[i].mensagens&&Usuario.conversas[i].mensagens.length) {
+				Usuario.conversas[i].canal_atual = Usuario._id;
+				Usuario.conversas[i].bubble_id = $scope.administrador.bubble_id;
+				$scope.conversas.push(Usuario.conversas[i]);
 			}
 		}
 	}

@@ -13,7 +13,7 @@ module.exports.listen = function(server){
 
 		function atualizaUsuarios(data) {
 
-			console.log("===========================================================")
+			console.log("============================================0===============")
 			console.log(data)
 			console.log("===========================================================")
 
@@ -223,10 +223,14 @@ module.exports.listen = function(server){
 		});
 
 		socket.on('trocar canal', function(novoCanal) {
+			/*
+			*/
 			trocaCanal(novoCanal);
 		});
 
 		socket.on('digitando', function(data) {
+			/*
+			*/
 			io.sockets.emit('digitando', data);
 		});
 	});

@@ -1,4 +1,4 @@
-app.controller('dashboardCtrl', function($scope, $rootScope, Api, Notification){
+app.controller('dashboardCtrl', function($scope, $rootScope){
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores

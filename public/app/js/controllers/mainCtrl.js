@@ -1,38 +1,32 @@
-app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams, $http){
-
-	$scope.safeApply = function(fn) {
-		var phase = this.$root.$$phase;
-		if(phase == '$apply' || phase == '$digest') {
-			if(fn && (typeof(fn) === 'function')) {
-				fn();
-			}
-		} else {
-			this.$apply(fn);
-		}
-	};
-
-	// Abre e fecha menu esquerdo
-	$('#toggleMenu').click(function(){
-		$('#wrapper').toggleClass('toggledmenuleft');
-	});
+app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams, $http, Api){
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
 	// Aparecerão ou não
 	$rootScope.menuLeft = false;
 
-	$http.get('/api/bubbles').success(function(res) {
+	Api.AllChats().success(function(data){
+
 		// Variavel com todos os dados do usuario
-		$rootScope.user = res.user;
+		$rootScope.user = data.user;
+
+		// Todos os chats deste usuario logado
+		$rootScope.allChats = data.bubble;
 
 		// Se usuario for convidado
 		// Manda para tela de perfil para ser cadastrado informações minimas
-		if(!res.user.nome) $rootScope.go('sua-conta');
+		if(!data.user.nome) $rootScope.go('sua-conta');
+	});
 
-		$scope.safeApply(function() {
-			$scope.$broadcast('rebuild:menuLeftScroll');
-	    });
-    });
+    if($routeParams.app_id) {
+		if(!$rootScope.bubble) {
+			// Usuario não seguiu o fluxo certo, por isso deve trazer da API = + desempenho
+			Api.getBubble($routeParams.app_id).success(function(data){
+				$rootScope.bubble = data;
+			});
+			console.log('APENAS ATUALIZOU')
+		}
+	}
 
 	// Mostrar ou não load de carregamento das views
 	// Será ativada ao clicar para trocar
@@ -45,14 +39,12 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams,
 	$scope.goInternalPages = function(destino) {
 		// Exibir load
 		$rootScope.loadViews(true);
-
 		$location.path('/' + $routeParams.app_id + '/' + destino);
 	}
 
 	$rootScope.go = function(destino) {
 		// Exibir load
 		$rootScope.loadViews(true);
-
 		$location.path(destino);
 	}
 
@@ -63,7 +55,7 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams,
 	}
 
 	// Retornar para view somente o primeiro nome
-	$scope.firstName = function(user) {
+	$scope.firstName = function() {
 		if($rootScope.user) {
 			if($rootScope.user.nome)
 				return $rootScope.user.nome.split(' ')[0];
