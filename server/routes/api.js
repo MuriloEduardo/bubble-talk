@@ -44,6 +44,11 @@ module.exports = function(router, passport, io){
 		}
 		res.redirect('/');
 	});
+	
+	// LISTAR USUARIO LOGADO //
+	router.get('/current-user', isLoggedIn, function(req, res){
+		res.json(req.user);
+	});
 
 	// CRIAR NOVO ADMINISTRADOR //
 	router.post('/new-adm', isLoggedIn, function(req, res){
@@ -99,7 +104,7 @@ module.exports = function(router, passport, io){
 	// LOGOUT //
 	router.get('/logout', isLoggedIn, function(req, res){
 		req.logout();
-		res.redirect('/login');
+		res.redirect('/volte-sempre');
 	});
 
 	router.put('/confirmacao', function(req, res){
@@ -234,7 +239,7 @@ module.exports = function(router, passport, io){
 	// LISTAR TODAS OS BUBBLES DO USUARIO LOGADO //
 	router.get('/bubbles', isLoggedIn, function(req, res){
 		Bubble.find({_id: { $in: req.user.bubbles.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data){
-			res.json({bubble:data,user:req.user});
+			res.json(data);
 		});
 	});
 };

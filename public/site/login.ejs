@@ -41,8 +41,9 @@
         <script src="site/js/app.js"></script>
         <script src="site/js/controllers/loginCtrl.js"></script>
 	</head>
-	<body class="bg-animate-color" ng-controller="loginCtrl" ng-init="loadMsgLogin('<%= message_login %>')">
-		<div class="vertical-center">
+	<body ng-controller="loginCtrl" ng-init="loadMsgLogin('<%= message_login %>')">
+		<section class="login-section">
+			<div class="vertical-center">
 			<div class="container login">
 				<div class="col-md-4 col-md-offset-4">
 					<div id="logotipo" class="bg-animate-color"><i class="material-icons">bubble_chart</i></div>
@@ -92,5 +93,6 @@
 				</div>
 			</div>
 		</div>
+		</section>
 	</body>
 </html>

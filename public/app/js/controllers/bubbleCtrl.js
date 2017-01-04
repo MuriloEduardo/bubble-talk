@@ -1,4 +1,4 @@
-app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $window){
+app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $window, bubble){
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
@@ -9,28 +9,21 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 	// Será ativada ao clicar para trocar
 	// E escondida quando chegar em outro controller
 	$rootScope.loadViews(false);
-
-	console.log('$rootScope')
-	console.log($rootScope)
-	var socket = io.connect('http://127.0.0.1:4000/'),
-		bubble = $rootScope.bubble,
-		Usuario = $rootScope.user;
-		
-		console.log('Usuario')
-		console.log(Usuario)
+	
+	var Usuario = $rootScope.user;
+	var bubble = bubble.data;
+	$rootScope.bubble = bubble;
 
 	$scope.conversa  = {};
 	$scope.conversas = [];
 	$scope.equipe    = [];
-
+	
 	$scope.administrador = {
 		canal_atual: Usuario._id,
 		bubble_id: bubble._id,
 		socket_id: Usuario._id
 	}
-
-	console.info(Usuario.nome)
-
+	
 	if(bubble.conversas.length) {
 		for (var i = 0; i < bubble.conversas.length; i++) {
 			if(bubble.conversas[i].mensagens&&bubble.conversas[i].mensagens.length) {
@@ -107,8 +100,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 			}
 		}
     }
-
+    
+    var socket = io.connect();
 	socket.on('connect', function() {
+		
+		console.log('conectado')
 
 		socket.on('conversas', function(data) {
 			for (var i=0;i<data.length;i++) {
@@ -128,7 +124,6 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 				var y = $filter('filter')($scope.equipe, {_id: data[i].canal_atual}, true)[0];
 				$scope.safeApply(function() {
 					if(y) y.connected = data[i].connected;
-					console.log(data[i])
 				});
 
 				var u = $filter('filter')($scope.conversas, {socket_id: data[i].socket_id}, true)[0];
@@ -294,9 +289,5 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 				}
 			}
 		});
-
-		$scope.$on('$destroy', function (event) {
-	        socket.removeAllListeners();
-	    });
 	});
 });

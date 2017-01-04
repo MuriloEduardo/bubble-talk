@@ -12,7 +12,7 @@ var passport     = require('passport');
 var flash        = require('connect-flash');
 var path         = require('path');
 var api          = express.Router();
-var port         = process.env.PORT || 4000;
+var port         = process.env.PORT;
 var configDB     = require('./server/config/database');
 
 mongoose.connect(configDB.url, function(err, res) {
@@ -41,34 +41,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.resolve(__dirname, 'public', 'site'));
 
 app.use(express.static(path.resolve(__dirname, 'public')));
-
-// Public           //
-// Home - One Page //
-app.get('/', function(req, res){
-	res.render('./index.ejs');
-});
-
-// Login
-app.get('/login', function(req, res){
-	res.render('./login.ejs', {message_login: req.flash('loginAviso')});
-});
-
-// Confirmação
-// Convido para ser administrador receberá link para cá
-// para cadastrar sua senha
-// @param id client sem senha
-app.get('/confirmacao/:id', function(req, res){
-	res.render('./confirmacao.ejs', {id: req.params.id});
-});
-
-// Landing
-app.get('/experimente-gratis', function(req, res){
-	res.render('./cadastrar.ejs', {message_cadastrar: req.flash('cadastrarAviso')});
-});
-
-
-// Internal
-// ===============
 
 // App
 require('./server/routes/app')(api);

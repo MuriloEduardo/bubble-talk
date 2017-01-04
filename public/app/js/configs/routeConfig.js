@@ -4,7 +4,12 @@ app.config(function ($routeProvider, $locationProvider) {
     
     .when('/', {
         templateUrl: 'views/listagem-chats.html',
-        controller: 'listagemChatsCtrl'
+        controller: 'listagemChatsCtrl',
+        resolve: {
+            AllChats: function (Api){
+                return Api.AllChats();
+            }
+        }
     })
 
     .when('/new-bubble', {
@@ -19,20 +24,29 @@ app.config(function ($routeProvider, $locationProvider) {
 
     .when('/:app_id', {
         templateUrl: 'views/dashboard.html',
-        controller: 'dashboardCtrl'
+        controller: 'dashboardCtrl',
+        resolve: {
+            bubble: function (Api, $route){
+                return Api.getBubble($route.current.params.app_id);
+            }
+        }
     })
 
     .when('/:app_id/bubble', {
         templateUrl: 'views/bubble.html',
-        controller: 'bubbleCtrl'
+        controller: 'bubbleCtrl',
+        resolve: {
+            bubble: function (Api, $route){
+                return Api.getBubble($route.current.params.app_id);
+            }
+        }
     })
 
     .when('/:app_id/equipe', {
         templateUrl: 'views/equipe.html',
         controller: 'equipeCtrl',
         resolve: {
-            bubble: function (Api, $route, $location){
-                Api.getBubble($route.current.params.app_id).success(function(data){ if(!data) $location.path('/') });
+            bubble: function (Api, $route){
                 return Api.getBubble($route.current.params.app_id);
             }
         }

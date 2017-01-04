@@ -1,4 +1,4 @@
-app.controller('listagemChatsCtrl', function($scope, $rootScope, $location){
+app.controller('listagemChatsCtrl', function($scope, $rootScope, $location, AllChats){
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
@@ -13,7 +13,9 @@ app.controller('listagemChatsCtrl', function($scope, $rootScope, $location){
 	$scope.openChat = function(app){
 		// Exibir load
 		$rootScope.loadViews(true);
-		$rootScope.bubble = app;
 		$location.path('/' + app._id.toLowerCase());
 	};
+	
+	// Todos os chats deste usuario logado
+	$rootScope.allChats = AllChats.data;
 });

@@ -147,7 +147,7 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle perfil-toggle" data-toggle="dropdown">
-                            <span>{{firstName()}}</span>
+                            <span ng-bind="firstName()"></span>
                             <div id="foto-perfil" ng-class="{'no-img-perfil': !user.foto}" ng-style="{'background-image': 'url()'}"></div>
                         </a>
                         <ul class="dropdown-menu">
@@ -162,7 +162,7 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="javascript:void(0)" ng-click="go('/api/logout')"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                                <a href="/api/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                             </li>
                         </ul>
                     </li>
@@ -255,14 +255,13 @@
     <script src="js/services/servicesAPI.js"></script>
 
     <script src="js/filters/spaceless.js"></script>
+    <script src="js/directives/enterSubmit.js"></script>
 
-    <script src="js/controllers/listagemChatsCtrl.js"></script>
     <script src="js/controllers/mainCtrl.js"></script>
+    <script src="js/controllers/listagemChatsCtrl.js"></script>
+    <script src="js/controllers/bubbleCtrl.js"></script>
     <script src="js/controllers/dashboardCtrl.js"></script>
     <script src="js/controllers/newBubbleCtrl.js"></script>
-    <script src="js/controllers/bubbleCtrl.js"></script>
     <script src="js/controllers/equipeCtrl.js"></script>
     <script src="js/controllers/suaContaCtrl.js"></script>
-
-    <script src="js/directives/enterSubmit.js"></script>
 </html>

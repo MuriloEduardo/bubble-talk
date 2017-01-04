@@ -1,32 +1,18 @@
 app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams, $http, Api){
+	
+	// Variavel com todos os dados do usuario
+	Api.getAdm().success(function(data,res){
+		$rootScope.user = data;
+		
+		// Se usuario for convidado
+		// Manda para tela de perfil para ser cadastrado informações minimas
+		if(!data.nome) $rootScope.go('sua-conta');
+	});
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
 	// Aparecerão ou não
 	$rootScope.menuLeft = false;
-
-	Api.AllChats().success(function(data){
-
-		// Variavel com todos os dados do usuario
-		$rootScope.user = data.user;
-
-		// Todos os chats deste usuario logado
-		$rootScope.allChats = data.bubble;
-
-		// Se usuario for convidado
-		// Manda para tela de perfil para ser cadastrado informações minimas
-		if(!data.user.nome) $rootScope.go('sua-conta');
-	});
-
-    if($routeParams.app_id) {
-		if(!$rootScope.bubble) {
-			// Usuario não seguiu o fluxo certo, por isso deve trazer da API = + desempenho
-			Api.getBubble($routeParams.app_id).success(function(data){
-				$rootScope.bubble = data;
-			});
-			console.log('APENAS ATUALIZOU')
-		}
-	}
 
 	// Mostrar ou não load de carregamento das views
 	// Será ativada ao clicar para trocar
