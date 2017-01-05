@@ -1,5 +1,13 @@
 app.controller('listagemChatsCtrl', function($scope, $rootScope, $location, AllChats){
-
+	
+	$scope.safeApply = function(fn) {
+		var phase = this.$root.$$phase;
+		if(phase == '$apply' || phase == '$digest')
+			this.$eval(fn);
+		else
+			this.$apply(fn);
+	};
+	
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
 	// Aparecerão ou não
@@ -14,6 +22,9 @@ app.controller('listagemChatsCtrl', function($scope, $rootScope, $location, AllC
 		// Exibir load
 		$rootScope.loadViews(true);
 		$location.path('/' + app._id.toLowerCase());
+		$scope.safeApply(function(){
+			$rootScope.bubble = app;
+		});
 	};
 	
 	// Todos os chats deste usuario logado

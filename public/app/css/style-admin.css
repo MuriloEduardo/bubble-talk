@@ -492,8 +492,10 @@ ul.alert-dropdown {
     background-position: center;
 }
 .no-chat-perfil{
-    background-size: 45%;
-    background-image: url('../../img/blank-chats-picture.png');
+    font-size: 22px;
+    text-align: center;
+    color: #fff;
+    line-height: 38px;
 }
 .comprar-new-chat{
     border-color: #fff;
@@ -1118,7 +1120,8 @@ form {margin:0;}
 }
 #app_dropdown a {
     padding: 18px 15px;
-    line-height: 34px;
+    line-height: 35px;
+    border-bottom: solid thin #39414e;
 }
 #app_dropdown span {
     font-weight: bold;
@@ -1133,4 +1136,16 @@ form {margin:0;}
 #app_dropdown a i {
     margin: 0;
     line-height: 34px;
+}
+.infos {
+    color: #777;
+}
+.status-app {
+    border-radius: 5px;
+    display: inline-block;
+    height: 10px;
+    line-height: 10px;
+    padding: 0;
+    width: 10px;
+    background-color: #42b72a;
 }

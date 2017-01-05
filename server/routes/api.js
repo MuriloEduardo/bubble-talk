@@ -217,15 +217,15 @@ module.exports = function(router, passport, io){
 
 	// LISTAR UM BUBBLE //
 	router.get('/bubbles/:app_id', isLoggedIn, function(req, res){
-
 		Bubble.findOne({'_id': req.params.app_id}, function(err, data1){
-
-			Usuario.find({_id: { $in: data1.administradores.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data2){
-				
-				data1.administradores = data2;
-
-				res.json(data1);
-			});
+			if(!data1) {
+				res.json({err:-1});
+			} else {
+				Usuario.find({_id: { $in: data1.administradores.map(function(o){ return mongoose.Types.ObjectId(o); })}}, function(err, data2){
+					data1.administradores = data2;
+					res.json(data1);
+				});
+			}
 		});
 	});
 

@@ -25,7 +25,7 @@ app.controller('mainCtrl', function($scope, $rootScope, $location, $routeParams,
 	$scope.goInternalPages = function(destino) {
 		// Exibir load
 		$rootScope.loadViews(true);
-		$location.path('/' + $routeParams.app_id + '/' + destino);
+		$location.path('/' + $routeParams.app_id + destino);
 	}
 
 	$rootScope.go = function(destino) {

@@ -1,4 +1,4 @@
-app.factory('Api', function($http){
+app.factory('Api', function($http, $location){
 
 	var _createBubble = function(obj) {
 		return $http.post('/api/new-bubble', obj);
@@ -9,7 +9,15 @@ app.factory('Api', function($http){
 	};
 
 	var _getBubble = function(app_id) {
-		return $http.get('/api/bubbles/' + app_id);
+		var ret = $http.get('/api/bubbles/' + app_id);
+		ret.success(function(res){
+			if(res.err==-1) {
+				// Aplicação nao encontrada
+				$location.path('/');
+				return false;
+			}
+		});
+		return ret;
 	}
 
 	var _newAdm = function(user) {

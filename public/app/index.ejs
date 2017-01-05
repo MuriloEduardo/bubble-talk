@@ -50,7 +50,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="javascript:void(0)" ng-click="goInternalPages('app')">
+                    <a class="navbar-brand" href="javascript:void(0)" ng-click="goInternalPages('/app')">
                         <div id="logotipo">
                             <i class="material-icons">&#xE6DD;</i>
                         </div>
@@ -185,14 +185,14 @@
                                 <li><a href="#">One more separated link</a></li>
                             </ul>
                         </li>
-                        <li ng-class="isActive(app_id)">
-                            <a href="javascript:void(0)" ng-click="goInternalPages(app_id)">
+                        <li ng-class="isActive('/')">
+                            <a href="javascript:void(0)" ng-click="goInternalPages('/')">
                                 <!-- <p><i class="material-icons">&#xE88A;</i></p> -->
                                 <span>Painel</span>
                             </a>
                         </li>
                         <li ng-class="isActive('bubble')">
-                            <a href="javascript:void(0)" ng-click="goInternalPages('bubble')">
+                            <a href="javascript:void(0)" ng-click="goInternalPages('/bubble')">
                                 <!-- <p><i class="material-icons">&#xE0B7;</i></p> -->
                                 <span>Conversas</span>
                             </a>
@@ -204,7 +204,7 @@
                             </a>
                         </li>
                         <li ng-class="isActive('equipe')">
-                            <a href="javascript:void(0)" ng-click="goInternalPages('equipe')">
+                            <a href="javascript:void(0)" ng-click="goInternalPages('/equipe')">
                                 <!-- <p><i class="material-icons">&#xE7FB;</i></p> -->
                                 <span>Equipe</span>
                             </a>
@@ -255,7 +255,9 @@
     <script src="js/services/servicesAPI.js"></script>
 
     <script src="js/filters/spaceless.js"></script>
+    
     <script src="js/directives/enterSubmit.js"></script>
+    <script src="js/directives/randomBackgroundcolor.js"></script>
 
     <script src="js/controllers/mainCtrl.js"></script>
     <script src="js/controllers/listagemChatsCtrl.js"></script>

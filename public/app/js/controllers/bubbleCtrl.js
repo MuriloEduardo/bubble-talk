@@ -1,4 +1,12 @@
 app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $window, bubble){
+	
+	$scope.safeApply = function(fn) {
+		var phase = this.$root.$$phase;
+		if(phase == '$apply' || phase == '$digest')
+			this.$eval(fn);
+		else
+			this.$apply(fn);
+	};
 
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
@@ -44,26 +52,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		}
 	}
 
-	$scope.safeApply = function(fn) {
-		var phase = this.$root.$$phase;
-		if(phase == '$apply' || phase == '$digest') {
-			if(fn && (typeof(fn) === 'function')) {
-				fn();
-			}
-		} else {
-			this.$apply(fn);
-		}
-	};
-
-	$timeout(function(){
-		$scope.$broadcast('rebuild:conversas');
-	});
-
 	var scrollBottom = function() {
-		$scope.safeApply(function() {
+		$timeout(function() {
 			$scope.$broadcast('rebuild:messages');
 			$scope.$broadcast('rebuild:conversas');
-	    });
+		});
 	}
 
 	$scope.dadosCliente = function() {
@@ -93,19 +86,16 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		if(m) {
 			for (var i = 0; i < m.mensagens.length; i++) {
 				if(!m.mensagens[i].remetente) {
-					$scope.safeApply(function() {
-						m.mensagens[i].visulizada = true;
+			        $scope.safeApply(function() {
+			        	m.mensagens[i].visulizada = true;
 			        });
 				}
 			}
 		}
     }
     
-    var socket = io.connect();
+    var socket = io.connect('https://bubble-talk-muriloeduardo.c9users.io');
 	socket.on('connect', function() {
-		
-		console.log('conectado')
-
 		socket.on('conversas', function(data) {
 			for (var i=0;i<data.length;i++) {
 				if(data[i]._id!=$scope.administrador.bubble_id&&data[i]._id!=$scope.administrador.socket_id) {
@@ -279,9 +269,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 				if($scope.administrador.cliente_socket_id==$scope.conversa.socket_id) {
 					for (var i = 0; i < $scope.conversa.mensagens.length; i++) {
 						if($scope.conversa.mensagens[i].remetente) {
-							$scope.safeApply(function() {
-								$scope.conversa.mensagens[i].visulizada = true;
-					        });
+							$scope.conversa.mensagens[i].visulizada = true;
 						}
 					}
 				} else {

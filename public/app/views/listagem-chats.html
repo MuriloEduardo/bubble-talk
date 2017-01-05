@@ -13,15 +13,18 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6">
-				<div class="cada-chat panel" data-icon="&#xE315;" ng-repeat="chat in allChats" ng-click="openChat(chat)">
-					<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}"></div>
+			<div class="col-md-6" ng-repeat="chat in allChats">
+				<div class="cada-chat panel" data-icon="&#xE315;" ng-click="openChat(chat)">
+					<div class="bubble" ng-class="{'no-chat-perfil': !chat.foto}" random-backgroundcolor>
+						<div ng-if="!chat.foto">{{chat.dados.appname.charAt(0)}}</div>
+					</div>
 					<div class="desc-bubble">
 						<div class="nome">
-							{{chat.dados.appname | spaceless}}
+							<span>{{chat.dados.appname | spaceless}}</span>
+							<div class="status-app"></div>
 						</div>
 						<div class="infos">
-							ID do Chat: {{chat._id}}
+							ID do Chat: <strong>{{chat._id}}</strong>
 						</div>
 					</div>
 				</div>

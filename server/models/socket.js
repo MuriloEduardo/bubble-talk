@@ -13,16 +13,6 @@ module.exports.listen = function(server){
 
 		function atualizaUsuarios(data) {
 
-			console.log("============================================0===============")
-			console.log(data)
-			console.log("===========================================================")
-
-			if(data.canal_atual == data.socket_id) {
-				console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-				console.log(data)
-				console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-			}
-
 			var u = usuarios.filter(function(el){return el.socket_id==socket.socket_id})[0];
 			if(u) {
 				u.connected = socket.connected;
@@ -35,8 +25,7 @@ module.exports.listen = function(server){
 					    "connected.status": u.connected
 				    }, function(err,e) {
 				    	if(e.nModified<=0) {
-				    		//throw '11111111111111111111111111111111111111111';
-				    		console.log('** ERROR 1 **')
+				    		throw '11111111111111111111111111111111111111111';
 				    	}
 						if(err) throw err;
 					});
