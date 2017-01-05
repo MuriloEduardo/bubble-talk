@@ -1,6 +1,7 @@
 var Usuario  = require('../models/usuario');
 var Bubble   = require('../models/bubble');
 var socketio = require('socket.io');
+var _  		 = require('underscore');
 
 // Todos usuarios que estão na aplicação
 var usuarios = [];
@@ -13,51 +14,31 @@ module.exports.listen = function(server){
 
 		function atualizaUsuarios() {
 			var currentUser = usuarios[socket.socket_id],
-				findId = currentUser.socket_id==currentUser.canal_atual ? currentUser.socket_id : currentUser.canal_atual;
-			
+				typeUser = undefined,
+				userFindId = currentUser.socket_id==currentUser.canal_atual ? currentUser.socket_id : currentUser.canal_atual;
 			if(currentUser.bubble_id==currentUser.canal_atual)  {
 				throw currentUser;
 			} else {
-				Usuario.findOne({_id: findId}, function(err, user){
-					console.log(user)
+				Usuario.findOne({_id: userFindId}, function(err, user){
+					if(currentUser.socket_id==currentUser.canal_atual) {
+						// Administrador
+						user.connected = {status: socket.connected,date: new Date()};
+						typeUser=1;
+					} else {
+						// Cliente
+						var currentClient = _.find(user.conversas, function (o) { return o.socket_id == currentUser.socket_id });
+						// Caso este cliente nao exista
+						// É porque ele ainda nao enviou nenhuma mensagem a este administrador
+						if(currentClient) currentClient.connected = {status: socket.connected,date: new Date()};
+						typeUser=0;
+					}
+					user.save(function(err, res) {
+						if(err) throw err;
+					});
 				});
 			}
-			
-			/*if(u) {
-				u.connected = socket.connected;
-				io.sockets.emit('usuarios',usuarios);
-			    
-			    if(usuario_socket.socket_id==usuario_socket.canal_atual&&usuario_socket.canal_atual!=usuario_socket.bubble_id) {
-			    	Usuario.update({
-						"_id": usuario_socket.canal_atual
-					},{
-					    "connected.status": u.connected
-				    }, function(err,e) {
-				    	if(e.nModified<=0) {
-				    		throw '11111111111111111111111111111111111111111';
-				    	}
-						if(err) throw err;
-					});
-			    } else {
-			    	Usuario.update({
-						"_id": usuario_socket.canal_atual,
-						"conversas": {
-							$elemMatch: {
-								"socket_id": usuario_socket.socket_id
-							}
-						}
-					},{
-					    "$set": {
-					        "conversas.$.connected.status": u.connected
-					    }
-				    }, function(err,e) {
-				    	if(e.nModified<=0) {
-				    		throw '2222222222222222222222222222222222222222';
-				    	}
-						if(err) throw err;
-					});
-			    }
-			}*/
+			currentUser.connected = {status: socket.connected,date: new Date()};
+			socket.broadcast.emit('usuarios',{user:currentUser,type:typeUser});
 		}
 
 		function trocaCanal(novoCanal) {

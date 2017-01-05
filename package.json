@@ -22,7 +22,8 @@
     "nodemailer-smtp-transport": "^2.6.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "bower": "^1.8.0",

@@ -15,7 +15,7 @@ var conta = nodemailer.createTransport({
 });
 
 
-module.exports = function(router, passport, io){
+module.exports = function(router, passport){
 
 	///////////////////////////////////////////////
 	//                  USUARIOS                 //

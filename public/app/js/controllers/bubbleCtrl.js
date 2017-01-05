@@ -92,7 +92,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		}
     }
     
-    var socket = io.connect('https://bubble-talk-muriloeduardo.c9users.io');
+    var socket = io.connect();
 	socket.on('connect', function() {
 		socket.on('conversas', function(data) {
 			for (var i=0;i<data.length;i++) {
@@ -108,17 +108,18 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		socket.emit('novo usuario', $scope.administrador);
 
 		socket.on('usuarios', function(data) {
-			for (var i = 0; i < data.length; i++) {
-				var y = $filter('filter')($scope.equipe, {_id: data[i].canal_atual}, true)[0];
-				$scope.safeApply(function() {
-					if(y) y.connected = data[i].connected;
-				});
-
-				var u = $filter('filter')($scope.conversas, {socket_id: data[i].socket_id}, true)[0];
-				$scope.safeApply(function() {
-					if(u) u.connected = data[i].connected;
-		        });
+			var currentUser = undefined;
+			if(data.type) {
+				// Equipe
+				currentUser = $filter('filter')($scope.equipe, {_id: data.user.socket_id}, true)[0];
+			} else {
+				// Cliente
+				currentUser = $filter('filter')($scope.conversas, {socket_id: data.user.socket_id}, true)[0];
 			}
+			
+			$scope.safeApply(function() {
+				currentUser.connected = data.user.connected;
+			});
 		});
 
 		$window.onfocus = function(){

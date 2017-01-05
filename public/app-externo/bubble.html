@@ -958,7 +958,7 @@
 					if(!$scope.conversa.conversas[i].remetente) {
 						$scope.safeApply(function() {
 							$scope.conversa.conversas[i].visulizada = true;
-							adm.conversas[i].visulizada = true;
+							// adm.conversas[i].visulizada = true;
 				        });
 					}
 				}
@@ -977,10 +977,9 @@
 		});
 
 		socket.on('usuarios', function(data) {
-			var m = $filter('filter')($scope.conversas, {_id: data.socket_id})[0];
-			console.log(m);
+			var m = $filter('filter')($scope.conversas, {_id: data.user.socket_id})[0];
 			$scope.safeApply(function() {
-				if(m) m.connected = data.connected;
+				if(m) m.connected = data.user.connected;
 	        });
 		});
 
