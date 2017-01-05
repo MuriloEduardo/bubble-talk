@@ -86,9 +86,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		if(m) {
 			for (var i = 0; i < m.mensagens.length; i++) {
 				if(!m.mensagens[i].remetente) {
-			        $scope.safeApply(function() {
-			        	m.mensagens[i].visulizada = true;
-			        });
+			        m.mensagens[i].visulizada = true;
 				}
 			}
 		}
@@ -134,6 +132,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		}
 
 		$scope.enviaMsg = function(mensagem) {
+			if(!mensagem) return;
 			
 			var send_mensagem = {
 				mensagem: mensagem,

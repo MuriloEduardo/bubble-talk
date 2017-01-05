@@ -11,10 +11,19 @@ module.exports.listen = function(server){
 	var io = socketio.listen(server);
 	io.sockets.on('connection', function(socket) {
 
-		function atualizaUsuarios(data) {
-
-			var u = usuarios.filter(function(el){return el.socket_id==socket.socket_id})[0];
-			if(u) {
+		function atualizaUsuarios() {
+			var currentUser = usuarios[socket.socket_id],
+				findId = currentUser.socket_id==currentUser.canal_atual ? currentUser.socket_id : currentUser.canal_atual;
+			
+			if(currentUser.bubble_id==currentUser.canal_atual)  {
+				throw currentUser;
+			} else {
+				Usuario.findOne({_id: findId}, function(err, user){
+					console.log(user)
+				});
+			}
+			
+			/*if(u) {
 				u.connected = socket.connected;
 				io.sockets.emit('usuarios',usuarios);
 			    
@@ -48,7 +57,7 @@ module.exports.listen = function(server){
 						if(err) throw err;
 					});
 			    }
-			}
+			}*/
 		}
 
 		function trocaCanal(novoCanal) {
@@ -96,7 +105,7 @@ module.exports.listen = function(server){
 			usuarios[data.socket_id] = data;
 
 			trocaCanal(data.canal_atual);
-			atualizaUsuarios(data);
+			atualizaUsuarios();
 
 			Usuario.find({ bubbles: { "$in" : [usuarios[data.socket_id].bubble_id]} }, function(err, adms) {
 				
@@ -163,7 +172,7 @@ module.exports.listen = function(server){
 			io.sockets.in(data.usuario.canal_atual).emit('visualizou', data.usuario);
 			var _id = data.usuario.cliente_socket_id ? data.usuario.cliente_socket_id : data.usuario.socket_id;
 			var msgs = data.conversa.conversas ? data.conversa.conversas : data.conversa.mensagens;
-			atualizaUsuarios(data);
+
 			Usuario.update({
 			    "_id" : data.usuario.canal_atual,
 			    "conversas" : {
@@ -206,20 +215,19 @@ module.exports.listen = function(server){
 		// Disconnect
 		socket.on('disconnect', function(data) {
 			if(!socket.socket_id) return;
-			var u = usuarios.filter(function(el){return el.socket_id==socket.socket_id});
-			usuarios.splice(usuarios.indexOf(u[0]), 1);
-			atualizaUsuarios(u);
+			
+			// Coloca este usuario como offline / online
+			atualizaUsuarios();
+			
+			// Retira tal usuario da lista de usuarios
+			usuarios.splice(usuarios.indexOf(usuarios[socket.socket_id]), 1);
 		});
 
 		socket.on('trocar canal', function(novoCanal) {
-			/*
-			*/
 			trocaCanal(novoCanal);
 		});
 
 		socket.on('digitando', function(data) {
-			/*
-			*/
 			io.sockets.emit('digitando', data);
 		});
 	});

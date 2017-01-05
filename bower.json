@@ -6,10 +6,7 @@
     "Murilo Eduardo dos Santos"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/MuriloEduardo/login-passport",
-  "resolutions": {
-    "jquery": "^3.0.0"
-  },
+  "homepage": "https://github.com/MuriloEduardo/bubble-talk",
   "dependencies": {
     "angular": "^1.5.7",
     "angular-route": "^1.5.7",
@@ -18,10 +15,7 @@
     "animate.css": "^3.5.2",
     "angular-ui-notification": "^0.2.0",
     "angular-animate": "^1.5.8",
-    "angular-sanitize": "^1.5.8",
-    "angular-local-storage": "^0.5.2"
-  },
-  "install": {
-    "path": "public/libs"
+    "angular-mocks": "^1.6.1",
+    "angular-sanitize": "^1.6.1"
   }
 }

@@ -12,10 +12,11 @@ var passport     = require('passport');
 var flash        = require('connect-flash');
 var path         = require('path');
 var api          = express.Router();
-var port         = process.env.PORT;
+var port         = process.env.PORT||4000;
 var configDB     = require('./server/config/database');
 
 mongoose.connect(configDB.url, function(err, res) {
+	mongoose.Promise = global.Promise;
 	if(err){
 		console.info('Nao foi possivel conectar a:' + configDB.url + ' com o erro: ' + err);
 	}else{
