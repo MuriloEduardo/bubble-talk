@@ -14,11 +14,10 @@ module.exports.listen = function(server){
 
 		function atualizaUsuarios() {
 			var currentUser = usuarios[socket.socket_id],
-				typeUser = undefined,
-				userFindId = currentUser.socket_id==currentUser.canal_atual ? currentUser.socket_id : currentUser.canal_atual;
-			if(currentUser.bubble_id==currentUser.canal_atual)  {
-				throw currentUser;
-			} else {
+				typeUser 	= undefined,
+				userFindId  = currentUser.socket_id==currentUser.canal_atual ? currentUser.socket_id : currentUser.canal_atual;
+
+			if(currentUser.bubble_id!=currentUser.canal_atual)  {
 				Usuario.findOne({_id: userFindId}, function(err, user){
 					if(currentUser.socket_id==currentUser.canal_atual) {
 						// Administrador
@@ -38,7 +37,7 @@ module.exports.listen = function(server){
 				});
 			}
 			currentUser.connected = {status: socket.connected,date: new Date()};
-			socket.broadcast.emit('usuarios',{user:currentUser,type:typeUser});
+			socket.emit('usuarios',{user:currentUser,type:typeUser});
 		}
 
 		function trocaCanal(novoCanal) {

@@ -8,6 +8,21 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 			this.$apply(fn);
 	};
 
+	emojify.setConfig({
+
+		emojify_tag_type : 'img',           // Only run emojify.js on this element
+		only_crawl_id    : null,            // Use to restrict where emojify.js applies
+		img_dir          : 'img/emoji',  // Directory for emoji images
+		ignored_tags     : {                // Ignore the following tags
+			'SCRIPT'  : 1,
+			'TEXTAREA': 1,
+			'A'       : 1,
+			'PRE'     : 1,
+			'CODE'    : 1
+		}
+	});
+	emojify.run();
+
 	// Variavel Scope root responsavel por informar se 
 	// Menu a esquerda e seus botoes controladores
 	// Aparecerão ou não
@@ -45,8 +60,11 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 	if(Usuario.conversas.length) {
 		for (var i = 0; i < Usuario.conversas.length; i++) {
 			if(Usuario.conversas[i].mensagens&&Usuario.conversas[i].mensagens.length) {
-				Usuario.conversas[i].canal_atual = Usuario._id;
-				Usuario.conversas[i].bubble_id = $scope.administrador.bubble_id;
+				
+				console.log(Usuario.conversas[i])
+
+				//Usuario.conversas[i].canal_atual = Usuario._id;
+				//Usuario.conversas[i].bubble_id = $scope.administrador.bubble_id;
 				$scope.conversas.push(Usuario.conversas[i]);
 			}
 		}
@@ -86,7 +104,9 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		if(m) {
 			for (var i = 0; i < m.mensagens.length; i++) {
 				if(!m.mensagens[i].remetente) {
-			        m.mensagens[i].visulizada = true;
+			        $scope.safeApply(function() {
+						m.mensagens[i].visulizada = true;
+					});
 				}
 			}
 		}
@@ -108,17 +128,15 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 		socket.emit('novo usuario', $scope.administrador);
 
 		socket.on('usuarios', function(data) {
-			var currentUser = undefined;
-			if(data.type) {
-				// Equipe
-				currentUser = $filter('filter')($scope.equipe, {_id: data.user.socket_id}, true)[0];
-			} else {
-				// Cliente
-				currentUser = $filter('filter')($scope.conversas, {socket_id: data.user.socket_id}, true)[0];
-			}
-			
+			var currentUser = undefined,
+				arr 		= undefined;
+
+			data.type?arr=$scope.equipe:arr=$scope.conversas;
+
 			$scope.safeApply(function() {
-				currentUser.connected = data.user.connected;
+				currentUser = $filter('filter')(arr, {socket_id: data.user.socket_id}, true)[0];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+				if(currentUser)
+					currentUser.connected = data.user.connected;
 			});
 		});
 
@@ -242,6 +260,10 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 			socket.emit('digitando', $scope.administrador);
 		});
 
+		$scope.$watch('toggleEmoji', function() {
+			scrollBottom();
+		});
+
 		socket.on('trocou canal', function(canal) {
 			$scope.safeApply(function() {
 				$scope.administrador.canal_atual = canal;
@@ -266,7 +288,7 @@ app.controller('bubbleCtrl', function($scope, $rootScope, $timeout, $filter, $wi
 
 		socket.on('visualizou', function(data) {
 			if($scope.administrador.cliente_socket_id) {
-				if($scope.administrador.cliente_socket_id==$scope.conversa.socket_id) {
+				if($scope.administrador.cliente_socket_id==$scope.conversa.socket_id&&$scope.administrador.socket_id!=data.socket_id) {
 					for (var i = 0; i < $scope.conversa.mensagens.length; i++) {
 						if($scope.conversa.mensagens[i].remetente) {
 							$scope.conversa.mensagens[i].visulizada = true;

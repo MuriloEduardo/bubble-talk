@@ -655,7 +655,7 @@ label{
     font-size: 16px;
 }
 .col-side {
-    height: calc(100% - 25px);
+    height: 100%;
     background-color: #fff;
     overflow: hidden;
 }
@@ -706,6 +706,11 @@ label{
 .cada-canal .hrMsg {
     font-size: 10px;
 }
+.conversas-container {
+    height: calc(100% - 25px);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.08);
+    box-shadow: 0 1px 1px rgba(0,0,0,.08);
+}
 .conversas-container .navbar {
     margin-bottom: 0;
     border-right: none;
@@ -735,12 +740,17 @@ label{
     background-image: url('../../img/bg.jpg');
     background-repeat: repeat;
     height: 100%;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
 }
 .scrollme {
     height: calc(100% - 61px);
 }
 .chat-canal-0 footer {
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     padding: 15px;
     background-color: #f5f1ee;
 }
@@ -750,6 +760,11 @@ label{
     padding: 13px 15px 0 15px;
     padding-right: 108px;
     overflow: hidden;
+}
+.chat-canal-0 footer textarea:focus {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-color: transparent;
 }
 .chat-canal-0 footer a.actions {
     position: absolute;
@@ -1148,4 +1163,71 @@ form {margin:0;}
     padding: 0;
     width: 10px;
     background-color: #42b72a;
+}
+#emojis-box {
+    background-color: #f0f0f0;
+    height: 300px;
+    bottom: -215px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    visibility: hidden;
+    border-right: solid thin #e7e7e7;
+    border-left: solid thin #e7e7e7;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+#emojis-box.openEmoji {
+    visibility: visible;
+    bottom: 85px;
+}
+.openBodyChatEmoji {
+    height: 38.6%;
+}
+#emojis-box header {
+    background: #fff;
+    width: 100%;
+    position: relative;
+}
+#emojis-box header ul {
+    margin-left: 0;
+    display: flex;
+    justify-content: space-around;
+}
+#emojis-box header ul li {
+    float: left;
+    width: 100%;
+    padding: 0;
+}
+#emojis-box header ul li a {
+    padding: 15px;
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #c0c0c0;
+}
+#emojis-box header ul li a:hover {
+    opacity: .6;
+}
+.close-emoji {
+    line-height: 32px!important;
+    font-size: 28px!important;
+}
+.emoji{
+    width:1.5em;
+    height:1.5em;
+    display:inline-block;
+    margin-bottom:-.25em;
+    background-size:contain;
+}
+#border-animate-emojis {
+    position: absolute;
+    width: 16.66666666666667%;
+    height: 4px;
+    background: #58e870;
+    left: 0;
+    bottom: 0;
+    -webkit-transition: -webkit-transform .3s cubic-bezier(.1,.82,.25,1);
+    transition: transform .3s cubic-bezier(.1,.82,.25,1);
 }

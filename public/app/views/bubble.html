@@ -75,7 +75,7 @@
 					  </div>
 					</nav>
 					<div class="chat-canal-0">
-				    	<div ng-show="textareaBody" class="row-height100">
+				    	<div ng-show="textareaBody" class="row-height100" ng-class="{'openBodyChatEmoji': toggleEmoji}">
 					    	<div class="eng-body-chat">
 						    	<div id="body" class="body-chat scrollme" ng-scrollbar rebuild-on-resize bottom rebuild-on="rebuild:messages">
 									<div class="eng-msgs">
@@ -91,10 +91,29 @@
 									</div>
 						    	</div>
 					    	</div>
+					    	<section id="emojis-box" ng-class="{'openEmoji': toggleEmoji}">
+				    			<header>
+									<ul class="list-inline">
+										<li><a href="javascript:void(0)" title="Recentes"><i class="material-icons">&#xE192;</i></a></li>
+										<li><a href="javascript:void(0)" title="Pessoas"><i class="material-icons">&#xE420;</i></a></li>
+										<li><a href="javascript:void(0)" title="Natureza"><i class="material-icons">&#xE406;</i></a></li>
+										<li><a href="javascript:void(0)" title="Objetos"><i class="material-icons">&#xE90F;</i></a></li>
+										<li><a href="javascript:void(0)" title="Locais"><i class="material-icons">&#xE0C8;</i></a></li>
+										<li><a href="javascript:void(0)" title="Simbolos"><i class="material-icons">&#xE322;</i></a></li>
+									</ul>
+									<div id="border-animate-emojis"></div>
+				    			</header>
+				    			<div id="body-emojis">
+				    				<div>
+				    					tab1
+				    				</div>
+				    			</div>
+				    		</section>
 					    	<footer>
 					    		<textarea class="form-control" placeholder="Digite uma mensagem" ng-model="message" ng-change="typing()" enter-submit="enviaMsg(message)"></textarea>
-					    		<a href="#" class="actions emoticos">
-									<i class="material-icons">&#xE420;</i>
+					    		<a href="javascript:void(0)" ng-click="toggleEmoji=!toggleEmoji" class="actions emoticos">
+									<i class="material-icons" ng-if="!toggleEmoji">&#xE420;</i>
+									<i class="material-icons close-emoji" ng-if="toggleEmoji">&#xE313;</i>
 								</a>
 								<a href="#" class="actions anexo" ng-show="!message">
 									<i class="material-icons">&#xE226;</i>

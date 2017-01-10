@@ -29,6 +29,8 @@ var usuarioSchema = mongoose.Schema({
 				status: Boolean, 
 				date: {type: Date, default: Date.now}
 			},
+			bubble_id: String,
+			canal_atual: String,
 			mensagens: [
 				{
 					mensagem: String,
